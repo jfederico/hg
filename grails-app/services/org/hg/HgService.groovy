@@ -10,14 +10,13 @@ class HgService {
         log.info "----------------------------------"
     }
 
-    def xmlError(Exception e) {
-        def message = e != null? e.getMessage(): 'No message'
+    def xmlResponse(String msg) {
         def xml = '' +
         "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-        "<response>\n" + 
+        "<response>\n" +
         "  <returncode>error</returncode>\n" +
         "  <messagekey>GeneralError</messagekey>\n" +
-        "  <message>${message}</message>\n" +
+        "  <message>${(msg!=null? msg: 'No message')}</message>\n" +
         "</response>"
         return xml
     }
