@@ -12,7 +12,7 @@ class UrlMappings {
      */
 
 	static mappings = {
-		"/$controller/$engine_type?/$id?/$hg_act?"{
+		"/$controller/$type?/$id?/$act?"{
             action = 'index'
 			constraints {
 				// apply constraints here

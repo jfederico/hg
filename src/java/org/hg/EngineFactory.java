@@ -2,6 +2,8 @@ package org.hg;
 
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.hg.engine.Engine;
 
 public interface EngineFactory {
@@ -12,6 +14,6 @@ public interface EngineFactory {
     public static String ENGINE_CW = "cw";
     public static String ENGINE_CHALKANDWIRE = "chalkandwire";
 
-    Engine getEngine(Map<String, String> params) throws Exception;
+    Engine getEngine(HttpServletRequest request, Map<String, String> params) throws Exception;
 
 }

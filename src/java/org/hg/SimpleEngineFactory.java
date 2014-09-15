@@ -2,9 +2,11 @@ package org.hg;
 
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.hg.engine.Engine;
-import org.hg.engine.TestEngine;
-import org.hg.engine.BBBEngine;
+import org.hg.engine.bigbluebutton.BigBlueButtonEngine;
+import org.hg.engine.test.TestEngine;
 
 public class SimpleEngineFactory implements EngineFactory {
 
@@ -16,25 +18,34 @@ public class SimpleEngineFactory implements EngineFactory {
         return INSTANCE;
     }
 
-    public Engine getEngine(Map<String, String> params)
+    @Override
+    public Engine getEngine(HttpServletRequest request, Map<String, String> params)
             throws Exception {
         Engine engine = null;
 
         if( params == null ){
             throw new Exception("The request does not contain params");
-        } else if( !params.containsKey("engine_type") ){
-            throw new Exception("The request does not include engine_type as a parameter");
-        } else if ( !params.containsKey("id") ){
-            params.put("id", "0");
+        } else if( !params.containsKey(Engine.PARAM_TYPE) ){
+                throw new Exception("The request does not include [type] as a parameter");
+        } else {
+            if ( !params.containsKey(Engine.PARAM_ID) ){
+                params.put(Engine.PARAM_ID, "0");
+            }
+            if ( !params.containsKey(Engine.PARAM_ACT) ){
+                if( request.getMethod().equals("GET") )
+                    params.put(Engine.PARAM_ACT, "sso");
+                else
+                    params.put(Engine.PARAM_ACT, "cc");
+            }
         }
 
-        String engine_type = params.get("engine_type");
-        if( engine_type.equals(ENGINE_TEST) ){
-            engine = new TestEngine();
-        } else if( engine_type.equals(ENGINE_BBB) || engine_type.equals(ENGINE_BIGBLUEBUTTON) ){
-            engine = new BBBEngine();
+        String type = params.get("type");
+        if( type.equals(ENGINE_TEST) ){
+            engine = new TestEngine(params);
+        } else if( type.equals(ENGINE_BBB) || type.equals(ENGINE_BIGBLUEBUTTON) ){
+            engine = new BigBlueButtonEngine(params);
         } else {
-            throw new Exception(engine_type + " was not identified as an Engine Type");
+            throw new Exception(type + " was not identified as a Engine Type");
         }
         return engine;
     }
