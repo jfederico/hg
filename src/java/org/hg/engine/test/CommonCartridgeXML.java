@@ -12,7 +12,6 @@ public class CommonCartridgeXML implements CompletionContent {
         this.definition = definition;
     }
 
-    @Override
     public Map<String, String> get() {
         Map<String, String> completionContent = new HashMap<String, String>();
 
@@ -25,11 +24,11 @@ public class CommonCartridgeXML implements CompletionContent {
     private String getCommonCartridgeXML(){
         String commonCartridge = "" +
         "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-        "<cartridge_basiclti_link xmlns=\"http://www.imsglobal.org/xsd/imslticc_v1p0\"" +
+        "<cartridge_basiclti_link xmlns=\"http://www.imsglobal.org/xsd/imslticc_v1p0\"\n" +
         "       xmlns:blti = \"http://www.imsglobal.org/xsd/imsbasiclti_v1p0\"\n" +
         "       xmlns:lticm =\"http://www.imsglobal.org/xsd/imslticm_v1p0\"\n" +
         "       xmlns:lticp =\"http://www.imsglobal.org/xsd/imslticp_v1p0\"\n" +
-        "       xmlns:xsi = \"http://www.w3.org/2001/XMLSchema-instance\"" +
+        "       xmlns:xsi = \"http://www.w3.org/2001/XMLSchema-instance\"\n" +
         "       xsi:schemaLocation = \"http://www.imsglobal.org/xsd/imslticc_v1p0 http://www.imsglobal.org/xsd/lti/ltiv1p0/imslticc_v1p0.xsd\n" +
         "                             http://www.imsglobal.org/xsd/imsbasiclti_v1p0 http://www.imsglobal.org/xsd/lti/ltiv1p0/imsbasiclti_v1p0.xsd\n" +
         "                             http://www.imsglobal.org/xsd/imslticm_v1p0 http://www.imsglobal.org/xsd/lti/ltiv1p0/imslticm_v1p0.xsd\n" +
@@ -52,7 +51,6 @@ public class CommonCartridgeXML implements CompletionContent {
         "    <cartridge_bundle identifierref=\"BLTI001_Bundle\"/>\n" +
         "    <cartridge_icon identifierref=\"BLTI001_Icon\"/>\n" +
         "</cartridge_basiclti_link>";
-
         return commonCartridge;
     }
 

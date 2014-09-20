@@ -1,7 +1,10 @@
 package org.hg
 
+import java.util.List;
+
 import org.hg.EngineFactory
 import org.hg.SimpleEngineFactory
+import org.hg.domain.Type;
 import org.hg.engine.Engine
 import org.hg.engine.test.TestEngine;
 
@@ -15,8 +18,10 @@ class LtiController {
         hgService.logParameters(params)
 
         try {
-            Engine engine = engineFactory.getEngine(request, params)
-            
+            Type config = hgService.getConfig(params.get("type"))
+            log.debug config
+            Engine engine = engineFactory.createEngine(request, params, config)
+
             def completionContent = engine.getCompletionContent()
             if( completionContent == null ){
                 log.debug "ERROR: "
@@ -24,10 +29,10 @@ class LtiController {
             } else {
                 if( completionContent.get("type") == "url" ) {
                     log.info "Redirecting to " + completionContent
-                    render(text: hgService.xmlResponse("Redirecting to " + completionContent), contentType: "text/xml", encoding: "UTF-8")
+                    render(text: hgService.xmlResponse("Redirecting to " + completionContent, hgService.CODE_SUCCESS), contentType: "text/xml", encoding: "UTF-8")
                     //redirect(url: completionContent)
                 } else if( completionContent.get("type") == "xml" ) {
-                    log.info "Rendering XML" + completionContent.get("content")
+                    log.info "Rendering XML\n" + completionContent.get("content")
                     render(text: completionContent.get("content"), contentType: "text/xml", encoding: "UTF-8")
                 } else {
                     log.debug "ERROR: "

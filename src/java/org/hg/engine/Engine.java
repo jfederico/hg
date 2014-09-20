@@ -3,6 +3,8 @@ package org.hg.engine;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.hg.domain.Type;
+
 public abstract class Engine {
 
     public static String PARAM_CONTROLLER   = "controller";
@@ -14,8 +16,10 @@ public abstract class Engine {
     
     protected Map<String, String> params;
     protected Map<String, String> grails_params;
+    protected Type config;
 
-    public Engine(Map<String, String> params){
+    public Engine(Map<String, String> params, Type config){
+        this.config = config;
         this.grails_params = new HashMap<String, String>();
         for( int i=0; i < GRAILS_PARAMS.length; i++ ){
             if( params.containsKey(GRAILS_PARAMS[i]) ){
@@ -37,4 +41,7 @@ public abstract class Engine {
     //public abstract String getIconSourceURL();
     //public abstract String getConfigurationHTML();
     //public abstract String getFrontendHTML();
+    public Type getConfig(String type) {
+        return this.config;
+    }
 }

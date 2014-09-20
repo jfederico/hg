@@ -78,6 +78,8 @@ log4j = {
     }
     debug logfile:  'grails.app'
 
+	debug  'org.hg'
+
     error  'org.codehaus.groovy.grails.web.servlet',        // controllers
            'org.codehaus.groovy.grails.web.pages',          // GSP
            'org.codehaus.groovy.grails.web.sitemesh',       // layouts
