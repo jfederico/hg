@@ -3,22 +3,29 @@ package org.hg.engine;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.hg.domain.Type;
-
 public abstract class Engine {
 
     public static String PARAM_CONTROLLER   = "controller";
     public static String PARAM_ACTION       = "action";
-    public static String PARAM_TYPE         = "type";
-    public static String PARAM_ID           = "id";
+    public static String PARAM_TENANT       = "tenant";
+    public static String PARAM_ENGINE       = "engine";
+    public static String PARAM_VERSION      = "version";
     public static String PARAM_ACT          = "act";
-    public static String[] GRAILS_PARAMS    = new String[] {PARAM_CONTROLLER, PARAM_ACTION, PARAM_TYPE, PARAM_ID, PARAM_ACT};
+    public static String PARAM_CMD          = "cmd";
+    public static String[] GRAILS_PARAMS    = new String[] { PARAM_CONTROLLER,
+                                                             PARAM_ACTION,
+                                                             PARAM_TENANT,
+                                                             PARAM_ENGINE,
+                                                             PARAM_VERSION,
+                                                             PARAM_ACT,
+                                                             PARAM_CMD
+                                                           };
     
     protected Map<String, String> params;
     protected Map<String, String> grails_params;
-    protected Type config;
+    protected Map<String, Object> config;
 
-    public Engine(Map<String, String> params, Type config){
+    public Engine(Map<String, String> params, Map<String, Object> config){
         this.config = config;
         this.grails_params = new HashMap<String, String>();
         for( int i=0; i < GRAILS_PARAMS.length; i++ ){
@@ -35,13 +42,7 @@ public abstract class Engine {
     public abstract Map<String, String> getCompletionContent();
     public abstract void setCompletionContentCommand(CompletionContent completionContent);
 
-    //public abstract String getSingleSignOnURL();
-    //public abstract String getCommonCartridgeXML();
-    //public abstract String getRSSFeedXML();
-    //public abstract String getIconSourceURL();
-    //public abstract String getConfigurationHTML();
-    //public abstract String getFrontendHTML();
-    public Type getConfig(String type) {
+    public Map<String, Object> getConfig(String type) {
         return this.config;
     }
 }

@@ -18,7 +18,7 @@ class UrlMappings {
      *      
      *      app=hg      { name: hg }
      *      tenant=0    { id: 0, name: test }
-     *      engine=lti  [ lti | reg | res | api ] 
+     *      engine=lti  [ lti | reg | api ]
      *      version=v1p0
      *      
      * Configuration for tenant 1:BlindsideNetworks
