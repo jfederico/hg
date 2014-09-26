@@ -12,18 +12,26 @@ class HgService {
     
     private List<Type> config
     
+    private String jsonConfig = '' +
+        '[' + "\n" +
+        '   {"id": 0}' + "\n" +
+        '   {"id": 0}' + "\n" +
+        '   }' + "\n" +
+        '' + "\n" +
+        ']'
+    
     public HgService(){
         config = new ArrayList<Type>()
         config.add(new Type())
     }
 
-    def logParameters(Object params) {
+    def logParameters(params) {
         log.info "----------------------------------"
         for( param in params ) log.info "${param.getKey()}=${param.getValue()}"
         log.info "----------------------------------"
     }
 
-    def xmlResponse(String msg='No message', String code=CODE_ERROR, String key='GeneralError') {
+    def xmlResponse(String msg='No message', String code=CODE_ERROR, String key='GenericResponse') {
         def xml = '' +
                 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
                 "<response>\n" +

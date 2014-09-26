@@ -12,8 +12,20 @@ class LtiController {
     HgService hgService
     
     EngineFactory engineFactory = SimpleEngineFactory.getInstance()
-    
-    def index() { 
+
+    def index() {
+        log.info "###############${params.get('action')}###############"
+        hgService.logParameters(params)
+
+        try {
+            render(text: hgService.xmlResponse("All good", hgService.CODE_SUCCESS), contentType: "text/xml", encoding: "UTF-8")
+        } catch (Exception e){
+            log.debug "ERROR: " + e
+            render(text: hgService.xmlResponse(e.getMessage()), contentType: "text/xml", encoding: "UTF-8")
+        }
+    }
+
+    def index2() { 
         log.info "###############${params.get('action')}###############"
         hgService.logParameters(params)
 
