@@ -2,10 +2,16 @@ class UrlMappings {
     /*
      * $scheme://$domain:$port/$application/$tenant/$engine/$version/?query_string
      *
-     * engine = [ lti | reg | xml | rss | img | api ]
+     * engine = [ lti | reg | res | api ]
      * 
      * query_string = ?a=xxx&c=yyy (a=action, c=command)
-     *  
+     * 
+     * engine = lti :. a = [ cc | sso ]
+     * engine = reg :. a = [  ]
+     * engine = res :. a = [ xml | json | rss | png | ico ]
+     * engine = api :. a = [ outcomes | ]
+     *                 a = outcomes :. c = [ get | put | post | delete | update ] 
+     * 
      * Configuration for tenant 0:InternalTest
      *      
      *      https://lti.123it.ca/hg/
@@ -18,7 +24,7 @@ class UrlMappings {
      *      
      *      app=hg      { name: hg }
      *      tenant=0    { id: 0, name: test }
-     *      engine=lti  [ lti | reg | api ]
+     *      engine=lti
      *      version=v1p0
      *      
      * Configuration for tenant 1:BlindsideNetworks
