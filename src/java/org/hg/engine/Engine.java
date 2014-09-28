@@ -50,34 +50,35 @@ public abstract class Engine {
         this.params = params;
         this.endpoint = endpoint;
 
-        try {
-            this.tpMeta = new JSONObject();
-            this.tcMeta = new JSONObject();
+        if( request.getMethod().equals("POST") ) {
+            try {
+                this.tpMeta = new JSONObject();
+                this.tcMeta = new JSONObject();
 
-            ltiStore = LTIStoreImpl.getInstance();
-            
-            String _endpoint = (request.isSecure()? "https": "http") + "://" + this.endpoint + "/" + this.grails_params.get("application") + "/" + this.grails_params.get("tenant") + "/lti/" + this.grails_params.get("version"); 
-            log.debug(_endpoint);
+                ltiStore = LTIStoreImpl.getInstance();
+                
+                String _endpoint = (request.isSecure()? "https": "http") + "://" + this.endpoint + "/" + this.grails_params.get("application") + "/" + this.grails_params.get("tenant") + "/lti/" + this.grails_params.get("version"); 
+                log.debug(_endpoint);
 
-            Map<String, Object> lti_cfg = (Map<String, Object>)config.get("lti");
-            this.tp = ltiStore.createToolProvider(_endpoint, (String)lti_cfg.get("key"), (String)lti_cfg.get("secret"), params, "1.0");
-            if( !this.tp.hasValidSignature() )
-                throw new Exception("OAuth signature is NOT valid");
-            else
-                log.debug("OAuth signature is valid");
-            
-            /*
-            this.tp.overrideParameters(getJSONOverride());
-            if( !this.tp.hasRequiredParameters(getJSONRequiredParameters()) )
-                throw new AmbasadoroException("Missing required parameters", "OAuthError");
-            else
-                log.debug("All required parameters are included");
-            */
-            
-        } catch( Exception e) {
-            throw e;
+                Map<String, Object> lti_cfg = (Map<String, Object>)config.get("lti");
+                this.tp = ltiStore.createToolProvider(_endpoint, (String)lti_cfg.get("key"), (String)lti_cfg.get("secret"), params, "1.0");
+                if( !this.tp.hasValidSignature() )
+                    throw new Exception("OAuth signature is NOT valid");
+                else
+                    log.debug("OAuth signature is valid");
+                
+                /*
+                this.tp.overrideParameters(getJSONOverride());
+                if( !this.tp.hasRequiredParameters(getJSONRequiredParameters()) )
+                    throw new AmbasadoroException("Missing required parameters", "OAuthError");
+                else
+                    log.debug("All required parameters are included");
+                */
+                
+            } catch( Exception e) {
+                throw e;
+            }
         }
-
     }
 
     protected CompletionResponse completionResponse;
