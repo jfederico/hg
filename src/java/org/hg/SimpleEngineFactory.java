@@ -26,6 +26,7 @@ public class SimpleEngineFactory implements EngineFactory {
         Engine engine = null;
 
         log.debug("createEngine()");
+
         if( config == null ) {
             throw new Exception("There is no configuration for the tenant " + params.get(Engine.PARAM_TENANT));
         }
@@ -39,14 +40,15 @@ public class SimpleEngineFactory implements EngineFactory {
             }
         }
 
+        @SuppressWarnings("unchecked")
         Map<String, Object> vendor = (Map<String, Object>)config.get("vendor");
         String vendor_code = (String)vendor.get("code");
         log.debug(vendor_code);
 
         if( vendor_code.equals(ENGINE_TEST) ){
-            engine = new TestEngine(params, config, endpoint);
+            engine = new TestEngine(request, params, config, endpoint);
         } else if( vendor_code.equals(ENGINE_BIGBLUEBUTTON) ){
-            engine = new BigBlueButtonEngine(params, config, endpoint);
+            engine = new BigBlueButtonEngine(request, params, config, endpoint);
         } else {
             throw new Exception(vendor_code + " was not identified as a vendor code for an Engine");
         }

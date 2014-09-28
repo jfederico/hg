@@ -36,12 +36,23 @@ grails.project.dependency.resolution = {
         mavenRepo "http://repository.codehaus.org"
         mavenRepo "http://download.java.net/maven/2/"
         mavenRepo "http://repository.jboss.com/maven2/"
+
+        // Blindside Networks repositories
+        mavenRepo "https://raw.github.com/blindsidenetworks/bigbluebutton-api/mvn-repo/"
+        mavenRepo "https://raw.github.com/blindsidenetworks/oauth/mvn-repo/"
+        mavenRepo "https://raw.github.com/blindsidenetworks/lti/mvn-repo/"
+
     }
 
     dependencies {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes e.g.
 
         runtime 'mysql:mysql-connector-java:5.1.27'
+        runtime "commons-net:commons-net:3.0.1"
+        runtime "org.json:json:20131018"
+        runtime "org.bigbluebutton:bigbluebutton-api:1.0.5"
+        runtime "net.oauth:oauth:1.0.1"
+        runtime "org.lti:lti:1.0.11"
     }
 
     plugins {

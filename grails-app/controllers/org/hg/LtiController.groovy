@@ -11,12 +11,16 @@ import org.hg.engine.test.TestEngine;
 class LtiController {
     HgService hgService
     
-    EngineFactory engineFactory = SimpleEngineFactory.getInstance()
-
+    EngineFactory engineFactory
+    
+    LtiController() {
+        this.engineFactory = SimpleEngineFactory.getInstance()     
+    }
+    
     def index() {
         log.info "###############${params.get('action')}###############"
         hgService.logParameters(params)
-
+        
         try {
             def config = hgService.getConfig(params.get("tenant"))
             log.debug config
@@ -29,8 +33,8 @@ class LtiController {
             } else {
                 if( completionResponse.get("type") == "url" ) {
                     log.info "Redirecting to " + completionResponse
-                    render(text: hgService.xmlResponse("Redirecting to " + completionResponse, hgService.CODE_SUCCESS), contentType: "text/xml", encoding: "UTF-8")
-                    //redirect(url: completionResponse)
+                    //render(text: hgService.xmlResponse("Redirecting to " + completionResponse, hgService.CODE_SUCCESS), contentType: "text/xml", encoding: "UTF-8")
+                    redirect(url: completionResponse.get("content"))
                 } else if( completionResponse.get("type") == "xml" ) {
                     log.info "Rendering XML\n" + completionResponse.get("content")
                     render(text: completionResponse.get("content"), contentType: "text/xml", encoding: "UTF-8")

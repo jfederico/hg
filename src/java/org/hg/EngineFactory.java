@@ -10,7 +10,7 @@ public interface EngineFactory {
 
     public static String ENGINE_TEST = "hg_test";
     public static String ENGINE_BN = "blindside_networks";
-    public static String ENGINE_BIGBLUEBUTTON = "bigbluebutton";
+    public static String ENGINE_BIGBLUEBUTTON = "big_blue_button";
     public static String ENGINE_CW = "cw";
     public static String ENGINE_CHALKANDWIRE = "chalk_and_wire";
 
