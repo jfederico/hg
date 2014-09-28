@@ -21,7 +21,7 @@ public class SimpleEngineFactory implements EngineFactory {
         return INSTANCE;
     }
 
-    public Engine createEngine(HttpServletRequest request, Map<String, String> params, Map<String, Object> config)
+    public Engine createEngine(HttpServletRequest request, Map<String, String> params, Map<String, Object> config, String endpoint)
             throws Exception {
         Engine engine = null;
 
@@ -30,11 +30,13 @@ public class SimpleEngineFactory implements EngineFactory {
             throw new Exception("There is no configuration for the tenant " + params.get(Engine.PARAM_TENANT));
         }
 
-        if ( !params.containsKey(Engine.PARAM_ACT) ){
-            if( request.getMethod().equals("GET") )
-                params.put(Engine.PARAM_ACT, "cc");
-            else
-                params.put(Engine.PARAM_ACT, "sso");
+        if( params.get("engine").equals("lti") ) {
+            if ( !params.containsKey(Engine.PARAM_ACT) ) {
+                if( request.getMethod().equals("GET") )
+                    params.put(Engine.PARAM_ACT, "cc");
+                else
+                    params.put(Engine.PARAM_ACT, "sso");
+            }
         }
 
         Map<String, Object> vendor = (Map<String, Object>)config.get("vendor");
@@ -42,9 +44,9 @@ public class SimpleEngineFactory implements EngineFactory {
         log.debug(vendor_code);
 
         if( vendor_code.equals(ENGINE_TEST) ){
-            engine = new TestEngine(params, config);
+            engine = new TestEngine(params, config, endpoint);
         } else if( vendor_code.equals(ENGINE_BIGBLUEBUTTON) ){
-            engine = new BigBlueButtonEngine(params, config);
+            engine = new BigBlueButtonEngine(params, config, endpoint);
         } else {
             throw new Exception(vendor_code + " was not identified as a vendor code for an Engine");
         }

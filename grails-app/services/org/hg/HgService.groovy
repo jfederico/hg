@@ -6,28 +6,39 @@ import org.hg.domain.Tenant
 import org.hg.domain.Key
 
 class HgService {
+    def endpoint
 
     public static String CODE_ERROR = "error"
     public static String CODE_SUCCESS = "success"
-    
+
     private List<Object> config
-    
+
     public HgService(){
         Map<String, Object> tTest
-        tTest = new HashMap<String, Object>()
+        tTest = new LinkedHashMap<String, Object>()
         tTest.put("id", "0")
         tTest.put("name", "test")
         List<Object> aliases = new ArrayList<Object>()
         aliases.add("t1")
         aliases.add("t2")
         tTest.put("aliases", aliases )
-        Map<String, Object> vendor = new HashMap<String, Object>()
+        Map<String, Object> vendor = new LinkedHashMap<String, Object>()
         vendor.put("code", "hg_test")
         vendor.put("name", "HG Test")
         vendor.put("description", "Default LTI Gateway for processing test requests")
         vendor.put("url", "http://www.123it.ca/hg")
         vendor.put("contact", "admin@123it.ca")
         tTest.put("vendor", vendor)
+        Map<String, Object> lti = new LinkedHashMap<String, Object>()
+        lti.put("key", "test")
+        lti.put("secret", "testtest")
+        tTest.put("lti", lti)
+        Map<String, Object> engine = new LinkedHashMap<String, Object>()
+        engine.put("key", "test")
+        engine.put("secret", "test")
+        engine.put("endpoint", "test")
+        engine.put("profiles", new ArrayList<Object>())
+        tTest.put("engine", engine)
 
         config = new ArrayList<Object>()
         config.add(tTest)

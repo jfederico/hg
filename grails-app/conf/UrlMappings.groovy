@@ -46,6 +46,7 @@ class UrlMappings {
 	static mappings = {
 
 		"/"{
+            application = grails.util.Metadata.current.'app.name'
             controller = 'lti'
             action = 'index'
             tenant = '0'
@@ -54,6 +55,7 @@ class UrlMappings {
 		}
         
         "/$tenant?/"{
+            application = grails.util.Metadata.current.'app.name'
             controller = 'lti'
             action = 'index'
             engine = 'lti'
@@ -61,6 +63,7 @@ class UrlMappings {
         }
 
         "/$tenant?/$engine?/"{
+            application = grails.util.Metadata.current.'app.name'
             controller = 'lti'
             action = 'index'
             version = 'v1p0'
@@ -70,6 +73,7 @@ class UrlMappings {
         }
 
         "/$tenant?/$engine?/$version?"{
+            application = grails.util.Metadata.current.'app.name'
             controller = 'lti'
             action = 'index'
             constraints {

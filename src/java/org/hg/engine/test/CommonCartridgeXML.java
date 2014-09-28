@@ -3,9 +3,9 @@ package org.hg.engine.test;
 import java.util.Map;
 import java.util.HashMap;
 
-import org.hg.engine.CompletionContent;
+import org.hg.engine.CompletionResponse;
 
-public class CommonCartridgeXML implements CompletionContent {
+public class CommonCartridgeXML implements CompletionResponse {
     protected Map<String, String> definition;
 
     public CommonCartridgeXML(Map<String, String> definition){
@@ -13,12 +13,12 @@ public class CommonCartridgeXML implements CompletionContent {
     }
 
     public Map<String, String> get() {
-        Map<String, String> completionContent = new HashMap<String, String>();
+        Map<String, String> completionResponse = new HashMap<String, String>();
 
-        completionContent.put("type", "xml");
-        completionContent.put("content", getCommonCartridgeXML());
+        completionResponse.put("type", "xml");
+        completionResponse.put("content", getCommonCartridgeXML());
 
-        return completionContent;
+        return completionResponse;
     }
     
     private String getCommonCartridgeXML(){

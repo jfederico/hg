@@ -14,6 +14,6 @@ public interface EngineFactory {
     public static String ENGINE_CW = "cw";
     public static String ENGINE_CHALKANDWIRE = "chalk_and_wire";
 
-    Engine createEngine(HttpServletRequest request, Map<String, String> params, Map<String, Object> config) throws Exception;
+    Engine createEngine(HttpServletRequest request, Map<String, String> params, Map<String, Object> config, String endpoint) throws Exception;
 
 }

@@ -20,23 +20,23 @@ class LtiController {
         try {
             def config = hgService.getConfig(params.get("tenant"))
             log.debug config
-            Engine engine = engineFactory.createEngine(request, params, config)
+            Engine engine = engineFactory.createEngine(request, params, config, hgService.endpoint)
 
-            def completionContent = engine.getCompletionContent()
-            if( completionContent == null ){
+            def completionResponse = engine.getCompletionResponse()
+            if( completionResponse == null ){
                 log.debug "ERROR: "
-                render(text: hgService.xmlResponse("completionContent is null"), contentType: "text/xml", encoding: "UTF-8")
+                render(text: hgService.xmlResponse("completionResponse is null"), contentType: "text/xml", encoding: "UTF-8")
             } else {
-                if( completionContent.get("type") == "url" ) {
-                    log.info "Redirecting to " + completionContent
-                    render(text: hgService.xmlResponse("Redirecting to " + completionContent, hgService.CODE_SUCCESS), contentType: "text/xml", encoding: "UTF-8")
-                    //redirect(url: completionContent)
-                } else if( completionContent.get("type") == "xml" ) {
-                    log.info "Rendering XML\n" + completionContent.get("content")
-                    render(text: completionContent.get("content"), contentType: "text/xml", encoding: "UTF-8")
+                if( completionResponse.get("type") == "url" ) {
+                    log.info "Redirecting to " + completionResponse
+                    render(text: hgService.xmlResponse("Redirecting to " + completionResponse, hgService.CODE_SUCCESS), contentType: "text/xml", encoding: "UTF-8")
+                    //redirect(url: completionResponse)
+                } else if( completionResponse.get("type") == "xml" ) {
+                    log.info "Rendering XML\n" + completionResponse.get("content")
+                    render(text: completionResponse.get("content"), contentType: "text/xml", encoding: "UTF-8")
                 } else {
                     log.debug "ERROR: "
-                    render(text: hgService.xmlResponse("completionContent not identified. Only url and xml are registered"), contentType: "text/xml", encoding: "UTF-8")
+                    render(text: hgService.xmlResponse("completionResponse not identified. Only url and xml are registered"), contentType: "text/xml", encoding: "UTF-8")
                 }
             }
         } catch (Exception e){
@@ -54,21 +54,21 @@ class LtiController {
             log.debug config
             Engine engine = engineFactory.createEngine(request, params, config)
 
-            def completionContent = engine.getCompletionContent()
-            if( completionContent == null ){
+            def completionResponse = engine.getCompletionResponse()
+            if( completionResponse == null ){
                 log.debug "ERROR: "
-                render(text: hgService.xmlResponse("completionContent is null"), contentType: "text/xml", encoding: "UTF-8")
+                render(text: hgService.xmlResponse("completionResponse is null"), contentType: "text/xml", encoding: "UTF-8")
             } else {
-                if( completionContent.get("type") == "url" ) {
-                    log.info "Redirecting to " + completionContent
-                    render(text: hgService.xmlResponse("Redirecting to " + completionContent, hgService.CODE_SUCCESS), contentType: "text/xml", encoding: "UTF-8")
-                    //redirect(url: completionContent)
-                } else if( completionContent.get("type") == "xml" ) {
-                    log.info "Rendering XML\n" + completionContent.get("content")
-                    render(text: completionContent.get("content"), contentType: "text/xml", encoding: "UTF-8")
+                if( completionResponse.get("type") == "url" ) {
+                    log.info "Redirecting to " + completionResponse
+                    render(text: hgService.xmlResponse("Redirecting to " + completionResponse, hgService.CODE_SUCCESS), contentType: "text/xml", encoding: "UTF-8")
+                    //redirect(url: completionResponse)
+                } else if( completionResponse.get("type") == "xml" ) {
+                    log.info "Rendering XML\n" + completionResponse.get("content")
+                    render(text: completionResponse.get("content"), contentType: "text/xml", encoding: "UTF-8")
                 } else {
                     log.debug "ERROR: "
-                    render(text: hgService.xmlResponse("completionContent not identified. Only url and xml are registered"), contentType: "text/xml", encoding: "UTF-8")
+                    render(text: hgService.xmlResponse("completionResponse not identified. Only url and xml are registered"), contentType: "text/xml", encoding: "UTF-8")
                 }
             }
         } catch (Exception e){
