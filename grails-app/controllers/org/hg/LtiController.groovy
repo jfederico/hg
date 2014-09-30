@@ -24,6 +24,9 @@ class LtiController {
         try {
             def config = hgService.getConfig(params.get("tenant"))
             log.debug config
+            def config_test = hgService.getConfigTest(params.get("tenant"))
+            log.debug config_test.toString()
+
             Engine engine = engineFactory.createEngine(request, params, config, hgService.endpoint)
 
             def completionResponse = engine.getCompletionResponse()

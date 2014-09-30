@@ -5,8 +5,12 @@ import org.hg.domain.Type
 import org.hg.domain.Tenant
 import org.hg.domain.Key
 
+import org.json.JSONArray
+import org.json.JSONObject
+
 class HgService {
     def endpoint
+    def config_home
 
     public static String CODE_ERROR = "error"
     public static String CODE_SUCCESS = "success"
@@ -73,6 +77,8 @@ class HgService {
         engine.put("secret", "8cd8ef52e8e101574e400365b55e11a6")
         engine.put("endpoint", "http://test-install.blindsidenetworks.com/bigbluebutton/")
         engine.put("profiles", new ArrayList<Object>())
+        Map<String, Object> moodle = new LinkedHashMap<String, Object>()
+        engine.put("moodle", moodle)
         tBN.put("engine", engine)
         return tBN
     }
@@ -97,11 +103,31 @@ class HgService {
 
     def getConfig(String tenant) {
         for( Map<String, Object> cfg : config){
-            log.debug cfg
             if( tenant == cfg.get("id") || tenant == cfg.get("name") || lookupAliases(tenant, cfg.get("aliases")) )
                 return cfg
         }
         return null
+    }
+
+    def getConfigTest(String tenant) {
+        log.debug "getConfigTest"
+        String fileConfig = new File(config_home + "/config.json").text
+        JSONObject jsonConfig = new JSONObject(fileConfig)
+        JSONArray jsonTenants = jsonConfig.getJSONArray("tenants")
+        for (int i = 0; i < jsonTenants.length(); i++) {
+            JSONObject jsonTenant = jsonTenants.getJSONObject(i);
+            if( tenant == jsonTenant.getString("id") || tenant == jsonTenant.getString("name") || jsonLookupAliases(tenant, jsonTenant.getJSONArray("aliases")) )
+                return jsonTenant
+        }
+    }
+
+    def jsonLookupAliases(String tenant, JSONArray jsonAliases){
+        for (int i = 0; i < jsonAliases.length(); i++) {
+            JSONObject jsonAlias = jsonAliases.getJSONObject(i);
+            if( tenant == jsonAlias.getString("alias") )
+                return true
+        }
+        return false
     }
 
     def lookupAliases(String tenant, List<Object> aliases){
