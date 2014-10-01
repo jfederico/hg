@@ -22,10 +22,12 @@ class LtiController {
         hgService.logParameters(params)
         
         try {
-            def config = hgService.getConfig(params.get("tenant"))
+            //def config = hgService.getConfig(params.get("tenant"))
+            //log.debug config
+            def json_config = hgService.getConfigTest(params.get("tenant"))
+            log.debug json_config.toString()
+            def config = hgService.jsonToMap(json_config)
             log.debug config
-            def config_test = hgService.getConfigTest(params.get("tenant"))
-            log.debug config_test.toString()
 
             Engine engine = engineFactory.createEngine(request, params, config, hgService.endpoint)
 
@@ -36,8 +38,8 @@ class LtiController {
             } else {
                 if( completionResponse.get("type") == "url" ) {
                     log.info "Redirecting to " + completionResponse
-                    //render(text: hgService.xmlResponse("Redirecting to " + completionResponse, hgService.CODE_SUCCESS), contentType: "text/xml", encoding: "UTF-8")
-                    redirect(url: completionResponse.get("content"))
+                    render(text: hgService.xmlResponse("Redirecting to " + completionResponse, hgService.CODE_SUCCESS), contentType: "text/xml", encoding: "UTF-8")
+                    //redirect(url: completionResponse.get("content"))
                 } else if( completionResponse.get("type") == "xml" ) {
                     log.info "Rendering XML\n" + completionResponse.get("content")
                     render(text: completionResponse.get("content"), contentType: "text/xml", encoding: "UTF-8")

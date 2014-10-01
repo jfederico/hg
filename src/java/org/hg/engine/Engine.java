@@ -1,6 +1,8 @@
 package org.hg.engine;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -66,7 +68,37 @@ public abstract class Engine {
                     throw new Exception("OAuth signature is NOT valid");
                 else
                     log.debug("OAuth signature is valid");
+
+
+                List<Map<String, Object>> profiles = (List<Map<String, Object>>)lti_cfg.get("profiles");
+                Map<String, Object> profile = null;
+                for( Map<String, Object> _profile : profiles ){
+                    log.debug(_profile.get("name"));
+                    
+                    Class cls;
+                    cls = this.tp.getClass();
+                    log.debug(cls);
+                    //log.debug(cls.TOOL_CONSUMER_INFO_PRODUCT_FAMILY_CODE);
+                    Class clsSuper = cls.getSuperclass();
+                    org.lti.impl.LTIv1p0 xx = new org.lti.impl.LTIv1p0ToolProvider();
+                    log.debug(xx.VERSION);
+                    org.lti.api.LTIToolProvider yy = new org.lti.impl.LTIv1p0ToolProvider();
+                    log.debug(yy.VERSION);
+
+                    //log.debug(clsSuper.TOOL_CONSUMER_INFO_PRODUCT_FAMILY_CODE);
+                    
+                    /*
+                    if( this.tp.TOOL_CONSUMER_INFO_PRODUCT_FAMILY_CODE.equals(_profile.get("name")) ){
+                        profile = _profile;
+                        break;
+                    }
+                    */
+                }
+                if( profile == null )
+                    profile = new HashMap<String, Object>();
                 
+                //JSONArray json_override_parameters = new JSONArray(profile.get("overrides"));
+                //log.debug(json_override_parameters);
                 /*
                 this.tp.overrideParameters(getJSONOverride());
                 if( !this.tp.hasRequiredParameters(getJSONRequiredParameters()) )

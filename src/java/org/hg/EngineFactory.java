@@ -5,6 +5,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.hg.engine.Engine;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public interface EngineFactory {
 
