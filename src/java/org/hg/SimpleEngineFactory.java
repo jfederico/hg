@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 import org.hg.engine.Engine;
+import org.hg.engine.IEngine;
 import org.hg.engine.bigbluebutton.BigBlueButtonEngine;
 import org.hg.engine.test.TestEngine;
 
@@ -21,9 +22,9 @@ public class SimpleEngineFactory implements EngineFactory {
         return INSTANCE;
     }
 
-    public Engine createEngine(HttpServletRequest request, Map<String, String> params, Map<String, Object> config, String endpoint)
+    public IEngine createEngine(HttpServletRequest request, Map<String, String> params, Map<String, Object> config, String endpoint)
             throws Exception {
-        Engine engine = null;
+        IEngine engine = null;
 
         log.debug("createEngine()");
 
@@ -43,7 +44,6 @@ public class SimpleEngineFactory implements EngineFactory {
         @SuppressWarnings("unchecked")
         Map<String, Object> vendor = (Map<String, Object>)config.get("vendor");
         String vendor_code = (String)vendor.get("code");
-        log.debug(vendor_code);
 
         if( vendor_code.equals(ENGINE_TEST) ){
             engine = new TestEngine(request, params, config, endpoint);
@@ -54,6 +54,24 @@ public class SimpleEngineFactory implements EngineFactory {
         }
 
         return engine;
+    }
+
+    public Object getEngineClass(Map<String, Object> config) throws Exception {
+        Object engineClass = null;
+
+        @SuppressWarnings("unchecked")
+        Map<String, Object> vendor = (Map<String, Object>)config.get("vendor");
+        String vendor_code = (String)vendor.get("code");
+
+        if(vendor_code.equals(ENGINE_TEST) ){
+            engineClass = TestEngine.class;
+        } else if( vendor_code.equals(ENGINE_BIGBLUEBUTTON) ){
+            engineClass = BigBlueButtonEngine.class;
+        } else {
+            throw new Exception(vendor_code + " was not identified as a vendor code for an Engine");
+        }
+
+        return engineClass;
     }
 
 }

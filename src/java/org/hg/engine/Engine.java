@@ -14,20 +14,8 @@ import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public abstract class Engine {
+public class Engine implements IEngine {
     private static final Logger log = Logger.getLogger(Engine.class);
-
-    public static String PARAM_ENDPOINT     = "endpoint";
-    public static String PARAM_APPLICATION  = "application";
-    public static String PARAM_CONTROLLER   = "controller";
-    public static String PARAM_ACTION       = "action";
-    public static String PARAM_TENANT       = "tenant";
-    public static String PARAM_ENGINE       = "engine";
-    public static String PARAM_VERSION      = "version";
-    public static String PARAM_ACT          = "act";
-    public static String PARAM_CMD          = "cmd";
-    public static String[] GRAILS_PARAMS    = new String[] { 
-        PARAM_ENDPOINT, PARAM_APPLICATION, PARAM_CONTROLLER, PARAM_ACTION, PARAM_TENANT, PARAM_ENGINE, PARAM_VERSION, PARAM_ACT, PARAM_CMD };
 
     protected Map<String, String> params;
     protected Map<String, Object> config;
@@ -75,37 +63,48 @@ public abstract class Engine {
                 for( Map<String, Object> _profile : profiles ){
                     log.debug(_profile.get("name"));
                     
+                    //Object constants = this.tp.constants; 
                     Class cls;
                     cls = this.tp.getClass();
                     log.debug(cls);
-                    //log.debug(cls.TOOL_CONSUMER_INFO_PRODUCT_FAMILY_CODE);
+                    log.debug(org.lti.impl.LTIv1p0ToolProvider.TOOL_CONSUMER_INFO_PRODUCT_FAMILY_CODE);
                     Class clsSuper = cls.getSuperclass();
-                    org.lti.impl.LTIv1p0 xx = new org.lti.impl.LTIv1p0ToolProvider();
-                    log.debug(xx.VERSION);
-                    org.lti.api.LTIToolProvider yy = new org.lti.impl.LTIv1p0ToolProvider();
-                    log.debug(yy.VERSION);
+                    log.debug(clsSuper);
+                    log.debug(org.lti.impl.LTIv1p0.TOOL_CONSUMER_INFO_PRODUCT_FAMILY_CODE);
+                    //log.debug(clsSuper.VERSION);
+                    ////log.debug(constants.TOOL_CONSUMER_INFO_PRODUCT_FAMILY_CODE);
+                    
+                    //org.lti.impl.LTIv1p0 xx = new org.lti.impl.LTIv1p0ToolProvider();
+                    //log.debug(xx.VERSION);
+                    //org.lti.api.LTIToolProvider yy = new org.lti.impl.LTIv1p0ToolProvider();
+                    //log.debug(yy.VERSION);
 
                     //log.debug(clsSuper.TOOL_CONSUMER_INFO_PRODUCT_FAMILY_CODE);
                     
-                    /*
-                    if( this.tp.TOOL_CONSUMER_INFO_PRODUCT_FAMILY_CODE.equals(_profile.get("name")) ){
+                    //def ltiConstants = engine.getToolProvider()
+                    //log.debug ltiConstants.LIS_OUTCOME_SERVICE_URL
+
+                    //LTIToolProvider ltiConstants = getToolProvider();
+                    //log.debug(ltiConstants.TOOL_CONSUMER_INFO_PRODUCT_FAMILY_CODE);
+
+                    if( this.params.get(org.lti.impl.LTIv1p0.TOOL_CONSUMER_INFO_PRODUCT_FAMILY_CODE).equals(_profile.get("name")) ){
                         profile = _profile;
+                        log.debug(profile.get("name"));
                         break;
                     }
-                    */
                 }
                 if( profile == null )
                     profile = new HashMap<String, Object>();
                 
-                //JSONArray json_override_parameters = new JSONArray(profile.get("overrides"));
-                //log.debug(json_override_parameters);
-                /*
-                this.tp.overrideParameters(getJSONOverride());
-                if( !this.tp.hasRequiredParameters(getJSONRequiredParameters()) )
-                    throw new AmbasadoroException("Missing required parameters", "OAuthError");
+                JSONArray json_override_parameters = new JSONArray((ArrayList<Object>)profile.get("overrides"));
+                log.debug(json_override_parameters.toString());
+                this.tp.overrideParameters(json_override_parameters);
+
+                JSONArray json_required_parameters = new JSONArray((ArrayList<Object>)profile.get("required"));
+                if( !this.tp.hasRequiredParameters(json_required_parameters) )
+                    throw new Exception("Missing required parameters");
                 else
                     log.debug("All required parameters are included");
-                */
                 
             } catch( Exception e) {
                 throw e;
@@ -115,10 +114,21 @@ public abstract class Engine {
 
     protected CompletionResponse completionResponse;
 
-    public abstract Map<String, String> getCompletionResponse();
-    public abstract void setCompletionResponseCommand(CompletionResponse completionResponse);
-
     public Map<String, Object> getConfig(String type) {
         return this.config;
+    }
+
+    @Override
+    public Map<String, String> getCompletionResponse() {
+        return null;
+    }
+
+    @Override
+    public void setCompletionResponseCommand(CompletionResponse completionResponse) {
+    }
+
+    @Override
+    public LTIToolProvider getToolProvider() {
+        return this.tp;
     }
 }

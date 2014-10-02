@@ -6,16 +6,19 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
+import org.hg.EngineFactory;
 import org.hg.engine.CompletionResponse;
 import org.hg.engine.Engine;
 
 public class BigBlueButtonEngine extends Engine {
     private static final Logger log = Logger.getLogger(BigBlueButtonEngine.class);
 
+    public static final String ENGINE_CODE = EngineFactory.ENGINE_BIGBLUEBUTTON;
+
     public BigBlueButtonEngine(HttpServletRequest request, Map<String, String> params, Map<String, Object> config, String endpoint)
         throws Exception {
         super(request, params, config, endpoint);
-        log.debug("instantiate TestEngine()");
+        log.debug("instantiate BigBlueButtonEngine()");
         if(this.grails_params.get(PARAM_ACT).equals("cc")){
             Map<String, String> definition = new HashMap<String, String>();
             definition.put("title", (String)config.get("title"));

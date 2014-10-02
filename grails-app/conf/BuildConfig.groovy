@@ -40,7 +40,7 @@ grails.project.dependency.resolution = {
         // Blindside Networks repositories
         mavenRepo "https://raw.github.com/blindsidenetworks/bigbluebutton-api/mvn-repo/"
         mavenRepo "https://raw.github.com/blindsidenetworks/oauth/mvn-repo/"
-        mavenRepo "https://raw.github.com/blindsidenetworks/lti/mvn-repo/"
+        //mavenRepo "https://raw.github.com/blindsidenetworks/lti/mvn-repo/"
 
     }
 
@@ -52,7 +52,7 @@ grails.project.dependency.resolution = {
         runtime "org.json:json:20131018"
         runtime "org.bigbluebutton:bigbluebutton-api:1.0.5"
         runtime "net.oauth:oauth:1.0.1"
-        runtime "org.lti:lti:1.0.11"
+        //runtime "org.lti:lti:1.0.11"
     }
 
     plugins {

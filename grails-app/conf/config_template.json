@@ -1,0 +1,173 @@
+{
+    "tenants": [
+        {
+            "id": "0",
+            "name": "bn",
+            "aliases": [
+                {
+                    "alias": "bbb"
+                },
+                {
+                    "alias": "bigbluebutton"
+                }
+            ],
+            "vendor": {
+                "code": "big_blue_button",
+                "name": "BN Test Install",
+                "description": "Default LTI Gateway for processing test requests on the BigBlueButton test-install server",
+                "url": "http://www.blindsidenetworks.com/",
+                "contact": "admin@blindsidenetworks.com"
+            },
+            "lti": {
+				"id": "0",
+                "key": "bbb",
+                "secret": "welcome",
+                "profiles": [
+                    {
+						"id": "0",
+						"name": "default",
+                        "profile": {
+                            "props": [
+                                {
+                                    "name": "emailAuthentication",
+                                    "type": "boolean",
+                                    "value": "true"
+                                },
+                                {
+                                    "name": "assessorRole",
+                                    "type": "string",
+                                    "value": "Faculty,Instructor"
+                                },
+                                {
+                                    "name": "studentRole",
+                                    "type": "string",
+                                    "value": "Student,Learner"
+                                }
+                            ],
+                            "required_params": [
+                                {
+                                    "name": "tool_consumer_info_product_family_code"
+                                },
+                                {
+                                    "name": "tool_consumer_instance_guid"
+                                },
+                                {
+                                    "name": "context_id"
+                                },
+                                {
+                                    "name": "resource_link_id"
+                                },
+                                {
+                                    "name": "user_id"
+                                },
+                                {
+                                    "name": "resource_link_title"
+                                },
+                                {
+                                    "name": "roles"
+                                },
+                                {
+                                    "name": "lis_person_contact_email_primary"
+                                }
+                            ],
+                            "custom_params": [
+                                {
+                                    "name": "toc",
+                                    "type": "text",
+                                    "default": "select"
+                                }
+                            ],
+                            "overrides": []
+                        }
+					},
+					{
+						"id": "0",
+						"name": "moodle",
+                        "profile": {
+                            "props": [
+                                {
+                                    "name": "emailAuthentication",
+                                    "type": "boolean",
+                                    "value": "false"
+                                },
+                                {
+                                    "name": "assessorRole",
+                                    "type": "string",
+                                    "value": "Faculty,Instructor"
+                                },
+                                {
+                                    "name": "studentRole",
+                                    "type": "string",
+                                    "value": "Student,Learner"
+                                },
+                                {
+                                    "name": "createUserMode",
+                                    "type": "numeric",
+                                    "value": "2"
+                                },
+                                {
+                                    "name": "assessorCode",
+                                    "type": "string",
+                                    "value": "JUC7846507S"
+                                },
+                                {
+                                    "name": "studentCode",
+                                    "type": "string",
+                                    "value": "WUC47262976"
+                                },
+                                {
+                                    "name": "assessorCodeRenew",
+                                    "type": "string",
+                                    "value": ""
+                                },
+                                {
+                                    "name": "studentCodeRenew",
+                                    "type": "string",
+                                    "value": ""
+                                },
+                                {
+                                    "name": "contextSending",
+                                    "type": "boolean",
+                                    "value": "true"
+                                }
+                            ],
+                            "requiredParams": [
+                                {
+                                    "name": "tool_consumer_info_product_family_code"
+                                },
+                                {
+                                    "name": "tool_consumer_instance_guid"
+                                },
+                                {
+                                    "name": "context_id"
+                                },
+                                {
+                                    "name": "resource_link_id"
+                                },
+                                {
+                                    "name": "user_id"
+                                },
+                                {
+                                    "name": "resource_link_title"
+                                },
+                                {
+                                    "name": "roles"
+                                },
+                                {
+                                    "name": "lis_person_sourcedid"
+                                }
+                            ],
+                            "customParams": [],
+                            "overrides": []
+                        }
+                    }
+                ]
+            },
+            "engine": {
+                "key": "",
+                "secret": "8cd8ef52e8e101574e400365b55e11a6",
+                "endpoint": "http://test-install.blindsidenetworks.com/bigbluebutton/"
+            }
+        }
+    ]
+}

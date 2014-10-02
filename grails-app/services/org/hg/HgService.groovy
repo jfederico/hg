@@ -110,7 +110,15 @@ class HgService {
         return null
     }
 
-    def getConfigTest(String tenant) {
+    def lookupAliases(String tenant, List<Object> aliases){
+        for( String alias : aliases ){
+            if( alias == tenant )
+                return true
+        }
+        return false
+    }
+
+    def getJSONConfig(String tenant) {
         log.debug "getConfigTest"
         String fileConfig = new File(config_home + "/config.json").text
         JSONObject jsonConfig = new JSONObject(fileConfig)
@@ -131,14 +139,6 @@ class HgService {
         return false
     }
 
-    def lookupAliases(String tenant, List<Object> aliases){
-        for( String alias : aliases ){
-            if( alias == tenant )
-                return true
-        }
-        return false
-    }
-    
     public Map jsonToMap(JSONObject json) throws JSONException
     {
         Map<String, Object> retMap = new HashMap<String, Object>();
