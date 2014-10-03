@@ -8,11 +8,9 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.lti.api.LTIToolProvider;
-import org.lti.api.LTIStore;
-import org.lti.impl.LTIStoreImpl;
+import org.lti.api.SimpleLTIStore;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 public class Engine implements IEngine {
     private static final Logger log = Logger.getLogger(Engine.class);
@@ -22,10 +20,7 @@ public class Engine implements IEngine {
     protected Map<String, String> grails_params;
     protected String endpoint;
 
-    protected LTIStore ltiStore;
     protected LTIToolProvider tp;
-    protected JSONObject tpMeta;
-    protected JSONObject tcMeta;
 
     public Engine(HttpServletRequest request, Map<String, String> params, Map<String, Object> config, String endpoint)
             throws Exception {
@@ -42,70 +37,14 @@ public class Engine implements IEngine {
 
         if( request.getMethod().equals("POST") ) {
             try {
-                this.tpMeta = new JSONObject();
-                this.tcMeta = new JSONObject();
-
-                ltiStore = LTIStoreImpl.getInstance();
+                String endpoint_url = (request.isSecure()? "https": "http") + "://" + this.endpoint + "/" + this.grails_params.get("application") + "/" + this.grails_params.get("tenant") + "/lti/" + this.grails_params.get("version"); 
                 
-                String _endpoint = (request.isSecure()? "https": "http") + "://" + this.endpoint + "/" + this.grails_params.get("application") + "/" + this.grails_params.get("tenant") + "/lti/" + this.grails_params.get("version"); 
-                log.debug(_endpoint);
-
-                Map<String, Object> lti_cfg = (Map<String, Object>)config.get("lti");
-                this.tp = ltiStore.createToolProvider(_endpoint, (String)lti_cfg.get("key"), (String)lti_cfg.get("secret"), params, "1.0");
-                if( !this.tp.hasValidSignature() )
-                    throw new Exception("OAuth signature is NOT valid");
-                else
-                    log.debug("OAuth signature is valid");
-
-
-                List<Map<String, Object>> profiles = (List<Map<String, Object>>)lti_cfg.get("profiles");
-                Map<String, Object> profile = null;
-                for( Map<String, Object> _profile : profiles ){
-                    log.debug(_profile.get("name"));
-                    
-                    //Object constants = this.tp.constants; 
-                    Class cls;
-                    cls = this.tp.getClass();
-                    log.debug(cls);
-                    log.debug(org.lti.impl.LTIv1p0ToolProvider.TOOL_CONSUMER_INFO_PRODUCT_FAMILY_CODE);
-                    Class clsSuper = cls.getSuperclass();
-                    log.debug(clsSuper);
-                    log.debug(org.lti.impl.LTIv1p0.TOOL_CONSUMER_INFO_PRODUCT_FAMILY_CODE);
-                    //log.debug(clsSuper.VERSION);
-                    ////log.debug(constants.TOOL_CONSUMER_INFO_PRODUCT_FAMILY_CODE);
-                    
-                    //org.lti.impl.LTIv1p0 xx = new org.lti.impl.LTIv1p0ToolProvider();
-                    //log.debug(xx.VERSION);
-                    //org.lti.api.LTIToolProvider yy = new org.lti.impl.LTIv1p0ToolProvider();
-                    //log.debug(yy.VERSION);
-
-                    //log.debug(clsSuper.TOOL_CONSUMER_INFO_PRODUCT_FAMILY_CODE);
-                    
-                    //def ltiConstants = engine.getToolProvider()
-                    //log.debug ltiConstants.LIS_OUTCOME_SERVICE_URL
-
-                    //LTIToolProvider ltiConstants = getToolProvider();
-                    //log.debug(ltiConstants.TOOL_CONSUMER_INFO_PRODUCT_FAMILY_CODE);
-
-                    if( this.params.get(org.lti.impl.LTIv1p0.TOOL_CONSUMER_INFO_PRODUCT_FAMILY_CODE).equals(_profile.get("name")) ){
-                        profile = _profile;
-                        log.debug(profile.get("name"));
-                        break;
-                    }
-                }
-                if( profile == null )
-                    profile = new HashMap<String, Object>();
+                this.tp = SimpleLTIStore.createToolProvider(this.params, this.config, endpoint_url);
                 
-                JSONArray json_override_parameters = new JSONArray((ArrayList<Object>)profile.get("overrides"));
-                log.debug(json_override_parameters.toString());
-                this.tp.overrideParameters(json_override_parameters);
+                Map<String, Object> profile = getProfile();
+                overrideParameters(profile);
+                validateRequiredParameters(profile);
 
-                JSONArray json_required_parameters = new JSONArray((ArrayList<Object>)profile.get("required"));
-                if( !this.tp.hasRequiredParameters(json_required_parameters) )
-                    throw new Exception("Missing required parameters");
-                else
-                    log.debug("All required parameters are included");
-                
             } catch( Exception e) {
                 throw e;
             }
@@ -130,5 +69,41 @@ public class Engine implements IEngine {
     @Override
     public LTIToolProvider getToolProvider() {
         return this.tp;
+    }
+    
+    private Map<String, Object> getProfile(){
+        Map<String, Object> return_profile = new HashMap<String, Object>();
+
+        @SuppressWarnings("unchecked")
+        Map<String, Object> lti_cfg = (Map<String, Object>)config.get("lti");
+        @SuppressWarnings("unchecked")
+        List<Map<String, Object>> profiles = (List<Map<String, Object>>)lti_cfg.get("profiles");
+        for( Map<String, Object> profile : profiles ){
+            if( tp.isToolConsumerInfoProductFamilyCode((String)profile.get("name")) ) {
+                return_profile = profile;
+                break;
+            }
+        }
+
+        log.debug(return_profile);
+        return return_profile;
+    }
+
+    private void overrideParameters(Map<String, Object> profile)
+            throws Exception {
+        @SuppressWarnings("unchecked")
+        JSONArray json_override_parameters = new JSONArray((ArrayList<Object>)profile.get("overrides"));
+        log.debug(json_override_parameters.toString());
+        this.tp.overrideParameters(json_override_parameters);
+    }
+
+    private void validateRequiredParameters(Map<String, Object> profile)
+        throws Exception {
+        @SuppressWarnings("unchecked")
+        JSONArray json_required_parameters = new JSONArray((ArrayList<Object>)profile.get("required"));
+        if( !this.tp.hasRequiredParameters(json_required_parameters) )
+            throw new Exception("Missing required parameters");
+        else
+            log.debug("All required parameters are included");
     }
 }

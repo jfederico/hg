@@ -45,6 +45,8 @@ public class SimpleEngineFactory implements EngineFactory {
         Map<String, Object> vendor = (Map<String, Object>)config.get("vendor");
         String vendor_code = (String)vendor.get("code");
 
+        log.debug(vendor_code);
+
         if( vendor_code.equals(ENGINE_TEST) ){
             engine = new TestEngine(request, params, config, endpoint);
         } else if( vendor_code.equals(ENGINE_BIGBLUEBUTTON) ){

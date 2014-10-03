@@ -23,9 +23,7 @@ class LtiController {
 
         try {
             def json_config = hgService.getJSONConfig(params.get("tenant"))
-            log.debug json_config.toString()
             def config = hgService.jsonToMap(json_config)
-            log.debug config
 
             IEngine engine = engineFactory.createEngine(request, params, config, hgService.endpoint)
             Object engineClass = engineFactory.getEngineClass(config)
