@@ -26,11 +26,10 @@ class LtiController {
             def config = hgService.jsonToMap(json_config)
 
             IEngine engine = engineFactory.createEngine(request, params, config, hgService.endpoint)
-            Object engineClass = engineFactory.getEngineClass(config)
-            log.debug engineClass.ENGINE_CODE
-            
-            def ltiConstants = engine.getToolProvider()
-            log.debug ltiConstants.TOOL_CONSUMER_INFO_PRODUCT_FAMILY_CODE
+            //Object engineClass = engineFactory.getEngineClass(config)
+            //log.debug engineClass.ENGINE_CODE
+            //def ltiConstants = engine.getToolProvider()
+            //log.debug ltiConstants.TOOL_CONSUMER_INFO_PRODUCT_FAMILY_CODE
 
             def completionResponse = engine.getCompletionResponse()
             if( completionResponse == null ){
@@ -39,8 +38,8 @@ class LtiController {
             } else {
                 if( completionResponse.get("type") == "url" ) {
                     log.info "Redirecting to " + completionResponse
-                    render(text: hgService.xmlResponse("Redirecting to " + completionResponse, hgService.CODE_SUCCESS), contentType: "text/xml", encoding: "UTF-8")
-                    //redirect(url: completionResponse.get("content"))
+                    //render(text: hgService.xmlResponse("Redirecting to " + completionResponse, hgService.CODE_SUCCESS), contentType: "text/xml", encoding: "UTF-8")
+                    redirect(url: completionResponse.get("content"))
                 } else if( completionResponse.get("type") == "xml" ) {
                     log.info "Rendering XML\n" + completionResponse.get("content")
                     render(text: completionResponse.get("content"), contentType: "text/xml", encoding: "UTF-8")

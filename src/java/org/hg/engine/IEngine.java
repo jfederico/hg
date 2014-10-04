@@ -18,7 +18,7 @@ public interface IEngine {
     public static String[] GRAILS_PARAMS    = new String[] { 
         PARAM_ENDPOINT, PARAM_APPLICATION, PARAM_CONTROLLER, PARAM_ACTION, PARAM_TENANT, PARAM_ENGINE, PARAM_VERSION, PARAM_ACT, PARAM_CMD };
 
-    public abstract Map<String, String> getCompletionResponse();
+    public abstract Map<String, String> getCompletionResponse() throws Exception;
     public abstract void setCompletionResponseCommand(CompletionResponse completionResponse);
     public abstract LTIToolProvider getToolProvider();
 

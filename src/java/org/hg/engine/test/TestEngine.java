@@ -36,14 +36,15 @@ public class TestEngine extends Engine {
             definition.put( "vendor_description", (String)vendor.get("description") );
             definition.put( "vendor_url", (String)vendor.get("url") );
             definition.put( "vendor_contact_email", (String)vendor.get("contact") );
-            setCompletionResponseCommand(new CommonCartridgeXML(definition));
+            setCompletionResponseCommand( new CommonCartridgeXML(definition) );
         } else {
-            setCompletionResponseCommand(new SingleSignOnURL());
+            setCompletionResponseCommand( new SingleSignOnURL() );
         }
     }
 
     @Override
-    public Map<String, String> getCompletionResponse() {
+    public Map<String, String> getCompletionResponse()
+        throws Exception {
         return completionResponse.get();
     }
 

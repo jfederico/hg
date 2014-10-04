@@ -57,7 +57,8 @@ public class Engine implements IEngine {
         return this.config;
     }
 
-    public Map<String, String> getCompletionResponse() {
+    public Map<String, String> getCompletionResponse() 
+        throws Exception {
         return null;
     }
 

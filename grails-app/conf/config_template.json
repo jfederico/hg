@@ -1,7 +1,7 @@
 {
     "tenants": [
         {
-            "id": "0",
+            "id": "1",
             "name": "bn",
             "aliases": [
                 {
@@ -11,10 +11,12 @@
                     "alias": "bigbluebutton"
                 }
             ],
+            "title": "Blindeside Networks",
+            "description": "Blindside Networks started BigBlueButton in 2009. It provides commercial support and premium hosting for the BigBlueButton community.",
             "vendor": {
                 "code": "big_blue_button",
                 "name": "BN Test Install",
-                "description": "Default LTI Gateway for processing test requests on the BigBlueButton test-install server",
+                "description": "test-install is a BigBlueButton server freely provided by Blindside Networks for testing purposes only.",
                 "url": "http://www.blindsidenetworks.com/",
                 "contact": "admin@blindsidenetworks.com"
             },
