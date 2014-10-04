@@ -57,16 +57,13 @@ public class Engine implements IEngine {
         return this.config;
     }
 
-    @Override
     public Map<String, String> getCompletionResponse() {
         return null;
     }
 
-    @Override
     public void setCompletionResponseCommand(CompletionResponse completionResponse) {
     }
 
-    @Override
     public LTIToolProvider getToolProvider() {
         return this.tp;
     }
