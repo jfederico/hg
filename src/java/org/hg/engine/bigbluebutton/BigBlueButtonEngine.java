@@ -79,7 +79,7 @@ public class BigBlueButtonEngine extends Engine {
         meetingParams.put("attendeePW", DigestUtils.shaHex("ap" + params.get("resource_link_id") + params.get("oauth_consumer_key")));
         meetingParams.put("moderatorPW", DigestUtils.shaHex("mp" + params.get("resource_link_id") + params.get("oauth_consumer_key")));
         try {
-            meetingParams.put("welcome", URLEncoder.encode(params.containsKey("extra_welcome")? params.get("extra_welcome"): "Welcome to <b>" + params.get("name") + "</b>", "UTF-8") );
+            meetingParams.put("welcome", URLEncoder.encode(params.containsKey("extra_welcome")? params.get("extra_welcome"): "Welcome to <b>" + params.get("resource_link_title") + "</b>", "UTF-8") );
         } catch (UnsupportedEncodingException e) {
             log.debug("Error encoding meetingName: " + e.getMessage());
             meetingParams.put("welcome", "");
