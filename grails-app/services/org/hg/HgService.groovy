@@ -11,7 +11,6 @@ import org.json.JSONException
 
 class HgService {
     def endpoint
-    def config_home
 
     public static String CODE_ERROR = "error"
     public static String CODE_SUCCESS = "success"
@@ -119,10 +118,28 @@ class HgService {
     }
 
     def getJSONConfig(String tenant) {
+        def config_home = grails.util.BuildSettingsHolder.settings.baseDir.toString() + "/grails-app/conf"
         log.debug "getConfigTest"
-        String fileConfig = new File(config_home + "/config.json").text
-        JSONObject jsonConfig = new JSONObject(fileConfig)
-        JSONArray jsonTenants = jsonConfig.getJSONArray("tenants")
+        // Initialise jsonTenants
+        JSONArray jsonTenants = new JSONArray()
+        // Add the tenant "test" to the jsonTenants array
+        jsonTenants.put( new JSONObject(getTenantTest()) )
+        //log.debug jsonTenants
+
+        // Load the configuration file (if exists)
+        try {
+            String fileConfig = new File(config_home + "/config.json").text
+            JSONObject jsonConfig = new JSONObject(fileConfig)
+            // Add existing tenant profiles to jsonTenants array
+            JSONArray tenants = jsonConfig.getJSONArray("tenants")
+            for (int i = 0; i < tenants.length(); i++) {
+                jsonTenants.put(tenants.get(i));
+            }
+        } catch ( Exception e ) {
+            // There is nothing to do, the jsonArray will contain only the tenant "test"
+        }
+        //log.debug jsonTenants
+
         for (int i = 0; i < jsonTenants.length(); i++) {
             JSONObject jsonTenant = jsonTenants.getJSONObject(i);
             if( tenant == jsonTenant.getString("id") || tenant == jsonTenant.getString("name") || jsonLookupAliases(tenant, jsonTenant.getJSONArray("aliases")) )

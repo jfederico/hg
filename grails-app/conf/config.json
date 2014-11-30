@@ -1,0 +1,138 @@
+{
+    "tenants": [
+        {
+            "id": "1",
+            "name": "bn",
+            "aliases": [
+                {
+                    "alias": "bbb"
+                },
+                {
+                    "alias": "bigbluebutton"
+                }
+            ],
+            "title": "Blindeside Networks",
+            "description": "Blindside Networks started BigBlueButton in 2009. It provides commercial support and premium hosting for the BigBlueButton community.",
+            "vendor": {
+                "code": "big_blue_button",
+                "name": "BN Test Install",
+                "description": "test-install is a BigBlueButton server freely provided by Blindside Networks for testing purposes only.",
+                "url": "http://www.blindsidenetworks.com/",
+                "contact": "admin@blindsidenetworks.com"
+            },
+            "lti": {
+                "id": "0",
+                "key": "bbb",
+                "secret": "welcome",
+                "profiles": [
+                    {
+                        "id": "0",
+                        "name": "default",
+                        "profile": {
+                            "props": [
+                                {
+                                    "name": "moderatorRole",
+                                    "type": "string",
+                                    "value": "Faculty,Instructor"
+                                },
+                                {
+                                    "name": "viewerRole",
+                                    "type": "string",
+                                    "value": "Student,Learner"
+                                }
+                            ],
+                            "required_params": [
+                                {
+                                    "name": "tool_consumer_info_product_family_code"
+                                },
+                                {
+                                    "name": "tool_consumer_instance_guid"
+                                },
+                                {
+                                    "name": "context_id"
+                                },
+                                {
+                                    "name": "resource_link_id"
+                                },
+                                {
+                                    "name": "user_id"
+                                },
+                                {
+                                    "name": "resource_link_title"
+                                },
+                                {
+                                    "name": "roles"
+                                }
+                            ],
+                            "custom_params": [
+                                {
+                                    "name": "record",
+                                    "type": "boolean",
+                                    "default": "false"
+                                }
+                            ],
+                            "overrides": []
+                        }
+					},
+					{
+						"id": "1",
+						"name": "moodle",
+                        "profile": {
+                            "props": [
+                                {
+                                    "name": "moderatorRole",
+                                    "type": "string",
+                                    "value": "Faculty,Instructor"
+                                },
+                                {
+                                    "name": "viewerRole",
+                                    "type": "string",
+                                    "value": "Student,Learner"
+                                }
+                            ],
+                            "requiredParams": [
+                                {
+                                    "name": "tool_consumer_info_product_family_code"
+                                },
+                                {
+                                    "name": "tool_consumer_instance_guid"
+                                },
+                                {
+                                    "name": "context_id"
+                                },
+                                {
+                                    "name": "resource_link_id"
+                                },
+                                {
+                                    "name": "user_id"
+                                },
+                                {
+                                    "name": "resource_link_title"
+                                },
+                                {
+                                    "name": "roles"
+                                },
+                                {
+                                    "name": "lis_person_sourcedid"
+                                }
+                            ],
+                            "custom_params": [
+                                {
+                                    "name": "record",
+                                    "type": "boolean",
+                                    "default": "false"
+                                }
+                            ],
+                            "overrides": []
+                        }
+                    }
+                ]
+            },
+            "engine": {
+                "key": "",
+                "secret": "8cd8ef52e8e101574e400365b55e11a6",
+                "endpoint": "http://test-install.blindsidenetworks.com/bigbluebutton/"
+            }
+        }
+    ]
+}
