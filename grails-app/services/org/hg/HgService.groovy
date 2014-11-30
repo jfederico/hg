@@ -51,7 +51,7 @@ class HgService {
         tTest.put("engine", engine)
         return tTest
     }
-    
+
     def getTenantBN(){
         Map<String, Object> tBN
         tBN = new LinkedHashMap<String, Object>()
@@ -83,7 +83,6 @@ class HgService {
         return tBN
     }
 
-    
     def logParameters(params) {
         log.info "----------------------------------"
         for( param in params ) log.info "${param.getKey()}=${param.getValue()}"
