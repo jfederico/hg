@@ -45,6 +45,9 @@ class LtiController {
                 } else if( completionResponse.get("type") == "xml" ) {
                     log.info "Rendering XML\n" + completionResponse.get("content")
                     render(text: completionResponse.get("content"), contentType: "text/xml", encoding: "UTF-8")
+                } else if( completionResponse.get("type") == "html" ) {
+                    log.info "Rendering HTML [" + completionResponse.get("content") + "]"
+                    render(view: completionResponse.get("content"), model: ['data': completionResponse.get("data")])
                 } else {
                     log.debug "ERROR: "
                     render(text: hgService.xmlResponse("completionResponse not identified. Only url and xml are registered"), contentType: "text/xml", encoding: "UTF-8")
@@ -52,7 +55,11 @@ class LtiController {
             }
         } catch (Exception e){
             log.debug "ERROR: " + e
-            render(text: hgService.xmlResponse(e.getMessage()), contentType: "text/xml", encoding: "UTF-8")
+            //render(text: hgService.xmlResponse(e.getMessage()), contentType: "text/xml", encoding: "UTF-8")
+            render(view: "error", model: ['resultMessageKey': 'GeneralError', 'resultMessage': e.message])
+            flash.error = e.message
+            return
+
         }
     }
 }

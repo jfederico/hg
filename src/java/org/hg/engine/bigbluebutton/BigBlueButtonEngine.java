@@ -23,6 +23,17 @@ public class BigBlueButtonEngine extends Engine {
     public static final String ENGINE_URL = "http://www.bigbluebutton.org/";
     public static final String ENGINE_CONTACT_EMAIL = "bigbluebutton-users@googlegroups.com";
 
+    public static final String PARAM_CUSTOM_RECORD = "custom_record";
+    public static final String PARAM_ACTION = "a";
+    public static final String PARAM_COMMAND = "c";
+
+    public static final String PARAM_BBB_SSO = "sso";
+    public static final String PARAM_BBB_UI = "ui";
+    public static final String PARAM_BBB_DO = "do";
+    public static final String PARAM_BBB_DO_RECORDING_PUBLISH = "publish";
+    public static final String PARAM_BBB_DO_RECORDING_UNPUBLISH = "unpublish";
+    public static final String PARAM_BBB_DO_RECORDING_DELETE = "delete";
+
     public BigBlueButtonEngine(HttpServletRequest request, Map<String, String> params, Map<String, Object> config, String endpoint)
         throws Exception {
         super(request, params, config, endpoint);
@@ -55,7 +66,17 @@ public class BigBlueButtonEngine extends Engine {
             @SuppressWarnings("unchecked")
             Map<String, String> engine = (Map<String, String>)config.get("engine");
 
-            setCompletionResponseCommand( new SingleSignOnURL(engine, getMeetingParams(), getSessionParams()) );
+            if( params.containsKey(PARAM_CUSTOM_RECORD) && Boolean.parseBoolean(params.get(PARAM_CUSTOM_RECORD)) ){
+                if( params.containsKey(PARAM_ACTION) && params.get(PARAM_ACTION).equals(PARAM_BBB_SSO) ){
+                    setCompletionResponseCommand( new SingleSignOnURL(engine, getMeetingParams(), getSessionParams()) );
+                } else if( params.containsKey(PARAM_ACTION) && params.get(PARAM_ACTION).equals(PARAM_BBB_DO) ) {
+                    // Executing commands on recordings
+                } else {
+                    setCompletionResponseCommand( new UI() );
+                }
+            } else {
+                setCompletionResponseCommand( new SingleSignOnURL(engine, getMeetingParams(), getSessionParams()) );
+            }
         }
     }
 
@@ -102,7 +123,7 @@ public class BigBlueButtonEngine extends Engine {
             }
         }
         if(params.containsKey("launch_presentation_return_url"))
-            meetingParams.put("logoutURL", params.get("launch_presentation_return_url"));
+            meetingParams.put("logoutURL", getValidatedLogoutURL(params.get("launch_presentation_return_url")));
 
         return meetingParams;
     }

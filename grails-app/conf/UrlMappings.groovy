@@ -6,7 +6,7 @@ class UrlMappings {
      * 
      * query_string = ?a=xxx&c=yyy (a=action, c=command)
      * 
-     * engine = lti :. a = [ cc | sso ]
+     * engine = lti :. a = [ cc | sso | ui ]
      * engine = reg :. a = [  ]
      * engine = res :. a = [ xml | json | rss | png | ico ]
      * engine = api :. a = [ outcomes | ]
