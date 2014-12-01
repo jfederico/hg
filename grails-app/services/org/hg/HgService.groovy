@@ -29,8 +29,12 @@ class HgService {
         tTest.put("id", "0")
         tTest.put("name", "test")
         List<Object> aliases = new ArrayList<Object>()
-        aliases.add("t1")
-        aliases.add("t2")
+        Map<String, String> alias1 = new HashMap<String,String>()
+        alias1.put("alias", "t1")
+        aliases.add(alias1)
+        Map<String, String> alias2 = new HashMap<String,String>()
+        alias2.put("alias", "t2")
+        aliases.add(alias2)
         tTest.put("aliases", aliases )
         Map<String, Object> vendor = new LinkedHashMap<String, Object>()
         vendor.put("code", "hg_test")
@@ -121,7 +125,7 @@ class HgService {
         log.debug "getConfigTest"
         // Initialise jsonTenants
         JSONArray jsonTenants = new JSONArray()
-        // Add the tenant "test" to the jsonTenants array
+        // Add the predefined tenant "test" to the jsonTenants array
         jsonTenants.put( new JSONObject(getTenantTest()) )
         //log.debug jsonTenants
 
@@ -140,9 +144,13 @@ class HgService {
         //log.debug jsonTenants
 
         for (int i = 0; i < jsonTenants.length(); i++) {
-            JSONObject jsonTenant = jsonTenants.getJSONObject(i);
-            if( tenant == jsonTenant.getString("id") || tenant == jsonTenant.getString("name") || jsonLookupAliases(tenant, jsonTenant.getJSONArray("aliases")) )
-                return jsonTenant
+            try {
+                JSONObject jsonTenant = jsonTenants.getJSONObject(i);
+                if( tenant == jsonTenant.getString("id") || tenant == jsonTenant.getString("name") || jsonLookupAliases(tenant, jsonTenant.getJSONArray("aliases")) )
+                    return jsonTenant
+            } catch ( Exception e ) {
+                log.debug e.message
+            }
         }
     }
 
