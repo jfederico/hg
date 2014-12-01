@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta name="layout" content="lti" />
-    <title>EPortfolio Connect Server: Error</title>
+    <title>HG LTI Broker: Error</title>
   </head>
   <body>
     <div class="body">

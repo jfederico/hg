@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta name="layout" content="lti" />
-    <title>EPortfolio Connect Server: Index</title>
+    <title>HG LTI Broker: Index</title>
   </head>
   <body>
     <div class="body">
