@@ -27,7 +27,9 @@ class LtiController {
             def json_config = hgService.getJSONConfig(params.get("tenant"))
             def config = hgService.jsonToMap(json_config)
 
+            log.debug "****************************HERE"
             IEngine engine = engineFactory.createEngine(request, params, config, hgService.endpoint)
+            log.debug "****************************HERE"
             //Object engineClass = engineFactory.getEngineClass(config)
             //log.debug engineClass.ENGINE_CODE
             //def ltiConstants = engine.getToolProvider()
@@ -38,16 +40,16 @@ class LtiController {
                 log.debug "ERROR: "
                 render(text: hgService.xmlResponse("completionResponse is null"), contentType: "text/xml", encoding: "UTF-8")
             } else {
-                if( completionResponse.get("type") == "url" ) {
+                if( completionResponse.get("type") == engine.COMPLETION_RESPONSE_TYPE_URL ) {
                     log.info "Redirecting to " + completionResponse
                     //render(text: hgService.xmlResponse("Redirecting to " + completionResponse, hgService.CODE_SUCCESS), contentType: "text/xml", encoding: "UTF-8")
                     redirect(url: completionResponse.get("content"))
-                } else if( completionResponse.get("type") == "xml" ) {
+                } else if( completionResponse.get("type") == engine.COMPLETION_RESPONSE_TYPE_XML ) {
                     log.info "Rendering XML\n" + completionResponse.get("content")
                     render(text: completionResponse.get("content"), contentType: "text/xml", encoding: "UTF-8")
-                } else if( completionResponse.get("type") == "html" ) {
+                } else if( completionResponse.get("type") == engine.COMPLETION_RESPONSE_TYPE_HTML ) {
                     log.info "Rendering HTML [" + completionResponse.get("content") + "]"
-                    render(view: completionResponse.get("content"), model: ['data': completionResponse.get("data")])
+                    render(view: completionResponse.get("content"), model: [endpoint: engine.getEndpoint(), data: completionResponse.get("data")])
                 } else {
                     log.debug "ERROR: "
                     render(text: hgService.xmlResponse("completionResponse not identified. Only url and xml are registered"), contentType: "text/xml", encoding: "UTF-8")

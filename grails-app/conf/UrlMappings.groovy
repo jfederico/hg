@@ -7,6 +7,7 @@ class UrlMappings {
      * query_string = ?a=xxx&c=yyy (a=action, c=command)
      * 
      * engine = lti :. a = [ cc | sso | ui ]
+     *                 a = ui :. For bigbluebutton c = [ join | publish | unpublish | delete ]
      * engine = reg :. a = [  ]
      * engine = res :. a = [ xml | json | rss | png | ico ]
      * engine = api :. a = [ outcomes | ]

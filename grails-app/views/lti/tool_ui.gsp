@@ -5,7 +5,10 @@
     </head>
     <body>
 <!-- tool.index  -->
-        <h1 style="margin-left:20px; text-align: center;"><a title="<g:message code="tool.view.join" />" class="btn btn-primary btn-large" href="${createLink(controller:'tool', action:'join', id: '0')}"><g:message code="tool.view.join" /></a></h1>
+        <h1 style="margin-left:20px; text-align: center;">
+          <!-- ${endpoint}?a=ui&c=join  -->
+          <a title="<g:message code="tool.view.join" />" class="btn btn-primary btn-large" href="${createLink(application: handler_application)}/${handler_tenant}/${handler_engine}/${handler_version}?act=ui&cmd=join"><g:message code="tool.view.join" /></a>
+        </h1>
         <br><br>
         <div class="table-responsive">
         <table class="table table-striped table-bordered table-condensed">

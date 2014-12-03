@@ -24,6 +24,16 @@ public class Engine implements IEngine {
 
     public Engine(HttpServletRequest request, Map<String, String> params, Map<String, Object> config, String endpoint)
             throws Exception {
+        constructEngine(request, params, config, endpoint, ENGINE_TYPE_LTI);
+    }
+
+    public Engine(HttpServletRequest request, Map<String, String> params, Map<String, Object> config, String endpoint, String type)
+            throws Exception {
+        constructEngine(request, params, config, endpoint, type);
+    }
+
+    private void constructEngine(HttpServletRequest request, Map<String, String> params, Map<String, Object> config, String endpoint, String type)
+            throws Exception {
         this.config = config;
         this.grails_params = new HashMap<String, String>();
         for( int i=0; i < GRAILS_PARAMS.length; i++ ){
@@ -37,7 +47,7 @@ public class Engine implements IEngine {
 
         if( request.getMethod().equals("POST") ) {
             try {
-                String endpoint_url = (request.isSecure()? "https": "http") + "://" + this.endpoint + "/" + this.grails_params.get("application") + "/" + this.grails_params.get("tenant") + "/lti/" + this.grails_params.get("version"); 
+                String endpoint_url = (request.isSecure()? "https": "http") + "://" + this.endpoint + "/" + this.grails_params.get("application") + "/" + this.grails_params.get("tenant") + "/" + type + "/" + this.grails_params.get("version"); 
                 
                 this.tp = SimpleLTIStore.createToolProvider(this.params, this.config, endpoint_url);
                 
@@ -103,5 +113,9 @@ public class Engine implements IEngine {
             throw new Exception("Missing required parameters");
         else
             log.debug("All required parameters are included");
+    }
+
+    public String getEndpoint() {
+        return this.endpoint;
     }
 }
