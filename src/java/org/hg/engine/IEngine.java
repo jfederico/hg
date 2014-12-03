@@ -31,6 +31,6 @@ public interface IEngine {
     abstract Map<String, String> getCompletionResponse() throws Exception;
     abstract void setCompletionResponseCommand(CompletionResponse completionResponse);
     abstract LTIToolProvider getToolProvider();
-    abstract String getEndpoint();
+    abstract String getEndpointURL();
 
 }

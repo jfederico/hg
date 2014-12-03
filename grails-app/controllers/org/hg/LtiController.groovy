@@ -27,9 +27,7 @@ class LtiController {
             def json_config = hgService.getJSONConfig(params.get("tenant"))
             def config = hgService.jsonToMap(json_config)
 
-            log.debug "****************************HERE"
             IEngine engine = engineFactory.createEngine(request, params, config, hgService.endpoint)
-            log.debug "****************************HERE"
             //Object engineClass = engineFactory.getEngineClass(config)
             //log.debug engineClass.ENGINE_CODE
             //def ltiConstants = engine.getToolProvider()
@@ -49,7 +47,7 @@ class LtiController {
                     render(text: completionResponse.get("content"), contentType: "text/xml", encoding: "UTF-8")
                 } else if( completionResponse.get("type") == engine.COMPLETION_RESPONSE_TYPE_HTML ) {
                     log.info "Rendering HTML [" + completionResponse.get("content") + "]"
-                    render(view: completionResponse.get("content"), model: [endpoint: engine.getEndpoint(), data: completionResponse.get("data")])
+                    render(view: completionResponse.get("content"), model: [endpoint_url: engine.getEndpointURL(), data: completionResponse.get("data")])
                 } else {
                     log.debug "ERROR: "
                     render(text: hgService.xmlResponse("completionResponse not identified. Only url and xml are registered"), contentType: "text/xml", encoding: "UTF-8")

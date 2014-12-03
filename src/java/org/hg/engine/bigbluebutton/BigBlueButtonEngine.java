@@ -29,16 +29,15 @@ public class BigBlueButtonEngine extends Engine {
 
     public static final String PARAM_BBB_SSO = "sso";
     public static final String PARAM_BBB_UI = "ui";
-    public static final String PARAM_BBB_DO = "do";
-    public static final String PARAM_BBB_DO_RECORDING_PUBLISH = "publish";
-    public static final String PARAM_BBB_DO_RECORDING_UNPUBLISH = "unpublish";
-    public static final String PARAM_BBB_DO_RECORDING_DELETE = "delete";
+    public static final String PARAM_BBB_UI_RECORDING_PUBLISH = "publish";
+    public static final String PARAM_BBB_UI_RECORDING_UNPUBLISH = "unpublish";
+    public static final String PARAM_BBB_UI_RECORDING_DELETE = "delete";
 
     public BigBlueButtonEngine(HttpServletRequest request, Map<String, String> params, Map<String, Object> config, String endpoint)
         throws Exception {
         super(request, params, config, endpoint);
         log.debug("instantiate BigBlueButtonEngine()");
-        if(this.grails_params.get(PARAM_ACT).equals("cc")){
+        if(this.grails_params.get(PARAM_ACT).equals(ENGINE_ACTION_CC)){
             Map<String, String> definition = new HashMap<String, String>();
             definition.put("title", (String)config.get("title"));
             definition.put("description", (String)config.get("description"));
@@ -69,7 +68,7 @@ public class BigBlueButtonEngine extends Engine {
             if( params.containsKey(PARAM_CUSTOM_RECORD) && Boolean.parseBoolean(params.get(PARAM_CUSTOM_RECORD)) ){
                 if( params.containsKey(PARAM_ACTION) && params.get(PARAM_ACTION).equals(PARAM_BBB_SSO) ){
                     setCompletionResponseCommand( new SingleSignOnURL(engine, getMeetingParams(), getSessionParams()) );
-                } else if( params.containsKey(PARAM_ACTION) && params.get(PARAM_ACTION).equals(PARAM_BBB_DO) ) {
+                } else if( params.containsKey(PARAM_ACTION) && params.get(PARAM_ACTION).equals(PARAM_BBB_UI) ) {
                     // Executing commands on recordings
                 } else {
                     setCompletionResponseCommand( new UI() );

@@ -16,7 +16,7 @@ public class TestEngine extends Engine {
         throws Exception {
         super(request, params, config, endpoint);
         log.debug("instantiate TestEngine()");
-        if(this.grails_params.get(PARAM_ACT).equals("cc")){
+        if(this.grails_params.get(PARAM_ACT).equals(ENGINE_ACTION_CC)){
             Map<String, String> definition = new HashMap<String, String>();
             definition.put("title", (String)config.get("title"));
             definition.put("description", (String)config.get("description"));

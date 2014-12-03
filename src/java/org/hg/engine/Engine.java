@@ -19,6 +19,7 @@ public class Engine implements IEngine {
     protected Map<String, Object> config;
     protected Map<String, String> grails_params;
     protected String endpoint;
+    protected String endpoint_url;
 
     protected LTIToolProvider tp;
 
@@ -47,9 +48,9 @@ public class Engine implements IEngine {
 
         if( request.getMethod().equals("POST") ) {
             try {
-                String endpoint_url = (request.isSecure()? "https": "http") + "://" + this.endpoint + "/" + this.grails_params.get("application") + "/" + this.grails_params.get("tenant") + "/" + type + "/" + this.grails_params.get("version"); 
+                this.endpoint_url = (request.isSecure()? "https": "http") + "://" + this.endpoint + "/" + this.grails_params.get("application") + "/" + this.grails_params.get("tenant") + "/" + type + "/" + this.grails_params.get("version"); 
                 
-                this.tp = SimpleLTIStore.createToolProvider(this.params, this.config, endpoint_url);
+                this.tp = SimpleLTIStore.createToolProvider(this.params, this.config, this.endpoint_url);
                 
                 Map<String, Object> profile = getProfile();
                 overrideParameters(profile);
@@ -115,7 +116,7 @@ public class Engine implements IEngine {
             log.debug("All required parameters are included");
     }
 
-    public String getEndpoint() {
-        return this.endpoint;
+    public String getEndpointURL() {
+        return this.endpoint_url;
     }
 }
