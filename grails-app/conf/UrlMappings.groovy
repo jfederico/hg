@@ -4,14 +4,14 @@ class UrlMappings {
      *
      * engine = [ lti | reg | res | api ]
      * 
-     * query_string = ?a=xxx&c=yyy (a=action, c=command)
+     * query_string = ?a=xxx&c=yyy (act=action, cmd=command)
      * 
-     * engine = lti :. a = [ cc | sso | ui ]
-     *                 a = ui :. For bigbluebutton c = [ join | publish | unpublish | delete ]
-     * engine = reg :. a = [  ]
-     * engine = res :. a = [ xml | json | rss | png | ico ]
-     * engine = api :. a = [ outcomes | ]
-     *                 a = outcomes :. c = [ get | put | post | delete | update ] 
+     * engine = launch          :. act = [ cc | sso | ui ]
+     *                                  act = ui :. e.g. for bigbluebutton cmd = [ join | publish | unpublish | delete ]
+     * engine = registration    :. act = [  ]
+     * engine = resource        :. act = [ xml | json | rss | png | ico ]
+     * engine = api             :. act = [ outcomes | ]
+     *                                  act = outcomes :. cmd = [ get | put | post | delete | update ] 
      * 
      * Configuration for tenant 0:InternalTest
      *      
