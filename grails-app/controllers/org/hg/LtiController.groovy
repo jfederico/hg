@@ -27,7 +27,10 @@ class LtiController {
             def json_config = hgService.getJSONConfig(params.get("tenant"))
             def config = hgService.jsonToMap(json_config)
 
-            IEngine engine = engineFactory.createEngine(request, params, config, hgService.endpoint)
+            if( session["params"] == null || params.containsKey("oauth_nonce") && session["params"].get("oauth_nonce") != params.get("oauth_nonce") )
+                session["params"] = params
+
+            IEngine engine = engineFactory.createEngine(request, params, config, hgService.endpoint, session["params"])
             //Object engineClass = engineFactory.getEngineClass(config)
             //log.debug engineClass.ENGINE_CODE
             //def ltiConstants = engine.getToolProvider()
@@ -40,7 +43,6 @@ class LtiController {
             } else {
                 if( completionResponse.get("type") == engine.COMPLETION_RESPONSE_TYPE_URL ) {
                     log.info "Redirecting to " + completionResponse
-                    //render(text: hgService.xmlResponse("Redirecting to " + completionResponse, hgService.CODE_SUCCESS), contentType: "text/xml", encoding: "UTF-8")
                     redirect(url: completionResponse.get("content"))
                 } else if( completionResponse.get("type") == engine.COMPLETION_RESPONSE_TYPE_XML ) {
                     log.info "Rendering XML\n" + completionResponse.get("content")

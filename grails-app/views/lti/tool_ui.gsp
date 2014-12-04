@@ -6,7 +6,7 @@
     <body>
 <!-- tool.index  -->
         <h1 style="margin-left:20px; text-align: center;">
-          <a title="<g:message code="tool.view.join" />" class="btn btn-primary btn-large" href="${endpoint_url}?a=ui&c=join"><g:message code="tool.view.join" /></a>
+          <a title="<g:message code="tool.view.join" />" class="btn btn-primary btn-large" href="${endpoint_url}?act=ui&cmd=join"><g:message code="tool.view.join" /></a>
         </h1>
         <br><br>
         <div class="table-responsive">

@@ -22,7 +22,7 @@ public class SimpleEngineFactory implements EngineFactory {
         return INSTANCE;
     }
 
-    public IEngine createEngine(HttpServletRequest request, Map<String, String> params, Map<String, Object> config, String endpoint)
+    public IEngine createEngine(HttpServletRequest request, Map<String, String> params, Map<String, Object> config, String endpoint, Map<String, String> session_params)
             throws Exception {
         IEngine engine = null;
 
@@ -48,9 +48,9 @@ public class SimpleEngineFactory implements EngineFactory {
         log.debug(vendor_code);
 
         if( vendor_code.equals(ENGINE_TEST) ){
-            engine = new TestEngine(request, params, config, endpoint);
+            engine = new TestEngine(request, params, config, endpoint, session_params);
         } else if( vendor_code.equals(ENGINE_BIGBLUEBUTTON) ){
-            engine = new BigBlueButtonEngine(request, params, config, endpoint);
+            engine = new BigBlueButtonEngine(request, params, config, endpoint, session_params);
         } else {
             throw new Exception(vendor_code + " was not identified as a vendor code for an Engine");
         }

@@ -24,9 +24,9 @@ public interface IEngine {
 
     public static String ENGINE_TYPE_LTI    = "lti";
 
-    public static String ENGINE_ACTION_CC   = "cc";
-    public static String ENGINE_ACTION_SSO  = "sso";
-    public static String ENGINE_ACTION_UI   = "ui";
+    public static String ENGINE_ACT_CC   = "cc";
+    public static String ENGINE_ACT_SSO  = "sso";
+    public static String ENGINE_ACT_UI   = "ui";
 
     abstract Map<String, String> getCompletionResponse() throws Exception;
     abstract void setCompletionResponseCommand(CompletionResponse completionResponse);

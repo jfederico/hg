@@ -12,11 +12,11 @@ import org.hg.engine.Engine;
 public class TestEngine extends Engine {
     private static final Logger log = Logger.getLogger(TestEngine.class);
 
-    public TestEngine(HttpServletRequest request, Map<String, String> params, Map<String, Object> config, String endpoint)
+    public TestEngine(HttpServletRequest request, Map<String, String> params, Map<String, Object> config, String endpoint, Map<String, String> session_params)
         throws Exception {
-        super(request, params, config, endpoint);
+        super(request, params, config, endpoint, session_params);
         log.debug("instantiate TestEngine()");
-        if(this.grails_params.get(PARAM_ACT).equals(ENGINE_ACTION_CC)){
+        if(this.grails_params.get(PARAM_ACT).equals(ENGINE_ACT_CC)){
             Map<String, String> definition = new HashMap<String, String>();
             definition.put("title", (String)config.get("title"));
             definition.put("description", (String)config.get("description"));

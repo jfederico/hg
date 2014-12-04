@@ -24,20 +24,17 @@ public class BigBlueButtonEngine extends Engine {
     public static final String ENGINE_CONTACT_EMAIL = "bigbluebutton-users@googlegroups.com";
 
     public static final String PARAM_CUSTOM_RECORD = "custom_record";
-    public static final String PARAM_ACTION = "a";
-    public static final String PARAM_COMMAND = "c";
 
-    public static final String PARAM_BBB_SSO = "sso";
-    public static final String PARAM_BBB_UI = "ui";
-    public static final String PARAM_BBB_UI_RECORDING_PUBLISH = "publish";
-    public static final String PARAM_BBB_UI_RECORDING_UNPUBLISH = "unpublish";
-    public static final String PARAM_BBB_UI_RECORDING_DELETE = "delete";
+    public static final String BBB_CMD_MEETING_JOIN           = "join";
+    public static final String BBB_CMD_RECORDING_PUBLISH      = "publish";
+    public static final String BBB_CMD_RECORDING_UNPUBLISH    = "unpublish";
+    public static final String BBB_CMD_RECORDING_DELETE       = "delete";
 
-    public BigBlueButtonEngine(HttpServletRequest request, Map<String, String> params, Map<String, Object> config, String endpoint)
+    public BigBlueButtonEngine(HttpServletRequest request, Map<String, String> params, Map<String, Object> config, String endpoint, Map<String, String> session_params)
         throws Exception {
-        super(request, params, config, endpoint);
+        super(request, params, config, endpoint, session_params);
         log.debug("instantiate BigBlueButtonEngine()");
-        if(this.grails_params.get(PARAM_ACT).equals(ENGINE_ACTION_CC)){
+        if(this.grails_params.get(PARAM_ACT).equals(ENGINE_ACT_CC)){
             Map<String, String> definition = new HashMap<String, String>();
             definition.put("title", (String)config.get("title"));
             definition.put("description", (String)config.get("description"));
@@ -66,10 +63,13 @@ public class BigBlueButtonEngine extends Engine {
             Map<String, String> engine = (Map<String, String>)config.get("engine");
 
             if( params.containsKey(PARAM_CUSTOM_RECORD) && Boolean.parseBoolean(params.get(PARAM_CUSTOM_RECORD)) ){
-                if( params.containsKey(PARAM_ACTION) && params.get(PARAM_ACTION).equals(PARAM_BBB_SSO) ){
-                    setCompletionResponseCommand( new SingleSignOnURL(engine, getMeetingParams(), getSessionParams()) );
-                } else if( params.containsKey(PARAM_ACTION) && params.get(PARAM_ACTION).equals(PARAM_BBB_UI) ) {
-                    // Executing commands on recordings
+                if( params.containsKey(PARAM_ACT) && params.get(PARAM_ACT).equals(ENGINE_ACT_UI) ){
+                    if( params.containsKey(PARAM_CMD) && params.get(PARAM_CMD).equals(BBB_CMD_MEETING_JOIN) ) {
+                        setCompletionResponseCommand( new SingleSignOnURL(engine, getMeetingParams(), getSessionParams()) );
+                    } else if( params.containsKey(PARAM_ACT) && params.get(PARAM_ACT).equals(BBB_CMD_RECORDING_PUBLISH) ) {
+                    } else if( params.containsKey(PARAM_ACT) && params.get(PARAM_ACT).equals(BBB_CMD_RECORDING_UNPUBLISH) ) {
+                    } else if( params.containsKey(PARAM_ACT) && params.get(PARAM_ACT).equals(BBB_CMD_RECORDING_DELETE) ) {
+                    }
                 } else {
                     setCompletionResponseCommand( new UI() );
                 }
