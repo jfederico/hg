@@ -19,7 +19,7 @@ public class UI implements CompletionResponse {
         Map<String, String> completionResponse = new HashMap<String, String>();
 
         completionResponse.put("type", "html");
-        completionResponse.put("content", "tool_ui");
+        completionResponse.put("content", "bigbluebutton_tool_ui");
         completionResponse.put("data", getData().toString());
 
         return completionResponse;
