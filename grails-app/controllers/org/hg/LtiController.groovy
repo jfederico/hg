@@ -27,8 +27,9 @@ class LtiController {
             def json_config = hgService.getJSONConfig(params.get("tenant"))
             def config = hgService.jsonToMap(json_config)
 
-            if( session["params"] == null || params.containsKey("oauth_nonce") && session["params"].get("oauth_nonce") != params.get("oauth_nonce") )
+            if( session["params"] == null || params.containsKey("oauth_nonce") && session["params"].get("oauth_nonce") != params.get("oauth_nonce") ) {
                 session["params"] = params
+            }
 
             IEngine engine = engineFactory.createEngine(request, params, config, hgService.endpoint, session["params"])
             //Object engineClass = engineFactory.getEngineClass(config)

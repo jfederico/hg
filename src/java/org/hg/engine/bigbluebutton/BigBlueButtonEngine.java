@@ -34,6 +34,7 @@ public class BigBlueButtonEngine extends Engine {
         throws Exception {
         super(request, params, config, endpoint, session_params);
         log.debug("instantiate BigBlueButtonEngine()");
+
         if(this.grails_params.get(PARAM_ACT).equals(ENGINE_ACT_CC)){
             Map<String, String> definition = new HashMap<String, String>();
             definition.put("title", (String)config.get("title"));

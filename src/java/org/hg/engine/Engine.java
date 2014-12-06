@@ -56,7 +56,9 @@ public class Engine implements IEngine {
         }
         this.params = _params;
 
-        if ( this.grails_params.get(PARAM_ACT).equals(ENGINE_ACT_SSO) ){
+        if ( this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_LAUNCH) && this.grails_params.get(PARAM_ACT).equals(ENGINE_ACT_SSO) ||
+             this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_LAUNCH) && this.grails_params.get(PARAM_ACT).equals(ENGINE_ACT_UI)
+             ){
             try {
                 this.tp = SimpleLTIStore.createToolProvider(this.params, this.config, this.endpoint_url);
 
