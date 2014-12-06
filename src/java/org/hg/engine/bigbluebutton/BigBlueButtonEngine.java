@@ -38,10 +38,10 @@ public class BigBlueButtonEngine extends Engine {
             Map<String, String> definition = new HashMap<String, String>();
             definition.put("title", (String)config.get("title"));
             definition.put("description", (String)config.get("description"));
-            String launch_url_path = grails_params.get("application") + "/" + grails_params.get("tenant") + "/lti/" + grails_params.get("version"); 
+            String launch_url_path = grails_params.get("application") + "/" + grails_params.get("tenant") + "/" + ENGINE_TYPE_LAUNCH + "/" + grails_params.get("version"); 
             definition.put( "launch_url", "http://" + endpoint + "/" + launch_url_path );
             definition.put( "secure_launch_url", "https://" + endpoint + "/" + launch_url_path );
-            String icon_path = grails_params.get("application") + "/" + grails_params.get("tenant") + "/res/1/?a=ico";
+            String icon_path = grails_params.get("application") + "/" + grails_params.get("tenant") + "/" + ENGINE_TYPE_RESOURCE + "/1/?a=ico";
             definition.put( "icon", "http://" + endpoint + "/" + icon_path );
             definition.put( "secure_icon", "https://" + endpoint + "/" + icon_path );
             @SuppressWarnings("unchecked")

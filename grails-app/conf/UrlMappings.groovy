@@ -1,8 +1,10 @@
+import org.hg.engine.Engine
+
 class UrlMappings {
     /*
      * $scheme://$domain:$port/$application/$tenant/$engine/$version/?query_string
      *
-     * engine = [ lti | reg | res | api ]
+     * engine = [ launch | registration | resource | api ]
      * 
      * query_string = ?a=xxx&c=yyy (act=action, cmd=command)
      * 
@@ -19,7 +21,7 @@ class UrlMappings {
      *      
      *      It is translated to
      *      
-     *      https://lti.123it.ca/hg/0/lti/v1p0
+     *      https://lti.123it.ca/hg/0/launch/v1p0
      *      
      *      Meaning
      *      
@@ -34,7 +36,7 @@ class UrlMappings {
      *      
      *      It is translated to
      *      
-     *      https://lti.123it.ca/hg/bn/lti/v1p0
+     *      https://lti.123it.ca/hg/bn/launch/v1p0
      *      
      *      Meaning
      *      
@@ -51,7 +53,7 @@ class UrlMappings {
             controller = 'lti'
             action = 'index'
             tenant = '0'
-            engine = 'lti'
+            engine = Engine.ENGINE_TYPE_LAUNCH
             version = 'v1p0' 
 		}
         
@@ -59,7 +61,7 @@ class UrlMappings {
             application = grails.util.Metadata.current.'app.name'
             controller = 'lti'
             action = 'index'
-            engine = 'lti'
+            engine = Engine.ENGINE_TYPE_LAUNCH
             version = 'v1p0' 
         }
 

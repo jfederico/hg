@@ -25,7 +25,7 @@ public class Engine implements IEngine {
 
     public Engine(HttpServletRequest request, Map<String, String> params, Map<String, Object> config, String endpoint, Map<String, String> session_params)
             throws Exception {
-        constructEngine(request, params, config, endpoint, session_params, ENGINE_TYPE_LTI);
+        constructEngine(request, params, config, endpoint, session_params, ENGINE_TYPE_LAUNCH);
     }
 
     public Engine(HttpServletRequest request, Map<String, String> params, Map<String, Object> config, String endpoint, Map<String, String> session_params, String type)

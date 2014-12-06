@@ -32,7 +32,7 @@ public class SimpleEngineFactory implements EngineFactory {
             throw new Exception("There is no configuration for the tenant " + params.get(Engine.PARAM_TENANT));
         }
 
-        if( params.get("engine").equals("lti") ) {
+        if( params.get(Engine.PARAM_ENGINE).equals(Engine.ENGINE_TYPE_LAUNCH) ) {
             if ( !params.containsKey(Engine.PARAM_ACT) ) {
                 if( request.getMethod().equals("GET") )
                     params.put(Engine.PARAM_ACT, Engine.ENGINE_ACT_CC);
