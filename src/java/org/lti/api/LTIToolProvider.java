@@ -27,7 +27,8 @@ public abstract class LTIToolProvider {
     protected String key;
     protected String secret;
 
-    public LTIToolProvider(String endpoint, String key, String secret, Map<String, String> params) throws LTIException, Exception {
+    public LTIToolProvider(String endpoint, String key, String secret, Map<String, String> params)
+            throws LTIException, Exception {
         log.info("LTIToolProvider initializad");
 
         this.endpoint = endpoint;

@@ -39,34 +39,35 @@ public class Engine implements IEngine {
         this.grails_params = new HashMap<String, String>();
         this.endpoint = endpoint;
 
-        //Temporary working params
-        Map<String, String> _params;
         for( int i=0; i < GRAILS_PARAMS.length; i++ ){
             if( params.containsKey(GRAILS_PARAMS[i]) ){
                 this.grails_params.put(GRAILS_PARAMS[i], params.get(GRAILS_PARAMS[i]));
                 params.remove(GRAILS_PARAMS[i]);
             }
         }
+        this.endpoint_url = (request.isSecure()? "https": "http") + "://" + this.endpoint + "/" + this.grails_params.get("application") + "/" + this.grails_params.get("tenant") + "/" + type + "/" + this.grails_params.get("version"); 
+
+        //Temporary working params
+        Map<String, String> _params;
         if( request.getMethod().equals("POST") ) {
             _params = params;
         } else {
             _params = session_params;
         }
-
         this.params = _params;
-        try {
-            this.endpoint_url = (request.isSecure()? "https": "http") + "://" + this.endpoint + "/" + this.grails_params.get("application") + "/" + this.grails_params.get("tenant") + "/" + type + "/" + this.grails_params.get("version"); 
-            
-            this.tp = SimpleLTIStore.createToolProvider(this.params, this.config, this.endpoint_url);
-            
-            Map<String, Object> profile = getProfile();
-            overrideParameters(profile);
-            validateRequiredParameters(profile);
 
-        } catch( Exception e) {
-            throw e;
+        if ( this.grails_params.get(PARAM_ACT).equals(ENGINE_ACT_SSO) ){
+            try {
+                this.tp = SimpleLTIStore.createToolProvider(this.params, this.config, this.endpoint_url);
+
+                Map<String, Object> profile = getProfile();
+                overrideParameters(profile);
+                validateRequiredParameters(profile);
+
+            } catch( Exception e) {
+                throw e;
+            }
         }
-
     }
 
     protected CompletionResponse completionResponse;

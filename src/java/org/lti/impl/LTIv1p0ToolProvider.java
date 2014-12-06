@@ -13,8 +13,8 @@ public class LTIv1p0ToolProvider extends LTIToolProvider implements LTIv1p0 {
 
     private static final Logger log = Logger.getLogger(LTIv1p0ToolProvider.class);
 
-    public LTIv1p0ToolProvider(String endpoint, String key, String secret,
-            Map<String, String> params) throws LTIException, Exception {
+    public LTIv1p0ToolProvider(String endpoint, String key, String secret, Map<String, String> params)
+            throws LTIException, Exception {
         super(endpoint, key, secret, params);
     }
 
@@ -22,7 +22,8 @@ public class LTIv1p0ToolProvider extends LTIToolProvider implements LTIv1p0 {
         return VERSION;
     }
     
-    public boolean hasRequiredParameters(JSONArray requiredParameters) throws LTIException, Exception {
+    public boolean hasRequiredParameters(JSONArray requiredParameters)
+            throws LTIException, Exception {
         boolean response = true;
         String missingParams = "";
         for (int i = 0; i < requiredParameters.length(); i++) {
@@ -39,7 +40,8 @@ public class LTIv1p0ToolProvider extends LTIToolProvider implements LTIv1p0 {
         else return response;
     }
 
-    public void overrideParameters(JSONArray overrides) throws Exception {
+    public void overrideParameters(JSONArray overrides)
+            throws Exception {
         JSONObject override;
         String source;
         String target;

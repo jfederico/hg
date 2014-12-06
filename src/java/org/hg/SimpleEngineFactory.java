@@ -35,9 +35,9 @@ public class SimpleEngineFactory implements EngineFactory {
         if( params.get("engine").equals("lti") ) {
             if ( !params.containsKey(Engine.PARAM_ACT) ) {
                 if( request.getMethod().equals("GET") )
-                    params.put(Engine.PARAM_ACT, "cc");
+                    params.put(Engine.PARAM_ACT, Engine.ENGINE_ACT_CC);
                 else
-                    params.put(Engine.PARAM_ACT, "sso");
+                    params.put(Engine.PARAM_ACT, Engine.ENGINE_ACT_SSO);
             }
         }
 
