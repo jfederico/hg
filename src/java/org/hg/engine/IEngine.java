@@ -16,7 +16,8 @@ public interface IEngine {
     public static String PARAM_ACT          = "act";
     public static String PARAM_CMD          = "cmd";
     public static String[] GRAILS_PARAMS    = new String[] { 
-        PARAM_ENDPOINT, PARAM_APPLICATION, PARAM_CONTROLLER, PARAM_ACTION, PARAM_TENANT, PARAM_ENGINE, PARAM_VERSION, PARAM_ACT, PARAM_CMD };
+        PARAM_ENDPOINT, PARAM_APPLICATION, PARAM_CONTROLLER, PARAM_ACTION, PARAM_TENANT, PARAM_ENGINE, PARAM_VERSION, PARAM_ACT, PARAM_CMD
+    };
 
     public static String COMPLETION_RESPONSE_TYPE_HTML  = "html";
     public static String COMPLETION_RESPONSE_TYPE_URL   = "url";
@@ -26,6 +27,9 @@ public interface IEngine {
     public static String ENGINE_TYPE_REGISTRATION   = "registration";
     public static String ENGINE_TYPE_RESOURCE       = "resource";
     public static String ENGINE_TYPE_API            = "api";
+    public static String[] ENGINE_TYPES    = new String[] {
+        ENGINE_TYPE_LAUNCH, ENGINE_TYPE_REGISTRATION, ENGINE_TYPE_RESOURCE, ENGINE_TYPE_API
+    };
 
     public static String ENGINE_ACT_CC   = "cc";
     public static String ENGINE_ACT_SSO  = "sso";

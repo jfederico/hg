@@ -23,6 +23,7 @@ class LtiController {
         //def basePath = grails.util.BuildSettingsHolder.settings.baseDir
         hgService.logParameters(params)
 
+        IEngine engine = null
         try {
             def json_config = hgService.getJSONConfig(params.get("tenant"))
             def config = hgService.jsonToMap(json_config)
@@ -31,7 +32,7 @@ class LtiController {
                 session["params"] = params
             }
 
-            IEngine engine = engineFactory.createEngine(request, params, config, hgService.endpoint, session["params"])
+            engine = engineFactory.createEngine(request, params, config, hgService.endpoint, session["params"])
             //Object engineClass = engineFactory.getEngineClass(config)
             //log.debug engineClass.ENGINE_CODE
             //def ltiConstants = engine.getToolProvider()
@@ -53,11 +54,16 @@ class LtiController {
                     render(view: completionResponse.get("content"), model: [endpoint_url: engine.getEndpointURL(), data: completionResponse.get("data")])
                 } else {
                     log.debug "ERROR: "
+                    //if( params.get(engineFactory) )
                     render(text: hgService.xmlResponse("completionResponse not identified. Only url and xml are registered"), contentType: "text/xml", encoding: "UTF-8")
                 }
             }
         } catch (Exception e){
-            log.debug "ERROR: " + e
+            log.debug "ERROR: " + e.message
+            if( engine != null )
+                log.error "----------------------------------"
+            else
+                log.error "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
             //render(text: hgService.xmlResponse(e.getMessage()), contentType: "text/xml", encoding: "UTF-8")
             render(view: "error", model: ['resultMessageKey': 'GeneralError', 'resultMessage': e.message])
             flash.error = e.message

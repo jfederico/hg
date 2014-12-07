@@ -39,36 +39,37 @@ public class Engine implements IEngine {
         this.grails_params = new HashMap<String, String>();
         this.endpoint = endpoint;
 
-        for( int i=0; i < GRAILS_PARAMS.length; i++ ){
-            if( params.containsKey(GRAILS_PARAMS[i]) ){
-                this.grails_params.put(GRAILS_PARAMS[i], params.get(GRAILS_PARAMS[i]));
-                params.remove(GRAILS_PARAMS[i]);
+        try {
+            validateEngineType(type);
+
+            for( int i=0; i < GRAILS_PARAMS.length; i++ ){
+                if( params.containsKey(GRAILS_PARAMS[i]) ){
+                    this.grails_params.put(GRAILS_PARAMS[i], params.get(GRAILS_PARAMS[i]));
+                    params.remove(GRAILS_PARAMS[i]);
+                }
             }
-        }
-        this.endpoint_url = (request.isSecure()? "https": "http") + "://" + this.endpoint + "/" + this.grails_params.get("application") + "/" + this.grails_params.get("tenant") + "/" + type + "/" + this.grails_params.get("version"); 
+            this.endpoint_url = (request.isSecure()? "https": "http") + "://" + this.endpoint + "/" + this.grails_params.get("application") + "/" + this.grails_params.get("tenant") + "/" + type + "/" + this.grails_params.get("version"); 
 
-        //Temporary working params
-        Map<String, String> _params;
-        if( request.getMethod().equals("POST") ) {
-            _params = params;
-        } else {
-            _params = session_params;
-        }
-        this.params = _params;
-
-        if ( this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_LAUNCH) && this.grails_params.get(PARAM_ACT).equals(ENGINE_ACT_SSO) ||
-             this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_LAUNCH) && this.grails_params.get(PARAM_ACT).equals(ENGINE_ACT_UI)
-             ){
-            try {
-                this.tp = SimpleLTIStore.createToolProvider(this.params, this.config, this.endpoint_url);
-
-                Map<String, Object> profile = getProfile();
-                overrideParameters(profile);
-                validateRequiredParameters(profile);
-
-            } catch( Exception e) {
-                throw e;
+            //Temporary working params
+            Map<String, String> _params;
+            if( request.getMethod().equals("POST") ) {
+                _params = params;
+            } else {
+                _params = session_params;
             }
+            this.params = _params;
+
+            if ( this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_LAUNCH) && this.grails_params.get(PARAM_ACT).equals(ENGINE_ACT_SSO) ||
+                 this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_LAUNCH) && this.grails_params.get(PARAM_ACT).equals(ENGINE_ACT_UI) )
+            {
+                    this.tp = SimpleLTIStore.createToolProvider(this.params, this.config, this.endpoint_url);
+
+                    Map<String, Object> profile = getProfile();
+                    overrideParameters(profile);
+                    validateRequiredParameters(profile);
+            }
+        } catch( Exception e) {
+            throw e;
         }
     }
 
@@ -94,17 +95,19 @@ public class Engine implements IEngine {
         Map<String, Object> return_profile = new HashMap<String, Object>();
 
         @SuppressWarnings("unchecked")
-        Map<String, Object> lti_cfg = (Map<String, Object>)config.get("lti");
+        Map<String, Object> lti_cfg = (Map<String, Object>)this.config.get("lti");
         @SuppressWarnings("unchecked")
-        List<Map<String, Object>> profiles = (List<Map<String, Object>>)lti_cfg.get("profiles");
-        for( Map<String, Object> profile : profiles ){
-            if( tp.isToolConsumerInfoProductFamilyCode((String)profile.get("name")) ) {
-                return_profile = profile;
-                break;
+        List<Map<String, Object>> profiles = lti_cfg != null? (List<Map<String, Object>>)lti_cfg.get("profiles"): null;
+
+        if( profiles != null ) {
+            for( Map<String, Object> profile : profiles ){
+                if( this.tp.isToolConsumerInfoProductFamilyCode((String)profile.get("name")) ) {
+                    return_profile = profile;
+                    break;
+                }
             }
         }
 
-        log.debug(return_profile);
         return return_profile;
     }
 
@@ -124,6 +127,18 @@ public class Engine implements IEngine {
             throw new Exception("Missing required parameters");
         else
             log.debug("All required parameters are included");
+    }
+
+    private void validateEngineType(String type)
+        throws Exception {
+        for( int i=0; i < ENGINE_TYPES.length; i++ ){
+            if( type.equals(ENGINE_TYPES[i]) ){
+                return;
+            }
+        }
+        log.debug("Engine type is not valid");
+        Exception e = new java.lang.Exception("Engine type is not valid");
+        throw e;
     }
 
     public String getEndpointURL() {

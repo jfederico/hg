@@ -15,6 +15,7 @@ public class TestEngine extends Engine {
     public TestEngine(HttpServletRequest request, Map<String, String> params, Map<String, Object> config, String endpoint, Map<String, String> session_params)
         throws Exception {
         super(request, params, config, endpoint, session_params);
+
         log.debug("instantiate TestEngine()");
         if(this.grails_params.get(PARAM_ACT).equals(ENGINE_ACT_CC)){
             Map<String, String> definition = new HashMap<String, String>();
