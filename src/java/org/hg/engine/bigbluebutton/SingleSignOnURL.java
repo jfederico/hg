@@ -34,7 +34,7 @@ public class SingleSignOnURL implements CompletionResponse {
         completionResponse.put("type", "url");
 
         String ssoURL = null;
-        try{
+        try {
             BBBCommand cmd = new BBBCreateMeeting(bbbProxy, meeting_params );
             cmd.execute();
             log.info("Meeting created");

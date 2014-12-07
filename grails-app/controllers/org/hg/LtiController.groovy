@@ -53,22 +53,25 @@ class LtiController {
                     log.info "Rendering HTML [" + completionResponse.get("content") + "]"
                     render(view: completionResponse.get("content"), model: [endpoint_url: engine.getEndpointURL(), data: completionResponse.get("data")])
                 } else {
-                    log.debug "ERROR: "
-                    //if( params.get(engineFactory) )
-                    render(text: hgService.xmlResponse("completionResponse not identified. Only url and xml are registered"), contentType: "text/xml", encoding: "UTF-8")
+                    String message = "completionResponse not identified. Only actions [url | xml | html] are registered"
+                    log.debug "ERROR: " + message
+                    if( params.containsKey("launch_presentation_return_url") ) {
+                        redirect(url: params.get("launch_presentation_return_url") + "&lti_errormsg=" + URLEncoder.encode(message, "UTF-8"))
+                    } else {
+                        render(view: "error", model: ['resultMessageKey': 'GeneralError', 'resultMessage': message])
+                        flash.error = message
+                    }
                 }
             }
         } catch (Exception e){
             log.debug "ERROR: " + e.message
-            if( engine != null )
-                log.error "----------------------------------"
-            else
-                log.error "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
-            //render(text: hgService.xmlResponse(e.getMessage()), contentType: "text/xml", encoding: "UTF-8")
-            render(view: "error", model: ['resultMessageKey': 'GeneralError', 'resultMessage': e.message])
-            flash.error = e.message
-            return
-
+            if( params.containsKey("launch_presentation_return_url") ) {
+                redirect(url: params.get("launch_presentation_return_url") + "&lti_errormsg=" + e.message)
+            } else {
+                render(view: "error", model: ['resultMessageKey': 'GeneralError', 'resultMessage': e.message])
+                flash.error = e.message
+            }
         }
+        return
     }
 }

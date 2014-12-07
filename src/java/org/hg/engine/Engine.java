@@ -25,21 +25,13 @@ public class Engine implements IEngine {
 
     public Engine(HttpServletRequest request, Map<String, String> params, Map<String, Object> config, String endpoint, Map<String, String> session_params)
             throws Exception {
-        constructEngine(request, params, config, endpoint, session_params, ENGINE_TYPE_LAUNCH);
-    }
 
-    public Engine(HttpServletRequest request, Map<String, String> params, Map<String, Object> config, String endpoint, Map<String, String> session_params, String type)
-            throws Exception {
-        constructEngine(request, params, config, endpoint, session_params, type);
-    }
-
-    private void constructEngine(HttpServletRequest request, Map<String, String> params, Map<String, Object> config, String endpoint, Map<String, String> session_params, String type)
-            throws Exception {
         this.config = config;
         this.grails_params = new HashMap<String, String>();
         this.endpoint = endpoint;
 
         try {
+            String type = params.get(PARAM_ENGINE);
             validateEngineType(type);
 
             for( int i=0; i < GRAILS_PARAMS.length; i++ ){
@@ -137,7 +129,7 @@ public class Engine implements IEngine {
             }
         }
         log.debug("Engine type is not valid");
-        Exception e = new java.lang.Exception("Engine type is not valid");
+        Exception e = new java.lang.Exception("Engine type [" + type + "] is not valid");
         throw e;
     }
 
