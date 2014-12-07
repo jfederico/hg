@@ -20,7 +20,6 @@ class HgService {
     public HgService(){
         config = new ArrayList<Object>()
         config.add(getTenantTest())
-        config.add(getTenantBN())
     }
 
     def getTenantTest(){
@@ -36,6 +35,8 @@ class HgService {
         alias2.put("alias", "t2")
         aliases.add(alias2)
         tTest.put("aliases", aliases )
+        tTest.put("title", "Hyper Gateway ")
+        tTest.put("description", "Hyper Gateway is an LTI broker for implementing generic LTI tool providers")
         Map<String, Object> vendor = new LinkedHashMap<String, Object>()
         vendor.put("code", "hg_test")
         vendor.put("name", "HG Test")
@@ -44,47 +45,17 @@ class HgService {
         vendor.put("contact", "admin@123it.ca")
         tTest.put("vendor", vendor)
         Map<String, Object> lti = new LinkedHashMap<String, Object>()
+        lti.put("id", "0")
         lti.put("key", "test")
         lti.put("secret", "testtest")
+        lti.put("profiles", new ArrayList<Object>())
         tTest.put("lti", lti)
         Map<String, Object> engine = new LinkedHashMap<String, Object>()
         engine.put("key", "test")
         engine.put("secret", "test")
         engine.put("endpoint", "test")
-        engine.put("profiles", new ArrayList<Object>())
         tTest.put("engine", engine)
         return tTest
-    }
-
-    def getTenantBN(){
-        Map<String, Object> tBN
-        tBN = new LinkedHashMap<String, Object>()
-        tBN.put("id", "0")
-        tBN.put("name", "bn")
-        List<Object> aliases = new ArrayList<Object>()
-        aliases.add("bbb")
-        aliases.add("bigbluebutton")
-        tBN.put("aliases", aliases )
-        Map<String, Object> vendor = new LinkedHashMap<String, Object>()
-        vendor.put("code", "big_blue_button")
-        vendor.put("name", "BN Test Install")
-        vendor.put("description", "Default LTI Gateway for processing test requests on the BigBlueButton test-install server")
-        vendor.put("url", "http://www.blindsidenetworks.com/")
-        vendor.put("contact", "admin@blindsidenetworks.com")
-        tBN.put("vendor", vendor)
-        Map<String, Object> lti = new LinkedHashMap<String, Object>()
-        lti.put("key", "bbb")
-        lti.put("secret", "welcome")
-        tBN.put("lti", lti)
-        Map<String, Object> engine = new LinkedHashMap<String, Object>()
-        engine.put("key", "")
-        engine.put("secret", "8cd8ef52e8e101574e400365b55e11a6")
-        engine.put("endpoint", "http://test-install.blindsidenetworks.com/bigbluebutton/")
-        engine.put("profiles", new ArrayList<Object>())
-        Map<String, Object> moodle = new LinkedHashMap<String, Object>()
-        engine.put("moodle", moodle)
-        tBN.put("engine", engine)
-        return tBN
     }
 
     def logParameters(params) {
@@ -122,7 +93,6 @@ class HgService {
 
     def getJSONConfig(String tenant) {
         def config_home = grails.util.BuildSettingsHolder.settings.baseDir.toString() + "/grails-app/conf"
-        log.debug "getConfigTest"
         // Initialise jsonTenants
         JSONArray jsonTenants = new JSONArray()
         // Add the predefined tenant "test" to the jsonTenants array
