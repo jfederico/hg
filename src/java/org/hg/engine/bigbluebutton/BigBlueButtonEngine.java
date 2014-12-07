@@ -23,7 +23,10 @@ public class BigBlueButtonEngine extends Engine {
     public static final String ENGINE_URL = "http://www.bigbluebutton.org/";
     public static final String ENGINE_CONTACT_EMAIL = "bigbluebutton-users@googlegroups.com";
 
-    public static final String PARAM_CUSTOM_RECORD = "custom_record";
+    public static final String PARAM_CUSTOM_RECORD      = "custom_record";
+    public static final String PARAM_CUSTOM_DURATION    = "custom_duration";
+    public static final String PARAM_CUSTOM_VOICEBRIDGE = "custom_voicebridge";
+    public static final String PARAM_CUSTOM_WELCOME     = "custom_welcome";
 
     public static final String BBB_CMD_MEETING_JOIN           = "join";
     public static final String BBB_CMD_RECORDING_PUBLISH      = "publish";
@@ -68,8 +71,11 @@ public class BigBlueButtonEngine extends Engine {
                     if( params.containsKey(PARAM_CMD) && params.get(PARAM_CMD).equals(BBB_CMD_MEETING_JOIN) ) {
                         setCompletionResponseCommand( new SingleSignOnURL(engine, getMeetingParams(), getSessionParams()) );
                     } else if( params.containsKey(PARAM_ACT) && params.get(PARAM_ACT).equals(BBB_CMD_RECORDING_PUBLISH) ) {
+                        setCompletionResponseCommand( new PublishRecording(engine, getMeetingParams(), getSessionParams()) );
                     } else if( params.containsKey(PARAM_ACT) && params.get(PARAM_ACT).equals(BBB_CMD_RECORDING_UNPUBLISH) ) {
+                        setCompletionResponseCommand( new UnpublishRecording(engine, getMeetingParams(), getSessionParams()) );
                     } else if( params.containsKey(PARAM_ACT) && params.get(PARAM_ACT).equals(BBB_CMD_RECORDING_DELETE) ) {
+                        setCompletionResponseCommand( new DeleteRecording(engine, getMeetingParams(), getSessionParams()) );
                     }
                 } else {
                     setCompletionResponseCommand( new UI() );
@@ -100,22 +106,22 @@ public class BigBlueButtonEngine extends Engine {
         meetingParams.put("attendeePW", DigestUtils.shaHex("ap" + params.get("resource_link_id") + params.get("oauth_consumer_key")));
         meetingParams.put("moderatorPW", DigestUtils.shaHex("mp" + params.get("resource_link_id") + params.get("oauth_consumer_key")));
         try {
-            meetingParams.put("welcome", URLEncoder.encode(params.containsKey("extra_welcome")? params.get("extra_welcome"): "Welcome to <b>" + params.get("resource_link_title") + "</b>", "UTF-8") );
+            meetingParams.put("welcome", URLEncoder.encode(params.containsKey(PARAM_CUSTOM_WELCOME)? params.get(PARAM_CUSTOM_WELCOME): "Welcome to <b>" + params.get("resource_link_title") + "</b>", "UTF-8") );
         } catch (UnsupportedEncodingException e) {
             log.debug("Error encoding meetingName: " + e.getMessage());
             meetingParams.put("welcome", "");
         }
-        meetingParams.put("voiceBridge", params.containsKey("extra_voicebridge")? params.get("extra_voicebridge"): "0");
-        if(params.containsKey("extra_recording")){
-            meetingParams.put("record", Boolean.valueOf(params.get("extra_recording")).toString());
+        meetingParams.put("voiceBridge", params.containsKey(PARAM_CUSTOM_VOICEBRIDGE)? params.get(PARAM_CUSTOM_VOICEBRIDGE): "0");
+        if(params.containsKey(PARAM_CUSTOM_RECORD)){
+            meetingParams.put("record", Boolean.valueOf(params.get(PARAM_CUSTOM_RECORD)).toString());
             try {
                 meetingParams.put("welcome", meetingParams.get("welcome") + URLEncoder.encode("<br><br>This meeting is being recorded", "UTF-8"));
             } catch (UnsupportedEncodingException e) {
                 log.debug("Error encoding meetingName: " + e.getMessage());
             }
         }
-        if(params.containsKey("extra_duration")){
-            meetingParams.put("duration", params.get("extra_duration"));
+        if(params.containsKey(PARAM_CUSTOM_DURATION)){
+            meetingParams.put("duration", params.get(PARAM_CUSTOM_DURATION));
             try {
                 meetingParams.put("welcome", meetingParams.get("welcome") + URLEncoder.encode("<br><br>The maximum duration for this meeting is ", "UTF-8") + params.get("extra_duration") + URLEncoder.encode(" minutes.", "UTF-8"));
             } catch (UnsupportedEncodingException e) {
@@ -125,6 +131,7 @@ public class BigBlueButtonEngine extends Engine {
         if(params.containsKey("launch_presentation_return_url"))
             meetingParams.put("logoutURL", getValidatedLogoutURL(params.get("launch_presentation_return_url")));
 
+        System.out.println(meetingParams.toString());
         return meetingParams;
     }
 
