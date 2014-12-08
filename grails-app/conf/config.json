@@ -118,7 +118,22 @@
                             ],
                             "custom_params": [
                                 {
+                                    "name": "welcome",
+                                    "type": "text",
+                                    "default": ""
+                                },
+                                {
                                     "name": "record",
+                                    "type": "boolean",
+                                    "default": "false"
+                                },
+                                {
+                                    "name": "duration",
+                                    "type": "number",
+                                    "default": "0"
+                                },
+                                {
+                                    "name": "all_moderators",
                                     "type": "boolean",
                                     "default": "false"
                                 }
@@ -130,8 +145,8 @@
             },
             "engine": {
                 "key": "",
-                "secret": "8cd8ef52e8e101574e400365b55e11a6",
-                "endpoint": "http://test-install.blindsidenetworks.com/bigbluebutton/"
+                "secret": "7080xxxebf0aasd05a8565476bc3f8",
+                "endpoint": "http://bn.lb6.blindsidenetworks.com/bigbluebutton/"
             }
         }
     ]
