@@ -9,7 +9,7 @@ import org.bigbluebutton.api.BBBException;
 import org.bigbluebutton.api.BBBStore;
 import org.bigbluebutton.api.BBBProxy;
 import org.bigbluebutton.impl.BBBStoreImpl;
-import org.bigbluebutton.impl.BBBGetRecording;
+import org.bigbluebutton.impl.BBBGetRecordings;
 import org.hg.engine.CompletionResponse;
 
 //import org.json.JSONArray;
@@ -46,7 +46,7 @@ public class UI implements CompletionResponse {
             throws Exception {
         JSONObject data = new JSONObject();
         try {
-            BBBCommand cmd = new BBBGetRecording(bbbProxy, meeting_params );
+            BBBCommand cmd = new BBBGetRecordings(bbbProxy, meeting_params );
             cmd.execute();
             log.info("Recordings retrieved");
         } catch ( BBBException e){

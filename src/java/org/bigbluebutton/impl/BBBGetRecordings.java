@@ -27,13 +27,13 @@ import org.bigbluebutton.api.BBBCommand;
 import org.bigbluebutton.api.BBBException;
 import org.bigbluebutton.api.BBBProxy;
 
-public class BBBGetRecording implements BBBCommand {
+public class BBBGetRecordings implements BBBCommand {
 
-    private static final Logger log = Logger.getLogger(BBBGetRecording.class);
+    private static final Logger log = Logger.getLogger(BBBGetRecordings.class);
 
     private static final String ACTION = "Get recordings";
 
-    public BBBGetRecording(BBBProxy proxy, Map<String, String> params){
+    public BBBGetRecordings(BBBProxy proxy, Map<String, String> params){
         this.proxy = proxy;
         this.params = params;
     }

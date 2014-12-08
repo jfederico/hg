@@ -269,71 +269,87 @@ public class BBBProxyImpl implements BBBProxy{
         return this.endpoint + API_SERVERPATH + APICALL_JOIN + "?" + qs;
     }
     
-	public String getIsMeetingRunningURL(Map<String, String> params) {
-	    String qs;
+    public String getIsMeetingRunningURL(Map<String, String> params) {
+        String qs;
 
         qs = "meetingID=" + params.get("meetingID");
-	    qs += getCheckSumParameterForQuery(APICALL_ISMEETINGRUNNING, qs);
+        qs += getCheckSumParameterForQuery(APICALL_ISMEETINGRUNNING, qs);
 	    
-	    return this.endpoint + API_SERVERPATH + APICALL_ISMEETINGRUNNING + "?" + qs;
-	}
+        return this.endpoint + API_SERVERPATH + APICALL_ISMEETINGRUNNING + "?" + qs;
+    }
 
-	public String getEndURL(Map<String, String> params) {
-	    String qs;
-
-        qs = "meetingID=" + params.get("meetingID");
-        qs += "&password=" + params.get("password");
-	    qs += getCheckSumParameterForQuery(APICALL_END, qs);
-	    
-	    return this.endpoint + API_SERVERPATH + APICALL_END + "?" + qs;
-	}
-
-	public String getGetMeetingInfoURL(Map<String, String> params) {
-	    String qs;
+    public String getEndURL(Map<String, String> params) {
+        String qs;
 
         qs = "meetingID=" + params.get("meetingID");
         qs += "&password=" + params.get("password");
-	    qs += getCheckSumParameterForQuery(APICALL_GETMEETINGINFO, qs);
+        qs += getCheckSumParameterForQuery(APICALL_END, qs);
 	    
-	    return this.endpoint + API_SERVERPATH + APICALL_GETMEETINGINFO + "?" + qs;
-	}
+        return this.endpoint + API_SERVERPATH + APICALL_END + "?" + qs;
+    }
 
-	public String getGetMeetingsURL() {
-	    String qs;
+    public String getGetMeetingInfoURL(Map<String, String> params) {
+        String qs;
 
-	    qs = "random=xyz";
-	    qs = getCheckSumParameterForQuery(APICALL_GETMEETINGS, qs);
+        qs = "meetingID=" + params.get("meetingID");
+        qs += "&password=" + params.get("password");
+        qs += getCheckSumParameterForQuery(APICALL_GETMEETINGINFO, qs);
 
-	    return this.endpoint + API_SERVERPATH + APICALL_GETMEETINGS + "?" + qs;
-	}
+        return this.endpoint + API_SERVERPATH + APICALL_GETMEETINGINFO + "?" + qs;
+    }
 
-	public String getStringEncoded(String string){
-	    String stringEncoded = "";
-	    
-	    try {
-	        stringEncoded = URLEncoder.encode(string, PARAMETERENCODING); 
-	    } catch(Exception e){}
-	    
-	    return stringEncoded;
-	}
+    public String getGetMeetingsURL() {
+        String qs;
 
-	/** Creates the checksum parameter to be included as part of the endpoint */
-	protected String getCheckSumParameterForQuery(String apiCall, String queryString) {
-	    if (this.secret != null)
-	        return "&checksum=" + DigestUtils.shaHex(apiCall + queryString + this.secret);
-	    else
-	        return "";
-	}
+        qs = "random=xyz";
+        qs = getCheckSumParameterForQuery(APICALL_GETMEETINGS, qs);
+
+        return this.endpoint + API_SERVERPATH + APICALL_GETMEETINGS + "?" + qs;
+    }
+
+    public String getStringEncoded(String string){
+        String stringEncoded = "";
+
+        try {
+            stringEncoded = URLEncoder.encode(string, PARAMETERENCODING); 
+        } catch(Exception e){}
+
+        return stringEncoded;
+    }
+
+    /** Creates the checksum parameter to be included as part of the endpoint */
+    protected String getCheckSumParameterForQuery(String apiCall, String queryString) {
+        if (this.secret != null)
+            return "&checksum=" + DigestUtils.shaHex(apiCall + queryString + this.secret);
+        else
+            return "";
+    }
 
     public String getGetRecordingsURL(Map<String, String> params) {
-        return null;
+        String qs;
+
+        qs = "meetingID=" + params.get("meetingID");
+        qs += getCheckSumParameterForQuery(APICALL_GETRECORDINGS, qs);
+
+        return this.endpoint + API_SERVERPATH + APICALL_GETRECORDINGS + "?" + qs;
     }
 
     public String getPublishRecordingsURL(Map<String, String> params) {
-        return null;
+        String qs;
+
+        qs = "recordingID=" + params.get("recordingID");
+        qs += "publish=" + params.get("publish");
+        qs += getCheckSumParameterForQuery(APICALL_PUBLISHRECORDINGS, qs);
+
+        return this.endpoint + API_SERVERPATH + APICALL_PUBLISHRECORDINGS + "?" + qs;
     }
 
     public String getDeleteRecordingsURL(Map<String, String> params) {
-        return null;
+        String qs;
+
+        qs = "recordingID=" + params.get("recordingID");
+        qs += getCheckSumParameterForQuery(APICALL_DELETERECORDINGS, qs);
+
+        return this.endpoint + API_SERVERPATH + APICALL_DELETERECORDINGS + "?" + qs;
     }
 }
