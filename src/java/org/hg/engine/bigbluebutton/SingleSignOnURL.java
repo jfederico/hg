@@ -44,6 +44,7 @@ public class SingleSignOnURL implements CompletionResponse {
             throw new Exception("Error executing SSO", e.getCause());
         }
         completionResponse.put("content", ssoURL);
+        completionResponse.put("data", "{}");
 
         return completionResponse;
     }
