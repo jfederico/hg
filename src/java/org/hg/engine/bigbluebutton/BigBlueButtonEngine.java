@@ -78,7 +78,7 @@ public class BigBlueButtonEngine extends Engine {
                         setCompletionResponseCommand( new DeleteRecording(engine, getMeetingParams(), getSessionParams()) );
                     }
                 } else {
-                    setCompletionResponseCommand( new UI() );
+                    setCompletionResponseCommand( new UI(engine, getMeetingParams(), getSessionParams()) );
                 }
             } else {
                 setCompletionResponseCommand( new SingleSignOnURL(engine, getMeetingParams(), getSessionParams()) );
