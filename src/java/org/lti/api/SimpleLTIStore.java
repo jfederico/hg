@@ -5,6 +5,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.lti.impl.LTIv1p0ToolProvider;
 import org.lti.impl.LTIv1p1ToolProvider;
+import org.lti.impl.LTIv2p0ToolProvider;
 
 public class SimpleLTIStore {
 
@@ -40,7 +41,7 @@ public class SimpleLTIStore {
             } else if( version.equals(LTI_V1P2)) {
             //    tp = new LTIv1p2ToolProvider(endpoint, key, secret, params);
             } else if( version.equals(LTI_V2P0)) {
-            //    tp = new LTIv2p0ToolProvider(endpoint, key, secret, params);
+                tp = new LTIv2p0ToolProvider(endpoint, key, secret, params);
             } else {
                 tp = new LTIv1p0ToolProvider(endpoint, key, secret, params);
             }

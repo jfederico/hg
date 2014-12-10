@@ -19,6 +19,7 @@
 */
 package org.bigbluebutton.impl;
 
+import java.net.URLEncoder;
 import java.util.Map;
 import java.util.Random;
 
@@ -33,23 +34,25 @@ public class BBBv0p8p0 extends BBBProxyImpl {
     }
 
     public String getCreateURL(Map<String, String> params) {
-        String qs;
+        String qs = "";
 
-        qs = "name=" + params.get("name");
+        try {
+        qs += "name=" + URLEncoder.encode(params.get("name"), "UTF-8");
         qs += "&meetingID=" + params.get("meetingID");
         qs += "&moderatorPW=" + params.get("moderatorPW");
         qs += "&attendeePW=" + params.get("attendeePW");
-        qs += params.containsKey("welcome") ? "&welcome=" + params.get("welcome") : "";
-        qs += params.containsKey("logoutURL") ? "&logoutURL=" + params.get("logoutURL") : "";
+        qs += params.containsKey("welcome")? "&welcome=" + URLEncoder.encode(params.get("welcome"), "UTF-8"): "";
+        qs += params.containsKey("logoutURL")? "&logoutURL=" + URLEncoder.encode(params.get("logoutURL"), "UTF-8"): "";
         Integer voiceBridge = Integer.valueOf(params.containsKey("voiceBridge")? params.get("voiceBridge"): "0");
         voiceBridge = ( voiceBridge == null || voiceBridge == 0 )? 70000 + new Random(System.currentTimeMillis()).nextInt(10000): voiceBridge;
         qs += "&voiceBridge=" + voiceBridge.toString();
         qs += params.containsKey("dialNumber") ? "&dialNumber=" + params.get("dialNumber") : "";
         qs += params.containsKey("record") ? "&record=" + params.get("record"): "";
         qs += params.containsKey("duration") ? "&duration=" + params.get("duration") : "";
-        qs += params.containsKey("meta") ? "&" + params.get("meta") : "";
+        qs += params.containsKey("meta")? "&" + URLEncoder.encode(params.get("meta"), "UTF-8"): "";
         qs += getCheckSumParameterForQuery(APICALL_CREATE, qs);
-
+        } catch( Exception e) {
+        }
         return this.endpoint + API_SERVERPATH + APICALL_CREATE + "?" + qs;
     }
 

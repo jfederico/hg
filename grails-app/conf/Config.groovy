@@ -87,6 +87,12 @@ log4j = {
                        'org.bigbluebutton',
                        'org.bigbluebutton.api',
                        'org.bigbluebutton.impl',
+                       'net.oauth',
+                       'net.oauth.client',
+                       'net.oauth.http',
+                       'net.oauth.server',
+                       'net.oauth.signature',
+                       'net.oauth.signature.pem',
                        'grails.app.controllers',
                        'grails.app.services',
                        'grails.app.domain'

@@ -28,10 +28,10 @@ public class BigBlueButtonEngine extends Engine {
     public static final String PARAM_CUSTOM_VOICEBRIDGE = "custom_voicebridge";
     public static final String PARAM_CUSTOM_WELCOME     = "custom_welcome";
 
-    public static final String BBB_CMD_MEETING_JOIN           = "join";
-    public static final String BBB_CMD_RECORDING_PUBLISH      = "publish";
-    public static final String BBB_CMD_RECORDING_UNPUBLISH    = "unpublish";
-    public static final String BBB_CMD_RECORDING_DELETE       = "delete";
+    public static final String BBB_CMD_MEETING_JOIN         = "join";
+    public static final String BBB_CMD_RECORDING_PUBLISH    = "publish";
+    public static final String BBB_CMD_RECORDING_UNPUBLISH  = "unpublish";
+    public static final String BBB_CMD_RECORDING_DELETE     = "delete";
 
     public static final String BBB_ROLE_MODERATOR   = "moderator";
     public static final String BBB_ROLE_VIEWER      = "viewer";
@@ -81,7 +81,7 @@ public class BigBlueButtonEngine extends Engine {
                     } else if( this.grails_params.containsKey(PARAM_CMD) && this.grails_params.get(PARAM_CMD).equals(BBB_CMD_RECORDING_UNPUBLISH) ) {
                         setCompletionResponseCommand( new UnpublishRecording(engine, getMeetingParams(), getSessionParams(), getRecordingParams()) );
                     } else if( this.grails_params.containsKey(PARAM_CMD) && this.grails_params.get(PARAM_CMD).equals(BBB_CMD_RECORDING_DELETE) ) {
-                        setCompletionResponseCommand( new DeleteRecording(engine, getMeetingParams(), getSessionParams()) );
+                        setCompletionResponseCommand( new DeleteRecording(engine, getMeetingParams(), getSessionParams(), getRecordingParams()) );
                     }
                 } else {
                     setCompletionResponseCommand( new UI(engine, getMeetingParams(), getSessionParams()) );

@@ -27,7 +27,7 @@ class UrlMappings {
      *      
      *      app=hg      { name: hg }
      *      tenant=0    { id: 0, name: test }
-     *      engine=lti
+     *      engine=launch
      *      version=v1p0
      *      
      * Configuration for tenant 1:BlindsideNetworks
@@ -42,7 +42,7 @@ class UrlMappings {
      *      
      *      app=hg      { name: hg }
      *      tenant=bn   { id: 1, name: blindsidenetworks, alias: bn }
-     *      engine=lti
+     *      engine=launch
      *      version=v1p0
      */
 

@@ -8,11 +8,11 @@ import org.json.JSONObject;
 import org.lti.api.LTIException;
 import org.lti.api.LTIToolProvider;
 
-public class LTIv1p1ToolProvider extends LTIToolProvider implements LTIv1p1 {
+public class LTIv2p0ToolProvider extends LTIToolProvider implements LTIv1p1 {
 
-    private static final Logger log = Logger.getLogger(LTIv1p1ToolProvider.class);
+    private static final Logger log = Logger.getLogger(LTIv1p0ToolProvider.class);
 
-    public LTIv1p1ToolProvider(String endpoint, String key, String secret,
+    public LTIv2p0ToolProvider(String endpoint, String key, String secret,
             Map<String, String> params) throws LTIException, Exception {
         super(endpoint, key, secret, params);
     }
