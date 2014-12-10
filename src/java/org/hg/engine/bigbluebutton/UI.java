@@ -1,6 +1,5 @@
 package org.hg.engine.bigbluebutton;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,7 +59,6 @@ public class UI implements CompletionResponse {
                 map.put("duration", duration );
             }
 
-            System.out.println(recordings.toString());
             log.info("Recordings retrieved");
             data = recordings;
         } catch ( BBBException e){

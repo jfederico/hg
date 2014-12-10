@@ -38,10 +38,10 @@
                     <g:if test="${data.ismoderator}">
                     <td class="cell c5 lastcol" style="text-align:center;">
                       <g:if test="${r.published == 'true'}">
-                      <button class="btn btn-default btn-xs" name="unpublish_recording" type="submit" value="${r.recordID}" onClick="window.location='${createLink(controller:'tool',action:'publish',id: '0')}?bbb_recording_published=${r.published}&bbb_recording_id=${r.recordID}'; return false;"><g:message code="tool.view.unpublishRecording" /></button>
+                      <button class="btn btn-default btn-xs" name="unpublish_recording" type="submit" value="${r.recordID}" onClick="window.location='${endpoint_url}?act=ui&cmd=unpublish&bbb_recording_published=${r.published}&bbb_recording_id=${r.recordID}'; return false;"><g:message code="tool.view.unpublishRecording" /></button>
                       </g:if>
                       <g:else>
-                      <button class="btn btn-default btn-xs" name="publish_recording" type="submit" value="${r.recordID}" onClick="window.location='${createLink(controller:'tool',action:'publish',id: '0')}?bbb_recording_published=${r.published}&bbb_recording_id=${r.recordID}'; return false;"><g:message code="tool.view.publishRecording" /></button>
+                      <button class="btn btn-default btn-xs" name="publish_recording" type="submit" value="${r.recordID}" onClick="window.location='${endpoint_url}?act=ui&cmd=publish&bbb_recording_published=${r.published}&bbb_recording_id=${r.recordID}'; return false;"><g:message code="tool.view.publishRecording" /></button>
                       </g:else>
                       <button class="btn btn-danger btn-xs" name="delete_recording" type="submit" value="${r.recordID}" onClick="if(confirm('<g:message code="tool.view.deleteRecordingConfirmation" />')) window.location='${createLink(controller:'tool',action:'delete',id: '0')}?bbb_recording_id=${r.recordID}'; return false;"><g:message code="tool.view.deleteRecording" /></button>
                     </td>

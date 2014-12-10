@@ -48,7 +48,7 @@ public class BigBlueButtonEngine extends Engine {
             String launch_url_path = grails_params.get("application") + "/" + grails_params.get("tenant") + "/" + ENGINE_TYPE_LAUNCH + "/" + grails_params.get("version"); 
             definition.put( "launch_url", "http://" + endpoint + "/" + launch_url_path );
             definition.put( "secure_launch_url", "https://" + endpoint + "/" + launch_url_path );
-            String icon_path = grails_params.get("application") + "/" + grails_params.get("tenant") + "/" + ENGINE_TYPE_RESOURCE + "/1/?a=ico";
+            String icon_path = grails_params.get("application") + "/" + grails_params.get("tenant") + "/" + ENGINE_TYPE_RESOURCE + "/v1/?a=ico";
             definition.put( "icon", "http://" + endpoint + "/" + icon_path );
             definition.put( "secure_icon", "https://" + endpoint + "/" + icon_path );
             @SuppressWarnings("unchecked")
@@ -69,15 +69,15 @@ public class BigBlueButtonEngine extends Engine {
             @SuppressWarnings("unchecked")
             Map<String, String> engine = (Map<String, String>)config.get("engine");
 
-            if( params.containsKey(PARAM_CUSTOM_RECORD) && Boolean.parseBoolean(params.get(PARAM_CUSTOM_RECORD)) ){
-                if( params.containsKey(PARAM_ACT) && params.get(PARAM_ACT).equals(ENGINE_ACT_UI) ){
-                    if( params.containsKey(PARAM_CMD) && params.get(PARAM_CMD).equals(BBB_CMD_MEETING_JOIN) ) {
+            if( this.params.containsKey(PARAM_CUSTOM_RECORD) && Boolean.parseBoolean(this.params.get(PARAM_CUSTOM_RECORD)) ){
+                if( this.grails_params.containsKey(PARAM_ACT) && this.grails_params.get(PARAM_ACT).equals(ENGINE_ACT_UI) ){
+                    if( this.grails_params.containsKey(PARAM_CMD) && this.grails_params.get(PARAM_CMD).equals(BBB_CMD_MEETING_JOIN) ) {
                         setCompletionResponseCommand( new SingleSignOnURL(engine, getMeetingParams(), getSessionParams()) );
-                    } else if( params.containsKey(PARAM_ACT) && params.get(PARAM_ACT).equals(BBB_CMD_RECORDING_PUBLISH) ) {
-                        setCompletionResponseCommand( new PublishRecording(engine, getMeetingParams(), getSessionParams()) );
-                    } else if( params.containsKey(PARAM_ACT) && params.get(PARAM_ACT).equals(BBB_CMD_RECORDING_UNPUBLISH) ) {
-                        setCompletionResponseCommand( new UnpublishRecording(engine, getMeetingParams(), getSessionParams()) );
-                    } else if( params.containsKey(PARAM_ACT) && params.get(PARAM_ACT).equals(BBB_CMD_RECORDING_DELETE) ) {
+                    } else if( this.grails_params.containsKey(PARAM_CMD) && this.grails_params.get(PARAM_CMD).equals(BBB_CMD_RECORDING_PUBLISH) ) {
+                        setCompletionResponseCommand( new PublishRecording(engine, getMeetingParams(), getSessionParams(), getRecordingParams()) );
+                    } else if( this.grails_params.containsKey(PARAM_CMD) && this.grails_params.get(PARAM_CMD).equals(BBB_CMD_RECORDING_UNPUBLISH) ) {
+                        setCompletionResponseCommand( new UnpublishRecording(engine, getMeetingParams(), getSessionParams(), getRecordingParams()) );
+                    } else if( this.grails_params.containsKey(PARAM_CMD) && this.grails_params.get(PARAM_CMD).equals(BBB_CMD_RECORDING_DELETE) ) {
                         setCompletionResponseCommand( new DeleteRecording(engine, getMeetingParams(), getSessionParams()) );
                     }
                 } else {
@@ -134,7 +134,6 @@ public class BigBlueButtonEngine extends Engine {
         if(params.containsKey("launch_presentation_return_url"))
             meetingParams.put("logoutURL", getValidatedLogoutURL(params.get("launch_presentation_return_url")));
 
-        System.out.println(meetingParams.toString());
         return meetingParams;
     }
 
@@ -202,6 +201,43 @@ public class BigBlueButtonEngine extends Engine {
             userFullName = "User";
         }
         return userFullName;
+    }
+
+    private Map<String, String> getRecordingParams(){
+        Map<String, String> params = tp.getParameters();
+        Map<String, String> meetingParams = new HashMap<String, String>();
+        // Map ToolProvider parameters with Meeting parameters
+        meetingParams.put("name", getValidatedMeetingName(params.get("resource_link_title")));
+        meetingParams.put("meetingID", getValidatedMeetingId(params.get("resource_link_id"), params.get("oauth_consumer_key")));
+        meetingParams.put("attendeePW", DigestUtils.shaHex("ap" + params.get("resource_link_id") + params.get("oauth_consumer_key")));
+        meetingParams.put("moderatorPW", DigestUtils.shaHex("mp" + params.get("resource_link_id") + params.get("oauth_consumer_key")));
+        try {
+            meetingParams.put("welcome", URLEncoder.encode(params.containsKey(PARAM_CUSTOM_WELCOME)? params.get(PARAM_CUSTOM_WELCOME): "Welcome to <b>" + params.get("resource_link_title") + "</b>", "UTF-8") );
+        } catch (UnsupportedEncodingException e) {
+            log.debug("Error encoding meetingName: " + e.getMessage());
+            meetingParams.put("welcome", "");
+        }
+        meetingParams.put("voiceBridge", params.containsKey(PARAM_CUSTOM_VOICEBRIDGE)? params.get(PARAM_CUSTOM_VOICEBRIDGE): "0");
+        if(params.containsKey(PARAM_CUSTOM_RECORD)){
+            meetingParams.put("record", Boolean.valueOf(params.get(PARAM_CUSTOM_RECORD)).toString());
+            try {
+                meetingParams.put("welcome", meetingParams.get("welcome") + URLEncoder.encode("<br><br>This meeting is being recorded", "UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                log.debug("Error encoding meetingName: " + e.getMessage());
+            }
+        }
+        if(params.containsKey(PARAM_CUSTOM_DURATION)){
+            meetingParams.put("duration", params.get(PARAM_CUSTOM_DURATION));
+            try {
+                meetingParams.put("welcome", meetingParams.get("welcome") + URLEncoder.encode("<br><br>The maximum duration for this meeting is ", "UTF-8") + params.get("extra_duration") + URLEncoder.encode(" minutes.", "UTF-8"));
+            } catch (UnsupportedEncodingException e) {
+                log.debug("Error encoding meetingName: " + e.getMessage());
+            }
+        }
+        if(params.containsKey("launch_presentation_return_url"))
+            meetingParams.put("logoutURL", getValidatedLogoutURL(params.get("launch_presentation_return_url")));
+
+        return meetingParams;
     }
 
 }

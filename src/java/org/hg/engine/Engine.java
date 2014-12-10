@@ -42,6 +42,7 @@ public class Engine implements IEngine {
             }
             this.endpoint_url = (request.isSecure()? "https": "http") + "://" + this.endpoint + "/" + this.grails_params.get("application") + "/" + this.grails_params.get("tenant") + "/" + type + "/" + this.grails_params.get("version"); 
 
+            /*
             //Temporary working params
             Map<String, String> _params;
             if( request.getMethod().equals("POST") ) {
@@ -50,15 +51,18 @@ public class Engine implements IEngine {
                 _params = session_params;
             }
             this.params = _params;
-
+            */
             if ( this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_LAUNCH) && this.grails_params.get(PARAM_ACT).equals(ENGINE_ACT_SSO) ||
                  this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_LAUNCH) && this.grails_params.get(PARAM_ACT).equals(ENGINE_ACT_UI) )
             {
-                    this.tp = SimpleLTIStore.createToolProvider(this.params, this.config, this.endpoint_url);
+                 this.params = session_params;
+                 this.tp = SimpleLTIStore.createToolProvider(this.params, this.config, this.endpoint_url);
 
-                    Map<String, Object> profile = getProfile();
-                    overrideParameters(profile);
-                    validateRequiredParameters(profile);
+                 Map<String, Object> profile = getProfile();
+                 overrideParameters(profile);
+                 validateRequiredParameters(profile);
+            } else {
+                this.params = params;
             }
         } catch( Exception e) {
             throw e;
