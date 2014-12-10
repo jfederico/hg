@@ -39,7 +39,7 @@ public class BBBGetMeetingInfo implements BBBCommand {
     }
 
     private String getURL(){
-        String url = proxy.getGetRecordingsURL(params);
+        String url = proxy.getGetMeetingInfoURL(params);
         return url;
     }
 

@@ -39,7 +39,7 @@ public class BBBPublishRecordings implements BBBCommand {
     }
 
     private String getURL(){
-        String url = proxy.getEndURL(params);
+        String url = proxy.getPublishRecordingsURL(params);
         return url;
     }
 
@@ -54,6 +54,7 @@ public class BBBPublishRecordings implements BBBCommand {
         log.info(ACTION);
         String url = getURL();
         log.debug("Executing [" + url + "]");
+        System.out.println("Executing [" + url + "]");
         response = BBBProxyImpl.doAPICall(url);
 
         return response;
