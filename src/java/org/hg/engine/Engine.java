@@ -61,6 +61,12 @@ public class Engine implements IEngine {
                  Map<String, Object> profile = getProfile();
                  overrideParameters(profile);
                  validateRequiredParameters(profile);
+            } else if ( this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_REGISTRATION) && this.grails_params.get(PARAM_ACT).equals(ENGINE_ACT_SSO) ) {
+                this.params = session_params;
+                this.tp = SimpleLTIStore.createToolProvider(this.params, this.config, this.endpoint_url);
+
+                Map<String, Object> profile = getProfile();
+                validateRequiredParameters4Registration(profile);
             } else {
                 this.params = params;
             }
@@ -76,7 +82,7 @@ public class Engine implements IEngine {
     }
 
     public Map<String, Object> getCompletionResponse()
-        throws Exception {
+            throws Exception {
         return null;
     }
 
@@ -116,7 +122,7 @@ public class Engine implements IEngine {
     }
 
     private void validateRequiredParameters(Map<String, Object> profile)
-        throws Exception {
+            throws Exception {
         @SuppressWarnings("unchecked")
         JSONArray json_required_parameters = new JSONArray((ArrayList<Object>)profile.get("required"));
         if( !this.tp.hasRequiredParameters(json_required_parameters) )
@@ -125,8 +131,12 @@ public class Engine implements IEngine {
             log.debug("All required parameters are included");
     }
 
+    private void validateRequiredParameters4Registration(Map<String, Object> profile)
+            throws Exception {
+    }
+
     private void validateEngineType(String type)
-        throws Exception {
+            throws Exception {
         for( int i=0; i < ENGINE_TYPES.length; i++ ){
             if( type.equals(ENGINE_TYPES[i]) ){
                 return;
