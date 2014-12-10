@@ -6,9 +6,9 @@ import java.util.HashMap;
 import org.hg.engine.CompletionResponse;
 
 public class CommonCartridgeXML implements CompletionResponse {
-    protected Map<String, String> definition;
+    protected Map<String, Object> definition;
 
-    public CommonCartridgeXML(Map<String, String> definition){
+    public CommonCartridgeXML(Map<String, Object> definition){
         this.definition = definition;
     }
 

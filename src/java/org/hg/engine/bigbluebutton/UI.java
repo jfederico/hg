@@ -1,5 +1,6 @@
 package org.hg.engine.bigbluebutton;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,14 +40,19 @@ public class UI implements CompletionResponse {
         return completionResponse;
     }
 
-    private Map<String, Object> getData()
+    protected Map<String, Object> getData()
             throws Exception {
         Map<String, Object> data = new LinkedHashMap<String, Object>();
         try {
             BBBCommand cmd = new BBBGetRecordings(bbbProxy, meeting_params );
             Map<String, Object> recordings = cmd.execute();
-            
-            List<Object> recordingList = (List<Object>)recordings.get("recordings");
+            List<Object> recordingList;
+
+            if( !BBBProxy.APIRESPONSE_SUCCESS.equals((String)recordings.get("returncode")) || !(recordings.get("recordings") instanceof List<?>) ) {
+                recordingList = new ArrayList<Object>();
+            } else {
+                recordingList = (List<Object>)recordings.get("recordings");
+            }
             for(Object recording: recordingList){
                 /// Calculate duration
                 Map<String, Object> map = (Map<String, Object>)recording;

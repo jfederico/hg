@@ -42,15 +42,18 @@ public class BigBlueButtonEngine extends Engine {
         log.debug("instantiate BigBlueButtonEngine()");
 
         if(this.grails_params.get(PARAM_ACT).equals(ENGINE_ACT_CC)){
-            Map<String, String> definition = new HashMap<String, String>();
+            Map<String, Object> definition = new HashMap<String, Object>();
             definition.put("title", (String)config.get("title"));
             definition.put("description", (String)config.get("description"));
+
             String launch_url_path = grails_params.get("application") + "/" + grails_params.get("tenant") + "/" + ENGINE_TYPE_LAUNCH + "/" + grails_params.get("version"); 
             definition.put( "launch_url", "http://" + endpoint + "/" + launch_url_path );
             definition.put( "secure_launch_url", "https://" + endpoint + "/" + launch_url_path );
+
             String icon_path = grails_params.get("application") + "/" + grails_params.get("tenant") + "/" + ENGINE_TYPE_RESOURCE + "/v1/?a=ico";
             definition.put( "icon", "http://" + endpoint + "/" + icon_path );
             definition.put( "secure_icon", "https://" + endpoint + "/" + icon_path );
+
             @SuppressWarnings("unchecked")
             Map<String, Object> vendor = (Map<String, Object>)config.get("vendor");
             String vendor_code = (String)vendor.get("code");

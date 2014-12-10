@@ -6,25 +6,17 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.bigbluebutton.api.BBBCommand;
 import org.bigbluebutton.api.BBBException;
-import org.bigbluebutton.api.BBBStore;
-import org.bigbluebutton.api.BBBProxy;
-import org.bigbluebutton.impl.BBBStoreImpl;
-import org.bigbluebutton.impl.BBBPublishRecordings;
-import org.hg.engine.CompletionResponse;
+import org.bigbluebutton.impl.BBBDeleteRecordings;
 
-public class DeleteRecording implements CompletionResponse {
+public class DeleteRecording extends UI  {
     private static final Logger log = Logger.getLogger(DeleteRecording.class);
 
-    BBBProxy bbbProxy;
-    BBBStore bbbStore = BBBStoreImpl.getInstance();
-    Map<String, String> meeting_params;
-    Map<String, String> session_params;
-    
-    public DeleteRecording(Map<String, String> engine, Map<String, String> meeting_params, Map<String, String> session_params)
+    Map<String, String> recording_params;
+
+    public DeleteRecording(Map<String, String> engine, Map<String, String> meeting_params, Map<String, String> session_params, Map<String, String> recording_params)
         throws Exception {
-        this.bbbProxy = this.bbbStore.createProxy(engine.get("endpoint"), engine.get("secret"));
-        this.meeting_params = meeting_params;
-        this.session_params = session_params;
+        super(engine, meeting_params, session_params);
+        this.recording_params = recording_params;
     }
 
     public Map<String, Object> get()
@@ -32,7 +24,7 @@ public class DeleteRecording implements CompletionResponse {
         Map<String, Object> completionResponse = new LinkedHashMap<String, Object>();
 
         try{
-            BBBCommand cmd = new BBBPublishRecordings(bbbProxy, meeting_params );
+            BBBCommand cmd = new BBBDeleteRecordings(bbbProxy, this.recording_params );
             cmd.execute();
             log.info("Recording deleted");
 
@@ -46,11 +38,4 @@ public class DeleteRecording implements CompletionResponse {
 
         return completionResponse;
     }
-
-    private Map<String, Object> getData() {
-        Map<String, Object> data = new LinkedHashMap<String, Object>();
-        data.put("key", "value");
-        return data;
-    }
-
 }

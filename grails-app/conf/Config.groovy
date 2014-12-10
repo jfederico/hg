@@ -77,8 +77,16 @@ log4j = {
         console name:'console', layout:pattern(conversionPattern: '%d{[dd.MM.yy HH:mm:ss.SSS]} %-5p %c %x - %m%n')
         'null' name:'stacktrace'
     }
-    debug  logfile:    'org.hg.engine.bigbluebutton.*',
-                       'org.lti.api.*',
+    debug  logfile:    'org.hg',
+                       'org.hg.engine',
+                       'org.hg.engine.test',
+                       'org.hg.engine.bigbluebutton',
+                       'org.lti',
+                       'org.lti.api',
+                       'org.lti.impl',
+                       'org.bigbluebutton',
+                       'org.bigbluebutton.api',
+                       'org.bigbluebutton.impl',
                        'grails.app.controllers',
                        'grails.app.services',
                        'grails.app.domain'
