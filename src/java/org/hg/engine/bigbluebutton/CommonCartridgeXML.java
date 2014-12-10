@@ -12,8 +12,8 @@ public class CommonCartridgeXML implements CompletionResponse {
         this.definition = definition;
     }
 
-    public Map<String, String> get() {
-        Map<String, String> completionResponse = new HashMap<String, String>();
+    public Map<String, Object> get() {
+        Map<String, Object> completionResponse = new HashMap<String, Object>();
 
         completionResponse.put("type", "xml");
         completionResponse.put("content", getCommonCartridgeXML());

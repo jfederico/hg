@@ -35,7 +35,7 @@ public interface IEngine {
     public static String ENGINE_ACT_SSO  = "sso";
     public static String ENGINE_ACT_UI   = "ui";
 
-    abstract Map<String, String> getCompletionResponse() throws Exception;
+    abstract Map<String, Object> getCompletionResponse() throws Exception;
     abstract void setCompletionResponseCommand(CompletionResponse completionResponse);
     abstract LTIToolProvider getToolProvider();
     abstract String getEndpointURL();

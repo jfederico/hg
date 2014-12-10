@@ -71,7 +71,7 @@ public class Engine implements IEngine {
         return this.config;
     }
 
-    public Map<String, String> getCompletionResponse() 
+    public Map<String, Object> getCompletionResponse()
         throws Exception {
         return null;
     }
@@ -83,7 +83,7 @@ public class Engine implements IEngine {
         return this.tp;
     }
     
-    private Map<String, Object> getProfile(){
+    private Map<String, Object> getProfile() {
         Map<String, Object> return_profile = new HashMap<String, Object>();
 
         @SuppressWarnings("unchecked")

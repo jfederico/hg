@@ -11,7 +11,6 @@ import org.bigbluebutton.api.BBBProxy;
 import org.bigbluebutton.impl.BBBStoreImpl;
 import org.bigbluebutton.impl.BBBPublishRecordings;
 import org.hg.engine.CompletionResponse;
-import org.json.JSONObject;
 
 public class DeleteRecording implements CompletionResponse {
     private static final Logger log = Logger.getLogger(DeleteRecording.class);
@@ -28,9 +27,9 @@ public class DeleteRecording implements CompletionResponse {
         this.session_params = session_params;
     }
 
-    public Map<String, String> get()
+    public Map<String, Object> get()
         throws Exception{
-        Map<String, String> completionResponse = new LinkedHashMap<String, String>();
+        Map<String, Object> completionResponse = new LinkedHashMap<String, Object>();
 
         try{
             BBBCommand cmd = new BBBPublishRecordings(bbbProxy, meeting_params );
@@ -48,8 +47,8 @@ public class DeleteRecording implements CompletionResponse {
         return completionResponse;
     }
 
-    private JSONObject getData() {
-        JSONObject data = new JSONObject();
+    private Map<String, Object> getData() {
+        Map<String, Object> data = new LinkedHashMap<String, Object>();
         data.put("key", "value");
         return data;
     }

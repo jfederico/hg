@@ -44,7 +44,7 @@ public class TestEngine extends Engine {
     }
 
     @Override
-    public Map<String, String> getCompletionResponse()
+    public Map<String, Object> getCompletionResponse()
         throws Exception {
         return completionResponse.get();
     }

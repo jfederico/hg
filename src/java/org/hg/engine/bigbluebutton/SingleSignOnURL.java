@@ -27,9 +27,9 @@ public class SingleSignOnURL implements CompletionResponse {
         this.session_params = session_params;
     }
 
-    public Map<String, String> get()
+    public Map<String, Object> get()
         throws Exception{
-        Map<String, String> completionResponse = new LinkedHashMap<String, String>();
+        Map<String, Object> completionResponse = new LinkedHashMap<String, Object>();
 
         completionResponse.put("type", "url");
 
@@ -44,7 +44,7 @@ public class SingleSignOnURL implements CompletionResponse {
             throw new Exception("Error executing SSO", e.getCause());
         }
         completionResponse.put("content", ssoURL);
-        completionResponse.put("data", "{}");
+        completionResponse.put("data", new LinkedHashMap<String, Object>());
 
         return completionResponse;
     }

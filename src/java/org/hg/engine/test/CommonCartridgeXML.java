@@ -1,7 +1,7 @@
 package org.hg.engine.test;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.HashMap;
 
 import org.hg.engine.CompletionResponse;
 
@@ -12,11 +12,12 @@ public class CommonCartridgeXML implements CompletionResponse {
         this.definition = definition;
     }
 
-    public Map<String, String> get() {
-        Map<String, String> completionResponse = new HashMap<String, String>();
+    public Map<String, Object> get() {
+        Map<String, Object> completionResponse = new LinkedHashMap<String, Object>();
 
         completionResponse.put("type", "xml");
         completionResponse.put("content", getCommonCartridgeXML());
+        completionResponse.put("data", new LinkedHashMap<String, Object>());
 
         return completionResponse;
     }

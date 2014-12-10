@@ -33,6 +33,9 @@ public class BigBlueButtonEngine extends Engine {
     public static final String BBB_CMD_RECORDING_UNPUBLISH    = "unpublish";
     public static final String BBB_CMD_RECORDING_DELETE       = "delete";
 
+    public static final String BBB_ROLE_MODERATOR   = "moderator";
+    public static final String BBB_ROLE_VIEWER      = "viewer";
+
     public BigBlueButtonEngine(HttpServletRequest request, Map<String, String> params, Map<String, Object> config, String endpoint, Map<String, String> session_params)
         throws Exception {
         super(request, params, config, endpoint, session_params);
@@ -87,8 +90,8 @@ public class BigBlueButtonEngine extends Engine {
     }
 
     @Override
-    public Map<String, String> getCompletionResponse() 
-        throws Exception {
+    public Map<String, Object> getCompletionResponse()
+            throws Exception {
         return completionResponse.get();
     }
 
@@ -145,6 +148,11 @@ public class BigBlueButtonEngine extends Engine {
             sessionParams.put("password", DigestUtils.shaHex("ap" + params.get("resource_link_id") + params.get("oauth_consumer_key")));
         else
             sessionParams.put("password", DigestUtils.shaHex("mp" + params.get("resource_link_id") + params.get("oauth_consumer_key")));
+        //Set the role
+        if( LTIRoles.isStudent(params.get("roles")) || LTIRoles.isLearner(params.get("roles")) )
+            sessionParams.put("role", BBB_ROLE_VIEWER);
+        else
+            sessionParams.put("role", BBB_ROLE_MODERATOR);
         ////sessionParams.put("createTime", "");
         sessionParams.put("userID", DigestUtils.shaHex( params.get("user_id") + params.get("oauth_consumer_key")));
 

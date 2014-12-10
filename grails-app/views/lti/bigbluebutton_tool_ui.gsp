@@ -4,7 +4,6 @@
         <meta name="layout" content="lti" />
     </head>
     <body>
-<!-- tool.index  -->
         <h1 style="margin-left:20px; text-align: center;">
           <a title="<g:message code="tool.view.join" />" class="btn btn-primary btn-large" href="${endpoint_url}?act=ui&cmd=join"><g:message code="tool.view.join" /></a>
         </h1>
@@ -18,14 +17,14 @@
                     <th class="header c2" style="text-align:center;" scope="col"><g:message code="tool.view.description" /></th>
                     <th class="header c3" style="text-align:center;" scope="col"><g:message code="tool.view.date" /></th>
                     <th class="header c4" style="text-align:center;" scope="col"><g:message code="tool.view.duration" /></th>
-                    <g:if test="${ismoderator}">
+                    <g:if test="${data.ismoderator}">
                     <th class="header c5 lastcol" style="text-align:center;" scope="col"><g:message code="tool.view.actions" /></th>
                     </g:if>
                 </tr>
             </thead>
             <tbody>
-            <g:each in="${recordingList}" var="r">
-                <g:if test="${ismoderator || r.published == 'true'}">
+            <g:each in="${data.recordings}" var="r">
+                <g:if test="${data.ismoderator || r.published == 'true'}">
                 <tr class="r0 lastrow">
                     <td class="cell c0" style="text-align:center;">
                     <g:each in="${r.playback}" var="p">
@@ -33,10 +32,10 @@
                     </g:each>
                     </td>
                     <td class="cell c1" style="text-align:center;">${r.name}</td>
-                    <td class="cell c2" style="text-align:center;">${r.metadata.contextactivitydescription}</td>
+                    <td class="cell c2" style="text-align:center;">xxxxxxxxxxxxxx</td>
                     <td class="cell c3" style="text-align:center;">${new Date( Long.valueOf(r.startTime).longValue() )}</td>
                     <td class="cell c4" style="text-align:center;">${r.duration}</td>
-                    <g:if test="${ismoderator}">
+                    <g:if test="${data.ismoderator}">
                     <td class="cell c5 lastcol" style="text-align:center;">
                       <g:if test="${r.published == 'true'}">
                       <button class="btn btn-default btn-xs" name="unpublish_recording" type="submit" value="${r.recordID}" onClick="window.location='${createLink(controller:'tool',action:'publish',id: '0')}?bbb_recording_published=${r.published}&bbb_recording_id=${r.recordID}'; return false;"><g:message code="tool.view.unpublishRecording" /></button>
