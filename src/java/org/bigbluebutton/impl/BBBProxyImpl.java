@@ -326,30 +326,14 @@ public class BBBProxyImpl implements BBBProxy{
     }
 
     public String getGetRecordingsURL(Map<String, String> params) {
-        String qs;
-
-        qs = "meetingID=" + params.get("meetingID");
-        qs += getCheckSumParameterForQuery(APICALL_GETRECORDINGS, qs);
-
-        return this.endpoint + API_SERVERPATH + APICALL_GETRECORDINGS + "?" + qs;
+        return null;
     }
 
     public String getPublishRecordingsURL(Map<String, String> params) {
-        String qs;
-
-        qs = "recordingID=" + params.get("recordingID");
-        qs += "publish=" + params.get("publish");
-        qs += getCheckSumParameterForQuery(APICALL_PUBLISHRECORDINGS, qs);
-
-        return this.endpoint + API_SERVERPATH + APICALL_PUBLISHRECORDINGS + "?" + qs;
+        return null;
     }
 
     public String getDeleteRecordingsURL(Map<String, String> params) {
-        String qs;
-
-        qs = "recordingID=" + params.get("recordingID");
-        qs += getCheckSumParameterForQuery(APICALL_DELETERECORDINGS, qs);
-
-        return this.endpoint + API_SERVERPATH + APICALL_DELETERECORDINGS + "?" + qs;
+        return null;
     }
 }

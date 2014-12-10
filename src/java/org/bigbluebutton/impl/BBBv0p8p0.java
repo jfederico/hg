@@ -74,7 +74,7 @@ public class BBBv0p8p0 extends BBBProxyImpl {
     public String getPublishRecordingsURL(Map<String, String> params) {
         String qs;
 
-        qs = "recordID=" + params.get("recordID");
+        qs = "recordingID=" + params.get("recordingID");
         qs += "&publish=" + Boolean.valueOf(params.get("publish"));
         qs += getCheckSumParameterForQuery(APICALL_PUBLISHRECORDINGS, qs);
 

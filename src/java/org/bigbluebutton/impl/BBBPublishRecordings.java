@@ -54,7 +54,7 @@ public class BBBPublishRecordings implements BBBCommand {
         log.info(ACTION);
         String url = getURL();
         log.debug("Executing [" + url + "]");
-        System.out.println("Executing [" + url + "]");
+        System.out.println("====Executing [" + url + "]");
         response = BBBProxyImpl.doAPICall(url);
 
         return response;
