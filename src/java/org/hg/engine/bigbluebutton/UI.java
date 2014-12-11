@@ -40,6 +40,7 @@ public class UI implements CompletionResponse {
         return completionResponse;
     }
 
+    @SuppressWarnings("unchecked")
     protected Map<String, Object> getData()
             throws Exception {
         Map<String, Object> data = new LinkedHashMap<String, Object>();
