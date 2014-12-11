@@ -1,6 +1,10 @@
 package org.hg.engine.bigbluebutton;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
@@ -178,7 +182,19 @@ public class BigBlueButtonEngine extends Engine {
     }
 
     private String getValidatedLogoutURL(String logoutURL){
-        return (logoutURL == null)? "": logoutURL;
+        try {
+            URL url = new URL(logoutURL);
+            URLConnection conn = url.openConnection();
+            conn.connect();
+            return URLEncoder.encode(logoutURL, "UTF-8");
+        } catch (MalformedURLException e) {
+            // the URL is not in a valid form
+        } catch (IOException e) {
+            // the connection couldn't be established
+        } catch (Exception e) {
+            // the URL could not be URLEncoded
+        }
+        return "";
     }
 
     private String getValidatedUserFullName(Map<String, String> params){
