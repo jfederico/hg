@@ -1,4 +1,4 @@
-package org.lti.api;
+package org.lti;
 
 import java.util.Map;
 import java.util.Properties;
@@ -8,6 +8,7 @@ import net.oauth.OAuthMessage;
 import net.oauth.signature.HMAC_SHA1;
 
 import org.apache.log4j.Logger;
+import org.hg.engine.CompletionResponse;
 import org.json.JSONArray;
 
 public abstract class LTIToolProvider {
@@ -51,7 +52,7 @@ public abstract class LTIToolProvider {
         HMAC_SHA1 hmac = new HMAC_SHA1();
         hmac.setConsumerSecret(this.secret);
         String baseString = HMAC_SHA1.getBaseString(oam);
-        System.out.println("Base Message String = [ " + baseString + " ]\n");
+        log.debug("Base Message String = [ " + baseString + " ]\n");
         if( hmac.isValid(oauth_signature, baseString) )
             response = true;
         log.debug("Calculated: " + hmac.getSignature(baseString) + " Received: " + oauth_signature);
@@ -72,6 +73,13 @@ public abstract class LTIToolProvider {
         return reqProp;
     }
 
+    protected ValidateRequiredParameters validateRequiredParameters;
+
+    public void setValidateRequiredParametersCommand(ValidateRequiredParameters validateRequiredParameters) {
+        this.validateRequiredParameters = validateRequiredParameters;
+    }
+    
+    public abstract void validateRequiredParameters(JSONArray requiredParameters) throws LTIException, Exception;
     public abstract boolean hasRequiredParameters(JSONArray requiredParameters) throws LTIException, Exception;
     public abstract void overrideParameters(JSONArray overrides) throws Exception;
     public abstract Map<String, String> getParameters();

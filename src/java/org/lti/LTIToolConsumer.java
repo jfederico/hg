@@ -1,4 +1,4 @@
-package org.lti.api;
+package org.lti;
 
 public abstract class LTIToolConsumer {
 

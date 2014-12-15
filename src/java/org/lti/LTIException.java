@@ -1,4 +1,4 @@
-package org.lti.api;
+package org.lti;
 
 public class LTIException extends Exception {
     private static final long serialVersionUID = 4842929374437922453L;

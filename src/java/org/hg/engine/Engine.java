@@ -7,9 +7,9 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.lti.api.LTIToolProvider;
-import org.lti.api.SimpleLTIStore;
 import org.apache.log4j.Logger;
+import org.lti.LTIToolProvider;
+import org.lti.SimpleLTIStore;
 import org.json.JSONArray;
 
 public class Engine implements IEngine {
@@ -53,7 +53,8 @@ public class Engine implements IEngine {
             this.params = _params;
             */
             if ( this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_LAUNCH) && this.grails_params.get(PARAM_ACT).equals(ENGINE_ACT_SSO) ||
-                 this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_LAUNCH) && this.grails_params.get(PARAM_ACT).equals(ENGINE_ACT_UI) )
+                 this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_LAUNCH) && this.grails_params.get(PARAM_ACT).equals(ENGINE_ACT_UI) ||
+                 this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_REGISTRATION) && this.grails_params.get(PARAM_ACT).equals(ENGINE_ACT_SSO) )
             {
                  this.params = session_params;
                  this.tp = SimpleLTIStore.createToolProvider(this.params, this.config, this.endpoint_url);
@@ -61,12 +62,12 @@ public class Engine implements IEngine {
                  Map<String, Object> profile = getProfile();
                  overrideParameters(profile);
                  validateRequiredParameters(profile);
-            } else if ( this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_REGISTRATION) && this.grails_params.get(PARAM_ACT).equals(ENGINE_ACT_SSO) ) {
-                this.params = session_params;
-                this.tp = SimpleLTIStore.createToolProvider(this.params, this.config, this.endpoint_url);
-
-                Map<String, Object> profile = getProfile();
-                validateRequiredParameters4Registration(profile);
+            //} else if ( this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_REGISTRATION) && this.grails_params.get(PARAM_ACT).equals(ENGINE_ACT_SSO) ) {
+            //    this.params = session_params;
+            //    this.tp = SimpleLTIStore.createToolProvider(this.params, this.config, this.endpoint_url);
+            //
+            //    Map<String, Object> profile = getProfile();
+            //    validateRequiredParameters(profile);
             } else {
                 this.params = params;
             }
@@ -121,18 +122,15 @@ public class Engine implements IEngine {
         this.tp.overrideParameters(json_override_parameters);
     }
 
-    private void validateRequiredParameters(Map<String, Object> profile)
+    private void validateRequiredParameters(Map<String, Object> full_profile)
             throws Exception {
         @SuppressWarnings("unchecked")
-        JSONArray json_required_parameters = new JSONArray((ArrayList<Object>)profile.get("required"));
-        if( !this.tp.hasRequiredParameters(json_required_parameters) )
-            throw new Exception("Missing required parameters");
-        else
-            log.debug("All required parameters are included");
-    }
-
-    private void validateRequiredParameters4Registration(Map<String, Object> profile)
-            throws Exception {
+        Map<String, Object> profile = (HashMap<String, Object>)full_profile.get("profile");
+        @SuppressWarnings("unchecked")
+        ArrayList<Object> requiredParameters = (ArrayList<Object>)profile.get("required_params");
+        JSONArray json_required_parameters = new JSONArray(requiredParameters);
+        log.debug("Validating required parameters: " + json_required_parameters.toString() + " on " + (String)full_profile.get("name"));
+        this.tp.validateRequiredParameters(json_required_parameters);
     }
 
     private void validateEngineType(String type)

@@ -16,7 +16,7 @@ import org.apache.log4j.Logger;
 import org.hg.EngineFactory;
 import org.hg.engine.CompletionResponse;
 import org.hg.engine.Engine;
-import org.lti.api.LTIRoles;
+import org.lti.LTIRoles;
 
 public class BigBlueButtonEngine extends Engine {
     private static final Logger log = Logger.getLogger(BigBlueButtonEngine.class);

@@ -2,7 +2,7 @@ package org.hg.engine;
 
 import java.util.Map;
 
-import org.lti.api.LTIToolProvider;
+import org.lti.LTIToolProvider;
 
 public interface IEngine {
 

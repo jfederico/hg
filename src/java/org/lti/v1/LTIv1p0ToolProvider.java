@@ -1,27 +1,35 @@
-package org.lti.impl;
+package org.lti.v1;
 
 import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.lti.api.LTIException;
-import org.lti.api.LTIToolProvider;
+import org.lti.LTIException;
+import org.lti.LTIToolProvider;
+import org.lti.LTIv1;
 
-public class LTIv2p0ToolProvider extends LTIToolProvider implements LTIv1p1 {
+public class LTIv1p0ToolProvider extends LTIToolProvider implements LTIv1 {
 
     private static final Logger log = Logger.getLogger(LTIv1p0ToolProvider.class);
 
-    public LTIv2p0ToolProvider(String endpoint, String key, String secret,
-            Map<String, String> params) throws LTIException, Exception {
+    public LTIv1p0ToolProvider(String endpoint, String key, String secret, Map<String, String> params)
+            throws LTIException, Exception {
         super(endpoint, key, secret, params);
     }
 
     public String getLTIVersion(){
-        return LTIv1p0.VERSION;
+        return VERSION;
     }
     
-    public boolean hasRequiredParameters(JSONArray requiredParameters) throws LTIException, Exception {
+    public void validateRequiredParameters(JSONArray requiredParameters)
+            throws LTIException, Exception {
+        log.debug("Validating required parameters: " + requiredParameters.toString());
+        this.validateRequiredParameters.execute(this.params, requiredParameters);
+    }
+
+    public boolean hasRequiredParameters(JSONArray requiredParameters)
+            throws LTIException, Exception {
         boolean response = true;
         String missingParams = "";
         for (int i = 0; i < requiredParameters.length(); i++) {
@@ -38,7 +46,8 @@ public class LTIv2p0ToolProvider extends LTIToolProvider implements LTIv1p1 {
         else return response;
     }
 
-    public void overrideParameters(JSONArray overrides) throws Exception {
+    public void overrideParameters(JSONArray overrides)
+            throws Exception {
         JSONObject override;
         String source;
         String target;
@@ -69,9 +78,12 @@ public class LTIv2p0ToolProvider extends LTIToolProvider implements LTIv1p1 {
     public boolean hasParameter(String key){
         return params.containsKey(key);
     }
-
+    
     public boolean isToolConsumerInfoProductFamilyCode(String code) {
         return this.params.get(TOOL_CONSUMER_INFO_PRODUCT_FAMILY_CODE).equals(code);
     }
 
+    public static Logger getLog() {
+        return log;
+    }
 }

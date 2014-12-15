@@ -90,7 +90,7 @@
                                     "value": "Student,Learner"
                                 }
                             ],
-                            "requiredParams": [
+                            "required_params": [
                                 {
                                     "name": "tool_consumer_info_product_family_code"
                                 },
