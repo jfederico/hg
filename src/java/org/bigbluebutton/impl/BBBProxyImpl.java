@@ -240,17 +240,17 @@ public class BBBProxyImpl implements BBBProxy{
     public String getCreateURL(Map<String, String> params){
         String qs = "";
 
-        qs += "name=" + params.get("name");
-        qs += "&meetingID=" + params.get("meetingID");
-        qs += "&moderatorPW=" + params.get("moderatorPW");
-        qs += "&attendeePW=" + params.get("attendeePW");
-        qs += params.containsKey("welcome")? "&welcome=" + params.get("welcome"): "";
-        qs += params.containsKey("logoutURL")? "&logoutURL=" + params.get("logoutURL"): "";
-        Integer voiceBridge = Integer.valueOf(params.containsKey("voiceBridge")? params.get("voiceBridge"): "0");
+        qs += PARAM_NAME +"=" + params.get(PARAM_NAME);
+        qs += "&" + PARAM_MEETING_ID + "=" + params.get(PARAM_MEETING_ID);
+        qs += "&" + PARAM_MODERATOR_PW + "=" + params.get(PARAM_MODERATOR_PW);
+        qs += "&" + PARAM_ATTENDEE_PW + "=" + params.get(PARAM_ATTENDEE_PW);
+        qs += params.containsKey(PARAM_WELCOME)? "&" + PARAM_WELCOME + "=" + params.get(PARAM_WELCOME): "";
+        qs += params.containsKey(PARAM_LOGOUT_URL)? "&" + PARAM_LOGOUT_URL + "=" + params.get(PARAM_LOGOUT_URL): "";
+        Integer voiceBridge = Integer.valueOf(params.containsKey(PARAM_VOICE_BRIDGE)? params.get(PARAM_VOICE_BRIDGE): "0");
         voiceBridge = ( voiceBridge == null || voiceBridge == 0 )? 70000 + new Random(System.currentTimeMillis()).nextInt(10000): voiceBridge;
-        qs += "&voiceBridge=" + voiceBridge.toString();
-        qs += params.containsKey("dialNumber")? "&dialNumber=" + params.get("dialNumber"): "";
-        qs += params.containsKey("duration")? "&duration=" + params.get("duration"): "";
+        qs += "&" + PARAM_VOICE_BRIDGE + "=" + voiceBridge.toString();
+        qs += params.containsKey(PARAM_DIAL_NUMBER)? "&" + PARAM_DIAL_NUMBER + "=" + params.get(PARAM_DIAL_NUMBER): "";
+        qs += params.containsKey(PARAM_DURATION)? "&" + PARAM_DURATION + "=" + params.get(PARAM_DURATION): "";
         qs += getCheckSumParameterForQuery(APICALL_CREATE, qs);
 
         return this.endpoint + API_SERVERPATH + APICALL_CREATE + "?" + qs;
@@ -259,47 +259,47 @@ public class BBBProxyImpl implements BBBProxy{
     public String getJoinURL(Map<String, String> params){
         String qs = "";
 
-        qs += "fullName=" + params.get("fullName");
-        qs += "&meetingID=" + params.get("meetingID");
-        qs += "&password=" + params.get("password");
-        qs += params.containsKey("createTime")? "&createTime=" + params.get("createTime"): "";
-        qs += params.containsKey("userID")? "&userID=" + params.get("userID"): "";
+        qs += PARAM_FULL_NAME + "=" + params.get(PARAM_FULL_NAME);
+        qs += "&" + PARAM_MEETING_ID + "=" + params.get(PARAM_MEETING_ID);
+        qs += "&" + PARAM_PASSWORD + "=" + params.get(PARAM_PASSWORD);
+        qs += params.containsKey(PARAM_CREATE_TIME)? "&" + PARAM_CREATE_TIME + "=" + params.get(PARAM_CREATE_TIME): "";
+        qs += params.containsKey(PARAM_USER_ID)? "&" + PARAM_USER_ID + "=" + params.get(PARAM_USER_ID): "";
         qs += getCheckSumParameterForQuery(APICALL_JOIN, qs);
 
         return this.endpoint + API_SERVERPATH + APICALL_JOIN + "?" + qs;
     }
     
     public String getIsMeetingRunningURL(Map<String, String> params) {
-        String qs;
+        String qs = "";
 
-        qs = "meetingID=" + params.get("meetingID");
+        qs += PARAM_MEETING_ID + "=" + params.get(PARAM_MEETING_ID);
         qs += getCheckSumParameterForQuery(APICALL_ISMEETINGRUNNING, qs);
 	    
         return this.endpoint + API_SERVERPATH + APICALL_ISMEETINGRUNNING + "?" + qs;
     }
 
     public String getEndURL(Map<String, String> params) {
-        String qs;
+        String qs = "";
 
-        qs = "meetingID=" + params.get("meetingID");
-        qs += "&password=" + params.get("password");
+        qs += PARAM_MEETING_ID + "=" + params.get(PARAM_MEETING_ID);
+        qs += "&" + PARAM_PASSWORD + "=" + params.get(PARAM_PASSWORD);
         qs += getCheckSumParameterForQuery(APICALL_END, qs);
 	    
         return this.endpoint + API_SERVERPATH + APICALL_END + "?" + qs;
     }
 
     public String getGetMeetingInfoURL(Map<String, String> params) {
-        String qs;
+        String qs = "";
 
-        qs = "meetingID=" + params.get("meetingID");
-        qs += "&password=" + params.get("password");
+        qs += PARAM_MEETING_ID + "=" + params.get(PARAM_MEETING_ID);
+        qs += "&" + PARAM_PASSWORD + "=" + params.get(PARAM_PASSWORD);
         qs += getCheckSumParameterForQuery(APICALL_GETMEETINGINFO, qs);
 
         return this.endpoint + API_SERVERPATH + APICALL_GETMEETINGINFO + "?" + qs;
     }
 
     public String getGetMeetingsURL() {
-        String qs;
+        String qs = "";
 
         qs = "random=xyz";
         qs = getCheckSumParameterForQuery(APICALL_GETMEETINGS, qs);

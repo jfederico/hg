@@ -37,6 +37,32 @@ public interface BBBProxy {
     public final static String APICALL_PUBLISHRECORDINGS = "publishRecordings";
     public final static String APICALL_DELETERECORDINGS  = "deleteRecordings";
 
+    // API Params
+    public final static String PARAM_NAME               = "name";
+    public final static String PARAM_MEETING_ID         = "meetingID";
+    public final static String PARAM_ATTENDEE_PW        = "attendeePW";
+    public final static String PARAM_MODERATOR_PW       = "moderatorPW";
+    public final static String PARAM_WELCOME            = "welcome";
+    public final static String PARAM_DIAL_NUMBER        = "dialNumber";
+    public final static String PARAM_VOICE_BRIDGE       = "voiceBridge";
+    public final static String PARAM_WEB_VOICE          = "webVoice";
+    public final static String PARAM_LOGOUT_URL         = "logoutURL";
+    public final static String PARAM_RECORD             = "record";
+    public final static String PARAM_DURATION           = "duration";
+    public final static String PARAM_META               = "meta";
+    public final static String PARAM_FULL_NAME          = "fullName";    
+    public final static String PARAM_PASSWORD           = "password";
+    public final static String PARAM_CREATE_TIME        = "createTime";
+    public final static String PARAM_USER_ID            = "userID";
+    public final static String PARAM_WEB_VOICE_CONF     = "webVoiceConf";
+    public final static String PARAM_CONFIG_TOKEN       = "configToken";
+    public final static String PARAM_AVATAR_URL         = "avatarURL";
+    public final static String PARAM_REDIRECT_CLIENT    = "redirectClient";
+    public final static String PARAM_CLIENT_URL         = "clientURL";
+    public final static String PARAM_RECORD_ID          = "recordID";
+    public final static String PARAM_PUBLISH            = "publish";
+    public final static String PARAM_CONFIG_XML         = "configXML";
+
     // API Response Codes
     public final static String APIRESPONSE_SUCCESS = "SUCCESS";
     public final static String APIRESPONSE_FAILED = "FAILED";
