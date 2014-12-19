@@ -35,7 +35,7 @@ public class PublishRecording extends UI {
 
         completionResponse.put("type", "html");
         completionResponse.put("content", "bigbluebutton_tool_ui");
-        completionResponse.put("data", getData().toString());
+        completionResponse.put("data", getData());
 
         return completionResponse;
     }

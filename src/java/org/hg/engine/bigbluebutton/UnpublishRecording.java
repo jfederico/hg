@@ -30,7 +30,7 @@ public class UnpublishRecording extends UI {
             cmd.execute();
             log.info("Recording unpublished");
         } catch ( BBBException e){
-            throw new Exception("Error executing Unpublish Recording", e.getCause());
+            throw new Exception("Error executing unpublishRecording", e.getCause());
         }
 
         completionResponse.put("type", "html");

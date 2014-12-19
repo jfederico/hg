@@ -23,18 +23,19 @@ public class DeleteRecording extends UI  {
         throws Exception{
         Map<String, Object> completionResponse = new LinkedHashMap<String, Object>();
 
+        completionResponse.put("type", "url");
+
         try{
             BBBCommand cmd = new BBBDeleteRecordings(bbbProxy, this.recording_params );
             cmd.execute();
             log.info("Recording deleted");
-
         } catch ( BBBException e){
-            throw new Exception("Error executing Delete Recording", e.getCause());
+            throw new Exception("Error executing deleteRecording", e.getCause());
         }
 
         completionResponse.put("type", "html");
         completionResponse.put("content", "bigbluebutton_tool_ui");
-        completionResponse.put("data", getData().toString());
+        completionResponse.put("data", getData());
 
         return completionResponse;
     }
