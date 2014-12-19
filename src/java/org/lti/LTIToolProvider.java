@@ -78,4 +78,5 @@ public abstract class LTIToolProvider {
     public abstract void putParameter(String key, String value);
     public abstract boolean hasParameter(String key);
     public abstract boolean isToolConsumerInfoProductFamilyCode(String code);
+    public abstract String getProductFamilyCode();
 }

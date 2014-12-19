@@ -3,8 +3,8 @@ package org.lti;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.lti.v1.LTIv1p0ToolProvider;
-import org.lti.v2.LTIv2p0ToolProvider;
+import org.lti.v1.LTIv1ToolProvider;
+import org.lti.v2.LTIv2ToolProvider;
 
 public class SimpleLTIStore {
 
@@ -21,6 +21,7 @@ public class SimpleLTIStore {
         LTIToolProvider tp = null;
 
         String version = getVersionNumber(params);
+        log.debug("LTI version: " + version);
 
         try {
             @SuppressWarnings("unchecked")
@@ -29,13 +30,17 @@ public class SimpleLTIStore {
             String secret = (String)lti_cfg.get("secret");
 
             if( version.equals(LTI_V1)) {
-                tp = new LTIv1p0ToolProvider(endpoint, key, secret, params);
+                tp = new LTIv1ToolProvider(endpoint, key, secret, params);
                 tp.setValidateRequiredParametersCommand( new org.lti.v1.ValidateRequiredParameters4Launch() );
             } else if( version.equals(LTI_V2)) {
-                tp = new LTIv2p0ToolProvider(endpoint, key, secret, params);
+                tp = new LTIv2ToolProvider(endpoint, key, secret, params);
+                log.debug(config.toString());
+                log.debug(params.toString());
+                log.debug(tp.getParameters().toString());
                 tp.setValidateRequiredParametersCommand( new org.lti.v2.ValidateRequiredParameters4Launch() );
+                log.debug("HERE");
             } else {
-                tp = new LTIv1p0ToolProvider(endpoint, key, secret, params);
+                tp = new LTIv1ToolProvider(endpoint, key, secret, params);
                 tp.setValidateRequiredParametersCommand( new org.lti.v1.ValidateRequiredParameters4Launch() );
             }
 
@@ -49,7 +54,6 @@ public class SimpleLTIStore {
         String versionNumber = LTI_V1;
 
         String version = params.containsKey(LTI.LTI_VERSION)? params.get(LTI.LTI_VERSION): LTI_V1P0;
-        log.debug("LTI version: " + version);
         String[] versionA = version.split("-"); 
         String[] versionB = versionA[1].split("p");
         versionNumber = versionB[0];

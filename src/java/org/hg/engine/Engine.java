@@ -60,6 +60,7 @@ public class Engine implements IEngine {
 
                  Map<String, Object> profile = getProfile();
                  overrideParameters(profile);
+                 //this.tp.validateRequiredParameters(json_required_parameters);
                  validateRequiredParameters(profile);
             } else if ( this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_REGISTRATION) ) {
                 this.params = session_params;
@@ -101,9 +102,10 @@ public class Engine implements IEngine {
         @SuppressWarnings("unchecked")
         List<Map<String, Object>> profiles = lti_cfg != null? (List<Map<String, Object>>)lti_cfg.get("profiles"): null;
 
+        String profile_name = this.tp.getProductFamilyCode();
         if( profiles != null ) {
             for( Map<String, Object> profile : profiles ){
-                if( this.tp.isToolConsumerInfoProductFamilyCode((String)profile.get("name")) ) {
+                if( profile_name.equals((String)profile.get("name")) ) {
                     return_profile = profile;
                     break;
                 }
