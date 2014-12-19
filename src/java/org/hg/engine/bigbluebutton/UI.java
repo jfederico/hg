@@ -73,6 +73,7 @@ public class UI implements CompletionResponse {
         }
 
         data.put("ismoderator", BigBlueButtonEngine.BBB_ROLE_MODERATOR.equals(session_params.get("role")) );
+        log.info(data);
         return data;
     }
 }

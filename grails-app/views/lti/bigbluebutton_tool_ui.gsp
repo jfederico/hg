@@ -24,12 +24,14 @@
             </thead>
             <tbody>
             <g:each in="${data.recordings}" var="r">
-                <g:if test="${data.ismoderator || r.published == 'true'}">
+                <g:if test="${data.ismoderator || r.published == true}">
                 <tr class="r0 lastrow">
                     <td class="cell c0" style="text-align:center;">
+                    <g:if test="${r.published == true}">
                     <g:each in="${r.playback}" var="p">
                         <a title="${p.type}" target="_new" href="${p.url}">${p.type}</a>&#32;
                     </g:each>
+                    </g:if>
                     </td>
                     <td class="cell c1" style="text-align:center;">${r.name}</td>
                     <td class="cell c2" style="text-align:center;">xxxxxxxxxxxxxx</td>
@@ -37,7 +39,7 @@
                     <td class="cell c4" style="text-align:center;">${r.duration}</td>
                     <g:if test="${data.ismoderator}">
                     <td class="cell c5 lastcol" style="text-align:center;">
-                      <g:if test="${r.published == 'true'}">
+                      <g:if test="${r.published == true}">
                       <button class="btn btn-default btn-xs" name="unpublish_recording" type="submit" value="${r.recordID}" onClick="window.location='${endpoint_url}?act=ui&cmd=unpublish&bbb_recording_published=${r.published}&bbb_recording_id=${r.recordID}'; return false;"><g:message code="bigbluebutton.ui.view.unpublishRecording" /></button>
                       </g:if>
                       <g:else>

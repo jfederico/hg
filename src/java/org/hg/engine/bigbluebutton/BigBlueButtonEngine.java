@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.log4j.Logger;
+import org.bigbluebutton.api.BBBProxy;
 import org.hg.EngineFactory;
 import org.hg.engine.CompletionResponse;
 import org.hg.engine.Engine;
@@ -27,10 +28,13 @@ public class BigBlueButtonEngine extends Engine {
     public static final String ENGINE_URL = "http://www.bigbluebutton.org/";
     public static final String ENGINE_CONTACT_EMAIL = "bigbluebutton-users@googlegroups.com";
 
-    public static final String PARAM_CUSTOM_RECORD      = "custom_record";
-    public static final String PARAM_CUSTOM_DURATION    = "custom_duration";
-    public static final String PARAM_CUSTOM_VOICEBRIDGE = "custom_voicebridge";
-    public static final String PARAM_CUSTOM_WELCOME     = "custom_welcome";
+    public static final String PARAM_CUSTOM_RECORD          = "custom_record";
+    public static final String PARAM_CUSTOM_DURATION        = "custom_duration";
+    public static final String PARAM_CUSTOM_VOICEBRIDGE     = "custom_voicebridge";
+    public static final String PARAM_CUSTOM_WELCOME         = "custom_welcome";
+
+    public static final String PARAM_BBB_RECORDING_ID       = "bbb_recording_id";
+    public static final String PARAM_BBB_RECORDING_PUBLISHED= "bbb_recording_published";
 
     public static final String BBB_CMD_MEETING_JOIN         = "join";
     public static final String BBB_CMD_RECORDING_PUBLISH    = "publish";
@@ -81,10 +85,16 @@ public class BigBlueButtonEngine extends Engine {
                     if( this.grails_params.containsKey(PARAM_CMD) && this.grails_params.get(PARAM_CMD).equals(BBB_CMD_MEETING_JOIN) ) {
                         setCompletionResponseCommand( new SingleSignOnURL(engine, getMeetingParams(), getSessionParams()) );
                     } else if( this.grails_params.containsKey(PARAM_CMD) && this.grails_params.get(PARAM_CMD).equals(BBB_CMD_RECORDING_PUBLISH) ) {
+                        this.tp.putParameter(PARAM_BBB_RECORDING_ID, params.get(PARAM_BBB_RECORDING_ID));
+                        this.tp.putParameter(PARAM_BBB_RECORDING_PUBLISHED, params.get(PARAM_BBB_RECORDING_PUBLISHED));
                         setCompletionResponseCommand( new PublishRecording(engine, getMeetingParams(), getSessionParams(), getRecordingParams()) );
                     } else if( this.grails_params.containsKey(PARAM_CMD) && this.grails_params.get(PARAM_CMD).equals(BBB_CMD_RECORDING_UNPUBLISH) ) {
+                        this.tp.putParameter(PARAM_BBB_RECORDING_ID, params.get(PARAM_BBB_RECORDING_ID));
+                        this.tp.putParameter(PARAM_BBB_RECORDING_PUBLISHED, params.get(PARAM_BBB_RECORDING_PUBLISHED));
                         setCompletionResponseCommand( new UnpublishRecording(engine, getMeetingParams(), getSessionParams(), getRecordingParams()) );
                     } else if( this.grails_params.containsKey(PARAM_CMD) && this.grails_params.get(PARAM_CMD).equals(BBB_CMD_RECORDING_DELETE) ) {
+                        this.tp.putParameter(PARAM_BBB_RECORDING_ID, params.get(PARAM_BBB_RECORDING_ID));
+                        this.tp.putParameter(PARAM_BBB_RECORDING_PUBLISHED, params.get(PARAM_BBB_RECORDING_PUBLISHED));
                         setCompletionResponseCommand( new DeleteRecording(engine, getMeetingParams(), getSessionParams(), getRecordingParams()) );
                     }
                 } else {
@@ -108,59 +118,59 @@ public class BigBlueButtonEngine extends Engine {
     }
 
     private Map<String, String> getMeetingParams(){
-        Map<String, String> params = tp.getParameters();
+        Map<String, String> params = this.tp.getParameters();
         Map<String, String> meetingParams = new HashMap<String, String>();
         // Map ToolProvider parameters with Meeting parameters
-        meetingParams.put("name", getValidatedMeetingName(params.get("resource_link_title")));
-        meetingParams.put("meetingID", getValidatedMeetingId(params.get("resource_link_id"), params.get("oauth_consumer_key")));
-        meetingParams.put("attendeePW", DigestUtils.shaHex("ap" + params.get("resource_link_id") + params.get("oauth_consumer_key")));
-        meetingParams.put("moderatorPW", DigestUtils.shaHex("mp" + params.get("resource_link_id") + params.get("oauth_consumer_key")));
+        meetingParams.put(BBBProxy.PARAM_NAME, getValidatedMeetingName(params.get("resource_link_title")));
+        meetingParams.put(BBBProxy.PARAM_MEETING_ID, getValidatedMeetingId(params.get("resource_link_id"), params.get("oauth_consumer_key")));
+        meetingParams.put(BBBProxy.PARAM_ATTENDEE_PW, DigestUtils.shaHex("ap" + params.get("resource_link_id") + params.get("oauth_consumer_key")));
+        meetingParams.put(BBBProxy.PARAM_MODERATOR_PW, DigestUtils.shaHex("mp" + params.get("resource_link_id") + params.get("oauth_consumer_key")));
         try {
-            meetingParams.put("welcome", URLEncoder.encode(params.containsKey(PARAM_CUSTOM_WELCOME)? params.get(PARAM_CUSTOM_WELCOME): "Welcome to <b>" + params.get("resource_link_title") + "</b>", "UTF-8") );
+            meetingParams.put(BBBProxy.PARAM_WELCOME, URLEncoder.encode(params.containsKey(PARAM_CUSTOM_WELCOME)? params.get(PARAM_CUSTOM_WELCOME): "Welcome to <b>" + params.get("resource_link_title") + "</b>", "UTF-8") );
         } catch (UnsupportedEncodingException e) {
             log.debug("Error encoding meetingName: " + e.getMessage());
-            meetingParams.put("welcome", "");
+            meetingParams.put(BBBProxy.PARAM_WELCOME, "");
         }
-        meetingParams.put("voiceBridge", params.containsKey(PARAM_CUSTOM_VOICEBRIDGE)? params.get(PARAM_CUSTOM_VOICEBRIDGE): "0");
+        meetingParams.put(BBBProxy.PARAM_VOICE_BRIDGE, params.containsKey(PARAM_CUSTOM_VOICEBRIDGE)? params.get(PARAM_CUSTOM_VOICEBRIDGE): "0");
         if(params.containsKey(PARAM_CUSTOM_RECORD)){
-            meetingParams.put("record", Boolean.valueOf(params.get(PARAM_CUSTOM_RECORD)).toString());
+            meetingParams.put(BBBProxy.PARAM_RECORD, Boolean.valueOf(params.get(PARAM_CUSTOM_RECORD)).toString());
             try {
-                meetingParams.put("welcome", meetingParams.get("welcome") + URLEncoder.encode("<br><br>This meeting is being recorded", "UTF-8"));
+                meetingParams.put(BBBProxy.PARAM_WELCOME, meetingParams.get(BBBProxy.PARAM_WELCOME) + URLEncoder.encode("<br><br>This meeting is being recorded", "UTF-8"));
             } catch (UnsupportedEncodingException e) {
                 log.debug("Error encoding meetingName: " + e.getMessage());
             }
         }
         if(params.containsKey(PARAM_CUSTOM_DURATION)){
-            meetingParams.put("duration", params.get(PARAM_CUSTOM_DURATION));
+            meetingParams.put(BBBProxy.PARAM_DURATION, params.get(PARAM_CUSTOM_DURATION));
             try {
-                meetingParams.put("welcome", meetingParams.get("welcome") + URLEncoder.encode("<br><br>The maximum duration for this meeting is ", "UTF-8") + params.get("extra_duration") + URLEncoder.encode(" minutes.", "UTF-8"));
+                meetingParams.put(BBBProxy.PARAM_WELCOME, meetingParams.get(BBBProxy.PARAM_WELCOME) + URLEncoder.encode("<br><br>The maximum duration for this meeting is ", "UTF-8") + params.get("extra_duration") + URLEncoder.encode(" minutes.", "UTF-8"));
             } catch (UnsupportedEncodingException e) {
                 log.debug("Error encoding meetingName: " + e.getMessage());
             }
         }
         if(params.containsKey("launch_presentation_return_url"))
-            meetingParams.put("logoutURL", getValidatedLogoutURL(params.get("launch_presentation_return_url")));
+            meetingParams.put(BBBProxy.PARAM_LOGOUT_URL, getValidatedLogoutURL(params.get("launch_presentation_return_url")));
 
         return meetingParams;
     }
 
     private Map<String, String> getSessionParams(){
-        Map<String, String> params = tp.getParameters();
+        Map<String, String> params = this.tp.getParameters();
         Map<String, String> sessionParams = new HashMap<String, String>();
         // Map LtiUser parameters with Session parameters
-        sessionParams.put("fullName", getValidatedUserFullName(params));
-        sessionParams.put("meetingID", getValidatedMeetingId(params.get("resource_link_id"), params.get("oauth_consumer_key")));
+        sessionParams.put(BBBProxy.PARAM_FULL_NAME, getValidatedUserFullName(params));
+        sessionParams.put(BBBProxy.PARAM_MEETING_ID, getValidatedMeetingId(params.get("resource_link_id"), params.get("oauth_consumer_key")));
         if( LTIRoles.isStudent(params.get("roles")) || LTIRoles.isLearner(params.get("roles")) )
-            sessionParams.put("password", DigestUtils.shaHex("ap" + params.get("resource_link_id") + params.get("oauth_consumer_key")));
+            sessionParams.put(BBBProxy.PARAM_PASSWORD, DigestUtils.shaHex("ap" + params.get("resource_link_id") + params.get("oauth_consumer_key")));
         else
-            sessionParams.put("password", DigestUtils.shaHex("mp" + params.get("resource_link_id") + params.get("oauth_consumer_key")));
+            sessionParams.put(BBBProxy.PARAM_PASSWORD, DigestUtils.shaHex("mp" + params.get("resource_link_id") + params.get("oauth_consumer_key")));
         //Set the role
         if( LTIRoles.isStudent(params.get("roles")) || LTIRoles.isLearner(params.get("roles")) )
             sessionParams.put("role", BBB_ROLE_VIEWER);
         else
             sessionParams.put("role", BBB_ROLE_MODERATOR);
         ////sessionParams.put("createTime", "");
-        sessionParams.put("userID", DigestUtils.shaHex( params.get("user_id") + params.get("oauth_consumer_key")));
+        sessionParams.put(BBBProxy.PARAM_USER_ID, DigestUtils.shaHex( params.get("user_id") + params.get("oauth_consumer_key")));
 
         return sessionParams;
     }
@@ -223,40 +233,13 @@ public class BigBlueButtonEngine extends Engine {
     }
 
     private Map<String, String> getRecordingParams(){
-        Map<String, String> params = tp.getParameters();
-        Map<String, String> meetingParams = new HashMap<String, String>();
-        // Map ToolProvider parameters with Meeting parameters
-        meetingParams.put("name", getValidatedMeetingName(params.get("resource_link_title")));
-        meetingParams.put("meetingID", getValidatedMeetingId(params.get("resource_link_id"), params.get("oauth_consumer_key")));
-        meetingParams.put("attendeePW", DigestUtils.shaHex("ap" + params.get("resource_link_id") + params.get("oauth_consumer_key")));
-        meetingParams.put("moderatorPW", DigestUtils.shaHex("mp" + params.get("resource_link_id") + params.get("oauth_consumer_key")));
-        try {
-            meetingParams.put("welcome", URLEncoder.encode(params.containsKey(PARAM_CUSTOM_WELCOME)? params.get(PARAM_CUSTOM_WELCOME): "Welcome to <b>" + params.get("resource_link_title") + "</b>", "UTF-8") );
-        } catch (UnsupportedEncodingException e) {
-            log.debug("Error encoding meetingName: " + e.getMessage());
-            meetingParams.put("welcome", "");
-        }
-        meetingParams.put("voiceBridge", params.containsKey(PARAM_CUSTOM_VOICEBRIDGE)? params.get(PARAM_CUSTOM_VOICEBRIDGE): "0");
-        if(params.containsKey(PARAM_CUSTOM_RECORD)){
-            meetingParams.put("record", Boolean.valueOf(params.get(PARAM_CUSTOM_RECORD)).toString());
-            try {
-                meetingParams.put("welcome", meetingParams.get("welcome") + URLEncoder.encode("<br><br>This meeting is being recorded", "UTF-8"));
-            } catch (UnsupportedEncodingException e) {
-                log.debug("Error encoding meetingName: " + e.getMessage());
-            }
-        }
-        if(params.containsKey(PARAM_CUSTOM_DURATION)){
-            meetingParams.put("duration", params.get(PARAM_CUSTOM_DURATION));
-            try {
-                meetingParams.put("welcome", meetingParams.get("welcome") + URLEncoder.encode("<br><br>The maximum duration for this meeting is ", "UTF-8") + params.get("extra_duration") + URLEncoder.encode(" minutes.", "UTF-8"));
-            } catch (UnsupportedEncodingException e) {
-                log.debug("Error encoding meetingName: " + e.getMessage());
-            }
-        }
-        if(params.containsKey("launch_presentation_return_url"))
-            meetingParams.put("logoutURL", getValidatedLogoutURL(params.get("launch_presentation_return_url")));
+        Map<String, String> params = this.tp.getParameters();
+        Map<String, String> recordingParams = new HashMap<String, String>();
 
-        return meetingParams;
+        recordingParams.put(BBBProxy.PARAM_RECORD_ID, params.get(PARAM_BBB_RECORDING_ID));
+        recordingParams.put(BBBProxy.PARAM_PUBLISH, Boolean.toString(!Boolean.parseBoolean(params.get(PARAM_BBB_RECORDING_PUBLISHED))) );
+
+        return recordingParams;
     }
 
 }
