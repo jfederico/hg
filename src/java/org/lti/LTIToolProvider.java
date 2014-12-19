@@ -3,12 +3,10 @@ package org.lti;
 import java.util.Map;
 import java.util.Properties;
 
-import net.oauth.OAuth;
 import net.oauth.OAuthMessage;
 import net.oauth.signature.HMAC_SHA1;
 
 import org.apache.log4j.Logger;
-import org.hg.engine.CompletionResponse;
 import org.json.JSONArray;
 
 public abstract class LTIToolProvider {
@@ -30,17 +28,10 @@ public abstract class LTIToolProvider {
 
     public LTIToolProvider(String endpoint, String key, String secret, Map<String, String> params)
             throws LTIException, Exception {
-        log.info("LTIToolProvider initializad");
-
         this.endpoint = endpoint;
         this.key = key;
         this.secret = secret;
         this.params = params;
-
-        if( params.containsKey(OAuth.OAUTH_CONSUMER_KEY)) oauth_consumer_key = params.get(OAuth.OAUTH_CONSUMER_KEY); else throw new LTIException("OAuthError", "Parameter [" + OAuth.OAUTH_CONSUMER_KEY + "] not included");
-        if( params.containsKey(OAuth.OAUTH_SIGNATURE)) oauth_signature = params.get(OAuth.OAUTH_SIGNATURE); else throw new LTIException("OAuthError", "Parameter [" + OAuth.OAUTH_SIGNATURE + "] not included");
-        if( hasValidSignature() ) log.debug("OAuth signature is valid"); else throw new Exception("OAuth signature is NOT valid");
-
     }
 
     public boolean hasValidSignature() throws LTIException, Exception {

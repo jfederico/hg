@@ -7,10 +7,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.lti.LTIException;
 import org.lti.LTIToolProvider;
-import org.lti.LTIv2p0;
+import org.lti.LTIv2;
 import org.lti.v1.LTIv1p0ToolProvider;
 
-public class LTIv2p0ToolProvider extends LTIToolProvider implements LTIv2p0 {
+public class LTIv2p0ToolProvider extends LTIToolProvider implements LTIv2 {
 
     private static final Logger log = Logger.getLogger(LTIv1p0ToolProvider.class);
 
@@ -20,7 +20,7 @@ public class LTIv2p0ToolProvider extends LTIToolProvider implements LTIv2p0 {
     }
 
     public String getLTIVersion(){
-        return LTIv2p0.VERSION;
+        return LTIv2.VERSION;
     }
 
     @Override

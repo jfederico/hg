@@ -26,8 +26,6 @@ public class SimpleEngineFactory implements EngineFactory {
             throws Exception {
         IEngine engine = null;
 
-        log.debug("createEngine()");
-
         if( config == null ) {
             throw new Exception("There is no configuration for the tenant " + params.get(Engine.PARAM_TENANT));
         }

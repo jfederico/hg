@@ -2,6 +2,8 @@ package org.lti.v1;
 
 import java.util.Map;
 
+import net.oauth.OAuth;
+
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -16,6 +18,10 @@ public class LTIv1p0ToolProvider extends LTIToolProvider implements LTIv1 {
     public LTIv1p0ToolProvider(String endpoint, String key, String secret, Map<String, String> params)
             throws LTIException, Exception {
         super(endpoint, key, secret, params);
+        
+        if( params.containsKey(OAuth.OAUTH_CONSUMER_KEY)) oauth_consumer_key = params.get(OAuth.OAUTH_CONSUMER_KEY); else throw new LTIException("OAuthError", "Parameter [" + OAuth.OAUTH_CONSUMER_KEY + "] not included");
+        if( params.containsKey(OAuth.OAUTH_SIGNATURE)) oauth_signature = params.get(OAuth.OAUTH_SIGNATURE); else throw new LTIException("OAuthError", "Parameter [" + OAuth.OAUTH_SIGNATURE + "] not included");
+        if( hasValidSignature() ) log.debug("OAuth signature is valid"); else throw new Exception("OAuth signature is NOT valid");
     }
 
     public String getLTIVersion(){

@@ -53,8 +53,7 @@ public class Engine implements IEngine {
             this.params = _params;
             */
             if ( this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_LAUNCH) && this.grails_params.get(PARAM_ACT).equals(ENGINE_ACT_SSO) ||
-                 this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_LAUNCH) && this.grails_params.get(PARAM_ACT).equals(ENGINE_ACT_UI) ||
-                 this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_REGISTRATION) && this.grails_params.get(PARAM_ACT).equals(ENGINE_ACT_SSO) )
+                 this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_LAUNCH) && this.grails_params.get(PARAM_ACT).equals(ENGINE_ACT_UI) )
             {
                  this.params = session_params;
                  this.tp = SimpleLTIStore.createToolProvider(this.params, this.config, this.endpoint_url);
@@ -62,12 +61,12 @@ public class Engine implements IEngine {
                  Map<String, Object> profile = getProfile();
                  overrideParameters(profile);
                  validateRequiredParameters(profile);
-            //} else if ( this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_REGISTRATION) && this.grails_params.get(PARAM_ACT).equals(ENGINE_ACT_SSO) ) {
-            //    this.params = session_params;
-            //    this.tp = SimpleLTIStore.createToolProvider(this.params, this.config, this.endpoint_url);
-            //
-            //    Map<String, Object> profile = getProfile();
-            //    validateRequiredParameters(profile);
+            } else if ( this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_REGISTRATION) ) {
+                this.params = session_params;
+                this.tp = SimpleLTIStore.createToolProvider(this.params, this.config, this.endpoint_url);
+
+                Map<String, Object> profile = getProfile();
+                validateRequiredParameters(profile);
             } else {
                 this.params = params;
             }
@@ -114,8 +113,10 @@ public class Engine implements IEngine {
         return return_profile;
     }
 
-    private void overrideParameters(Map<String, Object> profile)
+    private void overrideParameters(Map<String, Object> full_profile)
             throws Exception {
+        @SuppressWarnings("unchecked")
+        Map<String, Object> profile = (HashMap<String, Object>)full_profile.get("profile");
         @SuppressWarnings("unchecked")
         JSONArray json_override_parameters = new JSONArray((ArrayList<Object>)profile.get("overrides"));
         log.debug(json_override_parameters.toString());

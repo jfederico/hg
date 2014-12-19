@@ -1,6 +1,6 @@
 package org.lti;
 
-public interface LTIv2p0 {
+public interface LTIv2 {
 
     public static final String VERSION = "2.0";
     

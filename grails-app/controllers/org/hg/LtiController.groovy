@@ -2,10 +2,13 @@ package org.hg
 
 import java.util.List
 
+import net.oauth.OAuth
+
 import org.hg.EngineFactory
 import org.hg.SimpleEngineFactory
 import org.hg.domain.Type
 import org.hg.engine.IEngine
+import org.hg.engine.Engine
 import org.hg.engine.test.TestEngine
 
 class LtiController {
@@ -28,7 +31,9 @@ class LtiController {
             def json_config = hgService.getJSONConfig(params.get("tenant"))
             def config = hgService.jsonToMap(json_config)
 
-            if( session["params"] == null || params.containsKey("oauth_nonce") && session["params"].get("oauth_nonce") != params.get("oauth_nonce") ) {
+            if( session["params"] == null ||
+                params.containsKey(Engine.PARAM_ENGINE) && params.get(Engine.PARAM_ENGINE) != Engine.ENGINE_TYPE_LAUNCH ||
+                params.containsKey(OAuth.OAUTH_NONCE) && params.get(OAuth.OAUTH_NONCE) != session["params"].get(OAuth.OAUTH_NONCE) ) {
                 session["params"] = params
             }
 
