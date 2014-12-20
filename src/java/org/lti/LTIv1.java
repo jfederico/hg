@@ -408,5 +408,23 @@ public interface LTIv1 {
      * See BLTI-151
      */
     public static final String NEW_SITE_TYPE = "lti";
+    
+    
+    public static final String[] BASIC_LTI_LAUNCH_REQUEST_PARAMETERS_REQUIRED = { 
+        LTI_MESSAGE_TYPE, LTI_VERSION, RESOURCE_LINK_ID
+        };
+
+    public static final String[] BASIC_LTI_LAUNCH_REQUEST_PARAMETERS_RECOMMENDED = { 
+        CONTEXT_ID,
+        LAUNCH_PRESENTATION_DOCUMENT_TARGET, LAUNCH_PRESENTATION_HEIGHT,
+        LAUNCH_PRESENTATION_RETURN_URL, LAUNCH_PRESENTATION_WIDTH,
+        ROLES, TOOL_CONSUMER_INSTANCE_GUID, USER_ID
+        };
+
+    public static final String[] BASIC_LTI_LAUNCH_REQUEST_PARAMETERS_OPTIONAL = { 
+        CONTEXT_TYPE,
+        LAUNCH_PRESENTATION_LOCALE, LAUNCH_PRESENTATION_CSS_URL, 
+        USER_IMAGE
+        };
 
 }

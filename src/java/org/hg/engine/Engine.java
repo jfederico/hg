@@ -8,9 +8,9 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
-import org.lti.LTIToolProvider;
+import org.lti.LTIException;
+import org.lti.ToolProvider;
 import org.lti.SimpleLTIStore;
-import org.json.JSONArray;
 
 public class Engine implements IEngine {
     private static final Logger log = Logger.getLogger(Engine.class);
@@ -21,10 +21,11 @@ public class Engine implements IEngine {
     protected String endpoint;
     protected String endpoint_url;
 
-    protected LTIToolProvider tp;
+    protected ToolProvider tp;
 
     public Engine(HttpServletRequest request, Map<String, String> params, Map<String, Object> config, String endpoint, Map<String, String> session_params)
             throws Exception {
+        log.debug("XX: Instantiating Engine()");
 
         this.config = config;
         this.grails_params = new HashMap<String, String>();
@@ -56,12 +57,16 @@ public class Engine implements IEngine {
                  this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_LAUNCH) && this.grails_params.get(PARAM_ACT).equals(ENGINE_ACT_UI) )
             {
                  this.params = session_params;
+                 log.debug("XX: It is going to create the tool provider");
                  this.tp = SimpleLTIStore.createToolProvider(this.params, this.config, this.endpoint_url);
+                 log.debug("XX: The tool provider was created");
 
                  Map<String, Object> profile = getProfile();
+                 log.debug("XX: Overriding tool parameters");
                  overrideParameters(profile);
-                 //this.tp.validateRequiredParameters(json_required_parameters);
+                 log.debug("XX: Validating tool required parameters");
                  validateRequiredParameters(profile);
+                 log.debug("XX: The tool required parameters have been validated");
             } else if ( this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_REGISTRATION) ) {
                 this.params = session_params;
                 this.tp = SimpleLTIStore.createToolProvider(this.params, this.config, this.endpoint_url);
@@ -90,7 +95,7 @@ public class Engine implements IEngine {
     public void setCompletionResponseCommand(CompletionResponse completionResponse) {
     }
 
-    public LTIToolProvider getToolProvider() {
+    public ToolProvider getToolProvider() {
         return this.tp;
     }
     
@@ -102,7 +107,7 @@ public class Engine implements IEngine {
         @SuppressWarnings("unchecked")
         List<Map<String, Object>> profiles = lti_cfg != null? (List<Map<String, Object>>)lti_cfg.get("profiles"): null;
 
-        String profile_name = this.tp.getProductFamilyCode();
+        String profile_name = "moodle"; //this.tp.getProductFamilyCode();
         if( profiles != null ) {
             for( Map<String, Object> profile : profiles ){
                 if( profile_name.equals((String)profile.get("name")) ) {
@@ -115,25 +120,42 @@ public class Engine implements IEngine {
         return return_profile;
     }
 
+    @SuppressWarnings("unchecked")
     private void overrideParameters(Map<String, Object> full_profile)
             throws Exception {
-        @SuppressWarnings("unchecked")
         Map<String, Object> profile = (HashMap<String, Object>)full_profile.get("profile");
-        @SuppressWarnings("unchecked")
-        JSONArray json_override_parameters = new JSONArray((ArrayList<Object>)profile.get("overrides"));
-        log.debug(json_override_parameters.toString());
-        this.tp.overrideParameters(json_override_parameters);
+        ArrayList<Object> overrides = (ArrayList<Object>)profile.get("overrides");
+        for( Object override: overrides ) {
+            String source = (String)((Map<String, Object>)override).get("source");
+            String target = (String)((Map<String, Object>)override).get("target");
+            String default_value = (String)((Map<String, Object>)override).get("default_value");
+            if( this.tp.hasParameter(source) )
+                this.tp.putParameter(source, this.tp.getParameter(target));
+            else
+                this.tp.putParameter(source, default_value);
+        }
     }
 
+    @SuppressWarnings("unchecked")
     private void validateRequiredParameters(Map<String, Object> full_profile)
             throws Exception {
-        @SuppressWarnings("unchecked")
         Map<String, Object> profile = (HashMap<String, Object>)full_profile.get("profile");
-        @SuppressWarnings("unchecked")
-        ArrayList<Object> requiredParameters = (ArrayList<Object>)profile.get("required_params");
-        JSONArray json_required_parameters = new JSONArray(requiredParameters);
-        log.debug("Validating required parameters: " + json_required_parameters.toString() + " on " + (String)full_profile.get("name"));
-        this.tp.validateRequiredParameters(json_required_parameters);
+        ArrayList<Object> required_params = (ArrayList<Object>)profile.get("required_params");
+        ArrayList<String> requiredParams = new ArrayList<String>();
+        log.debug(required_params);
+        for(Object required_param: required_params ){
+            log.debug((String)((Map<String, Object>)required_param).get("name"));
+            requiredParams.add( (String)((Map<String, Object>)required_param).get("name") );
+        }
+
+        String[] requiredParameters = requiredParams.toArray(new String[requiredParams.size()]);
+        log.debug("XX: Validation starting");
+        log.debug(requiredParameters);
+        try {
+            this.tp.validateParameters(requiredParameters);
+        } catch ( Exception e ) {
+            throw new LTIException(LTIException.MESSAGEKEY_MISSING_PARAMETERS, "Tool Provider required parameters missing. " + e.getMessage());
+        }
     }
 
     private void validateEngineType(String type)

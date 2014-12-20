@@ -11,6 +11,8 @@ public class LTIException extends Exception {
     public static final String  MESSAGEKEY_INVALIDRESPONSE      = "invalidResponseError";
     public static final String  MESSAGEKEY_GENERALERROR         = "generalError";
 
+    public static final String  MESSAGEKEY_MISSING_PARAMETERS   = "missingParameters";
+
     private String messageKey;
 
     public LTIException(String messageKey, String message, Throwable cause) {

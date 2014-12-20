@@ -2,7 +2,7 @@ package org.hg.engine;
 
 import java.util.Map;
 
-import org.lti.LTIToolProvider;
+import org.lti.ToolProvider;
 
 public interface IEngine {
 
@@ -37,7 +37,7 @@ public interface IEngine {
 
     abstract Map<String, Object> getCompletionResponse() throws Exception;
     abstract void setCompletionResponseCommand(CompletionResponse completionResponse);
-    abstract LTIToolProvider getToolProvider();
+    abstract ToolProvider getToolProvider();
     abstract String getEndpointURL();
 
 }

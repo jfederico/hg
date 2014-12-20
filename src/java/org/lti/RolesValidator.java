@@ -5,7 +5,7 @@ package org.lti;
  *
  * @author Jesus Federico
  */
-public class LTIRoles {
+public class RolesValidator {
 
     public static String STUDENT = "Student";
     public static String FACULTY = "Faculty";

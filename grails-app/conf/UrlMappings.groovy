@@ -2,17 +2,17 @@ import org.hg.engine.Engine
 
 class UrlMappings {
     /*
-     * $scheme://$domain:$port/$application/$tenant/$engine/$version/?query_string
+     * $scheme://$domain:$port/$application/$tenant/$engine_type/$version/?query_string
      *
-     * engine = [ launch | registration | resource | api ]
+     * engine_type = [ launch | registration | resource | api ]
      * 
      * query_string = ?a=xxx&c=yyy (act=action, cmd=command)
      * 
-     * engine = launch          :. act = [ cc | sso | ui ]
+     * engine_type = launch          :. act = [ cc | sso | ui ]
      *                                  act = ui :. e.g. for bigbluebutton cmd = [ join | publish | unpublish | delete ]
-     * engine = registration    :. act = [  ]
-     * engine = resource        :. act = [ xml | json | rss | png | ico ]
-     * engine = api             :. act = [ outcomes | ]
+     * engine_type = registration    :. act = [  ]
+     * engine_type = resource        :. act = [ xml | json | rss | png | ico ]
+     * engine_type = api             :. act = [ outcomes | ]
      *                                  act = outcomes :. cmd = [ get | put | post | delete | update ] 
      * 
      * Configuration for tenant 0:InternalTest

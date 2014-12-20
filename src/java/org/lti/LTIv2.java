@@ -427,34 +427,34 @@ public interface LTIv2 {
 
     public static final String TC_PROFILE_URL = "tc_profile_url";
 
-    public static final String[] BasicLTILaunchRequestParametersRequired = { 
+    public static final String[] BASIC_LTI_LAUNCH_REQUEST_PARAMETERS_REQUIRED = { 
         LTI_MESSAGE_TYPE, LTI_VERSION, RESOURCE_LINK_ID
         };
 
-    public static final String[] BasicLTILaunchRequestParametersRecommended = { 
+    public static final String[] BASIC_LTI_LAUNCH_REQUEST_PARAMETERS_RECOMMENDED = { 
         CONTEXT_ID,
         LAUNCH_PRESENTATION_DOCUMENT_TARGET, LAUNCH_PRESENTATION_HEIGHT,
         LAUNCH_PRESENTATION_RETURN_URL, LAUNCH_PRESENTATION_WIDTH,
         ROLES, TOOL_CONSUMER_INSTANCE_GUID, USER_ID
         };
 
-    public static final String[] BasicLTILaunchRequestParametersOptional = { 
+    public static final String[] BASIC_LTI_LAUNCH_REQUEST_PARAMETERS_OPTIONAL = { 
         CONTEXT_TYPE,
         LAUNCH_PRESENTATION_LOCALE, LAUNCH_PRESENTATION_CSS_URL, 
         ROLE_SCOPE_MENTOR, USER_IMAGE
         };
 
-    public static final String[] ToolProxyRegistrationRequestRequired = { 
+    public static final String[] TOOL_PROXY_REGISTRATION_REQUEST_PARAMETERS_REQUIRED = { 
         LTI_MESSAGE_TYPE, REG_KEY, REG_PASSWORD, TC_PROFILE_URL, LAUNCH_PRESENTATION_RETURN_URL 
         };
 
-    public static final String[] ToolProxyRegistrationRequestRecommended = { 
+    public static final String[] TOOL_PROXY_REGISTRATION_REQUEST_PARAMETERS_RECOMMENDED = { 
         LAUNCH_PRESENTATION_DOCUMENT_TARGET, LAUNCH_PRESENTATION_HEIGHT,
         LAUNCH_PRESENTATION_RETURN_URL, LAUNCH_PRESENTATION_WIDTH,
         ROLES, USER_ID
         };
 
-    public static final String[] ToolProxyRegistrationRequestOptional = { 
+    public static final String[] TOOL_PROXY_REGISTRATION_REQUEST_PARAMETERS_OPTIONAL = { 
         LAUNCH_PRESENTATION_LOCALE, LAUNCH_PRESENTATION_CSS_URL, 
         };
 

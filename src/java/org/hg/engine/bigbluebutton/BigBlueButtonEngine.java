@@ -17,7 +17,7 @@ import org.bigbluebutton.api.BBBProxy;
 import org.hg.EngineFactory;
 import org.hg.engine.CompletionResponse;
 import org.hg.engine.Engine;
-import org.lti.LTIRoles;
+import org.lti.RolesValidator;
 
 public class BigBlueButtonEngine extends Engine {
     private static final Logger log = Logger.getLogger(BigBlueButtonEngine.class);
@@ -47,7 +47,7 @@ public class BigBlueButtonEngine extends Engine {
     public BigBlueButtonEngine(HttpServletRequest request, Map<String, String> params, Map<String, Object> config, String endpoint, Map<String, String> session_params)
         throws Exception {
         super(request, params, config, endpoint, session_params);
-        log.debug("instantiate BigBlueButtonEngine()");
+        log.debug("XX: instantiate BigBlueButtonEngine()");
 
         if(this.grails_params.get(PARAM_ACT).equals(ENGINE_ACT_CC)){
             Map<String, Object> definition = new HashMap<String, Object>();
@@ -104,6 +104,7 @@ public class BigBlueButtonEngine extends Engine {
                 setCompletionResponseCommand( new SingleSignOnURL(engine, getMeetingParams(), getSessionParams()) );
             }
         }
+        log.debug("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX: BigBlueButtonEngine() instantiated");
     }
 
     @Override
@@ -160,12 +161,12 @@ public class BigBlueButtonEngine extends Engine {
         // Map LtiUser parameters with Session parameters
         sessionParams.put(BBBProxy.PARAM_FULL_NAME, getValidatedUserFullName(params));
         sessionParams.put(BBBProxy.PARAM_MEETING_ID, getValidatedMeetingId(params.get("resource_link_id"), params.get("oauth_consumer_key")));
-        if( LTIRoles.isStudent(params.get("roles")) || LTIRoles.isLearner(params.get("roles")) )
+        if( RolesValidator.isStudent(params.get("roles")) || RolesValidator.isLearner(params.get("roles")) )
             sessionParams.put(BBBProxy.PARAM_PASSWORD, DigestUtils.shaHex("ap" + params.get("resource_link_id") + params.get("oauth_consumer_key")));
         else
             sessionParams.put(BBBProxy.PARAM_PASSWORD, DigestUtils.shaHex("mp" + params.get("resource_link_id") + params.get("oauth_consumer_key")));
         //Set the role
-        if( LTIRoles.isStudent(params.get("roles")) || LTIRoles.isLearner(params.get("roles")) )
+        if( RolesValidator.isStudent(params.get("roles")) || RolesValidator.isLearner(params.get("roles")) )
             sessionParams.put("role", BBB_ROLE_VIEWER);
         else
             sessionParams.put("role", BBB_ROLE_MODERATOR);
@@ -220,7 +221,7 @@ public class BigBlueButtonEngine extends Engine {
                 userFullName += userLastName;
             }
             if( userFullName == null || userFullName == "" ){
-                userFullName = ( LTIRoles.isStudent(params.get("roles"), true) || LTIRoles.isLearner(params.get("roles"), true) )? "Viewer" : "Moderator";
+                userFullName = ( RolesValidator.isStudent(params.get("roles"), true) || RolesValidator.isLearner(params.get("roles"), true) )? "Viewer" : "Moderator";
             }
         }
         try {

@@ -138,7 +138,12 @@
                                     "default": "false"
                                 }
                             ],
-                            "overrides": []
+                            "overrides": [
+                                {
+                                    "target": "tool_consumer_instance_guid",
+                                    "source": "custom_tool_consumer_instance_guid"
+                                }
+                            ]
                         }
                     }
                 ]
