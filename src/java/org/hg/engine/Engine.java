@@ -130,9 +130,9 @@ public class Engine implements IEngine {
             String target = (String)((Map<String, Object>)override).get("target");
             String default_value = (String)((Map<String, Object>)override).get("default_value");
             if( this.tp.hasParameter(source) )
-                this.tp.putParameter(source, this.tp.getParameter(target));
+                this.tp.putParameter(target, this.tp.getParameter(source));
             else
-                this.tp.putParameter(source, default_value);
+                this.tp.putParameter(target, default_value);
         }
     }
 

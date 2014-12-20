@@ -1,5 +1,6 @@
 package org.lti;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
@@ -29,7 +30,7 @@ public abstract class ToolProvider {
         this.endpoint = endpoint;
         this.key = key;
         this.secret = secret;
-        this.params = params;
+        this.params = new HashMap<String, String>(params);
     }
 
     public void validateParameters(String[] requiredParameters)

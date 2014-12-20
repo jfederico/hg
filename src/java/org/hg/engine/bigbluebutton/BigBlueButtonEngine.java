@@ -104,7 +104,7 @@ public class BigBlueButtonEngine extends Engine {
                 setCompletionResponseCommand( new SingleSignOnURL(engine, getMeetingParams(), getSessionParams()) );
             }
         }
-        log.debug("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX: BigBlueButtonEngine() instantiated");
+        log.debug("XX: BigBlueButtonEngine() instantiated");
     }
 
     @Override
