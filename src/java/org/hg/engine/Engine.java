@@ -70,9 +70,6 @@ public class Engine implements IEngine {
             } else if ( this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_REGISTRATION) ) {
                 this.params = session_params;
                 this.tp = SimpleLTIStore.createToolProvider(this.params, this.config, this.endpoint_url);
-
-                Map<String, Object> profile = getProfile();
-                validateRequiredParameters(profile);
             } else {
                 this.params = params;
             }

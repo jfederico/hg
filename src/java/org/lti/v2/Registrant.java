@@ -14,9 +14,11 @@ public class Registrant extends ToolProvider implements LTIv2 {
     public Registrant(String endpoint, String key, String secret, Map<String, String> params)
             throws LTIException, Exception {
         super(endpoint, key, secret, params);
+        log.debug("XX: Instantiating Registrant() v2");
 
         try {
             validateParameters(LTIv2.TOOL_PROXY_REGISTRATION_REQUEST_PARAMETERS_REQUIRED);
+            log.debug("XX: LTI required parameters are included");
         } catch (Exception e) {
             throw new LTIException(LTIException.MESSAGEKEY_MISSING_PARAMETERS, "LTI version " + LTIv2.VERSION + " parameters not included. " + e.getMessage());
         }

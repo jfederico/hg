@@ -52,12 +52,14 @@ public class SimpleLTIStore {
             } else if( version.equals(LTI_VERSION_V2)) {
                 log.debug("XX: It is V2");
                 if( params.containsKey(LTIv2.LTI_MESSAGE_TYPE) ) {
-                    if( params.get(LTIv2.LTI_MESSAGE_TYPE) == LTIv2.LTI_MESSAGE_TYPE_TOOL_PROXY_REGISTRATION_REQUEST){
+                    log.debug("XX: " + LTIv2.LTI_MESSAGE_TYPE + "=" + params.get(LTIv2.LTI_MESSAGE_TYPE));
+                    if( LTIv2.LTI_MESSAGE_TYPE_TOOL_PROXY_REGISTRATION_REQUEST.equals(params.get(LTIv2.LTI_MESSAGE_TYPE)) ){
                         tp = new org.lti.v2.Registrant(endpoint, key, secret, params);
                     } else {
                         tp = new org.lti.v2.Launcher(endpoint, key, secret, params);
                     }
                 } else {
+                    log.debug("XX: It does not have " + LTIv2.LTI_MESSAGE_TYPE);
                     tp = new org.lti.v2.Launcher(endpoint, key, secret, params);
                 }
             } else {
