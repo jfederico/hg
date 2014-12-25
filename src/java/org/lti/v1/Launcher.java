@@ -37,4 +37,7 @@ public class Launcher extends ToolProvider implements LTIv1 {
         return LTIv1.VERSION;
     }
 
+    public String getLTILaunchPresentationReturnURL(){
+        return this.params.get(LAUNCH_PRESENTATION_RETURN_URL);
+    }
 }

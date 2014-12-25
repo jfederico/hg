@@ -28,7 +28,6 @@ public class SimpleLTIStore {
     private static final String LTI_VERSION_V1   = "1";
     private static final String LTI_VERSION_V2   = "2";
 
-    @SuppressWarnings("null")
     public static ToolProvider createToolProvider(Map<String, String> params, Map<String, Object> config, String endpoint) 
             throws LTIException {
         log.info("Creating LTIToolProvider");
@@ -47,23 +46,19 @@ public class SimpleLTIStore {
             String secret = (String)lti_cfg.get("secret");
 
             if( version.equals(LTI_VERSION_V1)) {
-                log.debug("XX: It is V1");
                 tp = new org.lti.v1.Launcher(endpoint, key, secret, params);
             } else if( version.equals(LTI_VERSION_V2)) {
-                log.debug("XX: It is V2");
                 if( params.containsKey(LTIv2.LTI_MESSAGE_TYPE) ) {
-                    log.debug("XX: " + LTIv2.LTI_MESSAGE_TYPE + "=" + params.get(LTIv2.LTI_MESSAGE_TYPE));
                     if( LTIv2.LTI_MESSAGE_TYPE_TOOL_PROXY_REGISTRATION_REQUEST.equals(params.get(LTIv2.LTI_MESSAGE_TYPE)) ){
+                        log.debug(params);
                         tp = new org.lti.v2.Registrant(endpoint, key, secret, params);
                     } else {
                         tp = new org.lti.v2.Launcher(endpoint, key, secret, params);
                     }
                 } else {
-                    log.debug("XX: It does not have " + LTIv2.LTI_MESSAGE_TYPE);
                     tp = new org.lti.v2.Launcher(endpoint, key, secret, params);
                 }
             } else {
-                log.debug("XX: It anything but V1 or V2");
                 tp = new org.lti.v1.Launcher(endpoint, key, secret, params);
             }
 
