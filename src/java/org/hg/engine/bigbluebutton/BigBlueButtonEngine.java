@@ -49,60 +49,64 @@ public class BigBlueButtonEngine extends Engine {
         super(request, params, config, endpoint, session_params);
         log.debug("XX: instantiate BigBlueButtonEngine()");
 
-        if(this.grails_params.get(PARAM_ACT).equals(ENGINE_ACT_CC)){
-            Map<String, Object> definition = new HashMap<String, Object>();
-            definition.put("title", (String)config.get("title"));
-            definition.put("description", (String)config.get("description"));
+        if(this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_LAUNCH)){
+            if(this.grails_params.get(PARAM_ACT).equals(ENGINE_ACT_CC)){
+                Map<String, Object> definition = new HashMap<String, Object>();
+                definition.put("title", (String)config.get("title"));
+                definition.put("description", (String)config.get("description"));
 
-            String launch_url_path = grails_params.get("application") + "/" + grails_params.get("tenant") + "/" + ENGINE_TYPE_LAUNCH + "/" + grails_params.get("version"); 
-            definition.put( "launch_url", "http://" + endpoint + "/" + launch_url_path );
-            definition.put( "secure_launch_url", "https://" + endpoint + "/" + launch_url_path );
+                String launch_url_path = grails_params.get("application") + "/" + grails_params.get("tenant") + "/" + ENGINE_TYPE_LAUNCH + "/" + grails_params.get("version"); 
+                definition.put( "launch_url", "http://" + endpoint + "/" + launch_url_path );
+                definition.put( "secure_launch_url", "https://" + endpoint + "/" + launch_url_path );
 
-            String icon_path = grails_params.get("application") + "/" + grails_params.get("tenant") + "/" + ENGINE_TYPE_RESOURCE + "/v1/?a=ico";
-            definition.put( "icon", "http://" + endpoint + "/" + icon_path );
-            definition.put( "secure_icon", "https://" + endpoint + "/" + icon_path );
+                String icon_path = grails_params.get("application") + "/" + grails_params.get("tenant") + "/" + ENGINE_TYPE_RESOURCE + "/v1/?a=ico";
+                definition.put( "icon", "http://" + endpoint + "/" + icon_path );
+                definition.put( "secure_icon", "https://" + endpoint + "/" + icon_path );
 
-            @SuppressWarnings("unchecked")
-            Map<String, Object> vendor = (Map<String, Object>)config.get("vendor");
-            String vendor_code = (String)vendor.get("code");
-            definition.put( "vendor_code", (vendor_code != null && !vendor_code.equals(""))? vendor_code: ENGINE_CODE );
-            String vendor_name = (String)vendor.get("name");
-            definition.put( "vendor_name", (vendor_name != null && !vendor_name.equals(""))? vendor_name: ENGINE_NAME );
-            String vendor_description = (String)vendor.get("description");
-            definition.put( "vendor_description", (vendor_description != null && !vendor_description.equals(""))? vendor_description: ENGINE_DESCRIPTION );
-            String vendor_url = (String)vendor.get("url");
-            definition.put( "vendor_url", (vendor_url != null && !vendor_url.equals(""))? vendor_url: ENGINE_URL );
-            String vendor_contact_email = (String)vendor.get("contact");
-            definition.put( "vendor_contact_email", (vendor_contact_email != null && !vendor_contact_email.equals(""))? vendor_contact_email: ENGINE_CONTACT_EMAIL );
+                @SuppressWarnings("unchecked")
+                Map<String, Object> vendor = (Map<String, Object>)config.get("vendor");
+                String vendor_code = (String)vendor.get("code");
+                definition.put( "vendor_code", (vendor_code != null && !vendor_code.equals(""))? vendor_code: ENGINE_CODE );
+                String vendor_name = (String)vendor.get("name");
+                definition.put( "vendor_name", (vendor_name != null && !vendor_name.equals(""))? vendor_name: ENGINE_NAME );
+                String vendor_description = (String)vendor.get("description");
+                definition.put( "vendor_description", (vendor_description != null && !vendor_description.equals(""))? vendor_description: ENGINE_DESCRIPTION );
+                String vendor_url = (String)vendor.get("url");
+                definition.put( "vendor_url", (vendor_url != null && !vendor_url.equals(""))? vendor_url: ENGINE_URL );
+                String vendor_contact_email = (String)vendor.get("contact");
+                definition.put( "vendor_contact_email", (vendor_contact_email != null && !vendor_contact_email.equals(""))? vendor_contact_email: ENGINE_CONTACT_EMAIL );
 
-            setCompletionResponseCommand( new CommonCartridgeXML(definition) );
-        } else {
-            @SuppressWarnings("unchecked")
-            Map<String, String> engine = (Map<String, String>)config.get("engine");
+                setCompletionResponseCommand( new CommonCartridgeXML(definition) );
+            } else {
+                @SuppressWarnings("unchecked")
+                Map<String, String> engine = (Map<String, String>)config.get("engine");
 
-            if( this.params.containsKey(PARAM_CUSTOM_RECORD) && Boolean.parseBoolean(this.params.get(PARAM_CUSTOM_RECORD)) ){
-                if( this.grails_params.containsKey(PARAM_ACT) && this.grails_params.get(PARAM_ACT).equals(ENGINE_ACT_UI) ){
-                    if( this.grails_params.containsKey(PARAM_CMD) && this.grails_params.get(PARAM_CMD).equals(BBB_CMD_MEETING_JOIN) ) {
-                        setCompletionResponseCommand( new SingleSignOnURL(engine, getMeetingParams(), getSessionParams()) );
-                    } else if( this.grails_params.containsKey(PARAM_CMD) && this.grails_params.get(PARAM_CMD).equals(BBB_CMD_RECORDING_PUBLISH) ) {
-                        this.tp.putParameter(PARAM_BBB_RECORDING_ID, params.get(PARAM_BBB_RECORDING_ID));
-                        this.tp.putParameter(PARAM_BBB_RECORDING_PUBLISHED, params.get(PARAM_BBB_RECORDING_PUBLISHED));
-                        setCompletionResponseCommand( new PublishRecording(engine, getMeetingParams(), getSessionParams(), getRecordingParams()) );
-                    } else if( this.grails_params.containsKey(PARAM_CMD) && this.grails_params.get(PARAM_CMD).equals(BBB_CMD_RECORDING_UNPUBLISH) ) {
-                        this.tp.putParameter(PARAM_BBB_RECORDING_ID, params.get(PARAM_BBB_RECORDING_ID));
-                        this.tp.putParameter(PARAM_BBB_RECORDING_PUBLISHED, params.get(PARAM_BBB_RECORDING_PUBLISHED));
-                        setCompletionResponseCommand( new UnpublishRecording(engine, getMeetingParams(), getSessionParams(), getRecordingParams()) );
-                    } else if( this.grails_params.containsKey(PARAM_CMD) && this.grails_params.get(PARAM_CMD).equals(BBB_CMD_RECORDING_DELETE) ) {
-                        this.tp.putParameter(PARAM_BBB_RECORDING_ID, params.get(PARAM_BBB_RECORDING_ID));
-                        this.tp.putParameter(PARAM_BBB_RECORDING_PUBLISHED, params.get(PARAM_BBB_RECORDING_PUBLISHED));
-                        setCompletionResponseCommand( new DeleteRecording(engine, getMeetingParams(), getSessionParams(), getRecordingParams()) );
+                if( this.params.containsKey(PARAM_CUSTOM_RECORD) && Boolean.parseBoolean(this.params.get(PARAM_CUSTOM_RECORD)) ){
+                    if( this.grails_params.containsKey(PARAM_ACT) && this.grails_params.get(PARAM_ACT).equals(ENGINE_ACT_UI) ){
+                        if( this.grails_params.containsKey(PARAM_CMD) && this.grails_params.get(PARAM_CMD).equals(BBB_CMD_MEETING_JOIN) ) {
+                            setCompletionResponseCommand( new SingleSignOnURL(engine, getMeetingParams(), getSessionParams()) );
+                        } else if( this.grails_params.containsKey(PARAM_CMD) && this.grails_params.get(PARAM_CMD).equals(BBB_CMD_RECORDING_PUBLISH) ) {
+                            this.tp.putParameter(PARAM_BBB_RECORDING_ID, params.get(PARAM_BBB_RECORDING_ID));
+                            this.tp.putParameter(PARAM_BBB_RECORDING_PUBLISHED, params.get(PARAM_BBB_RECORDING_PUBLISHED));
+                            setCompletionResponseCommand( new PublishRecording(engine, getMeetingParams(), getSessionParams(), getRecordingParams()) );
+                        } else if( this.grails_params.containsKey(PARAM_CMD) && this.grails_params.get(PARAM_CMD).equals(BBB_CMD_RECORDING_UNPUBLISH) ) {
+                            this.tp.putParameter(PARAM_BBB_RECORDING_ID, params.get(PARAM_BBB_RECORDING_ID));
+                            this.tp.putParameter(PARAM_BBB_RECORDING_PUBLISHED, params.get(PARAM_BBB_RECORDING_PUBLISHED));
+                            setCompletionResponseCommand( new UnpublishRecording(engine, getMeetingParams(), getSessionParams(), getRecordingParams()) );
+                        } else if( this.grails_params.containsKey(PARAM_CMD) && this.grails_params.get(PARAM_CMD).equals(BBB_CMD_RECORDING_DELETE) ) {
+                            this.tp.putParameter(PARAM_BBB_RECORDING_ID, params.get(PARAM_BBB_RECORDING_ID));
+                            this.tp.putParameter(PARAM_BBB_RECORDING_PUBLISHED, params.get(PARAM_BBB_RECORDING_PUBLISHED));
+                            setCompletionResponseCommand( new DeleteRecording(engine, getMeetingParams(), getSessionParams(), getRecordingParams()) );
+                        }
+                    } else {
+                        setCompletionResponseCommand( new UI(engine, getMeetingParams(), getSessionParams()) );
                     }
                 } else {
-                    setCompletionResponseCommand( new UI(engine, getMeetingParams(), getSessionParams()) );
+                    setCompletionResponseCommand( new SingleSignOnURL(engine, getMeetingParams(), getSessionParams()) );
                 }
-            } else {
-                setCompletionResponseCommand( new SingleSignOnURL(engine, getMeetingParams(), getSessionParams()) );
             }
+        } else if( this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_REGISTRATION) ){
+            setCompletionResponseCommand( new RegistrationURL(tp) );
         }
         log.debug("XX: BigBlueButtonEngine() instantiated");
     }
