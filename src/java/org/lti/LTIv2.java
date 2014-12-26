@@ -2,7 +2,7 @@ package org.lti;
 
 public interface LTIv2 {
 
-    public static final String VERSION = "2.0";
+    public static final String VERSION = "LTI-2p0";
     
     /**
      * context_id=8213060-006f-27b2066ac545

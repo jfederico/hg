@@ -25,7 +25,6 @@ public class Engine implements IEngine {
 
     public Engine(HttpServletRequest request, Map<String, String> params, Map<String, Object> config, String endpoint, Map<String, String> session_params)
             throws Exception {
-        log.debug("XX: Instantiating Engine()");
 
         this.config = config;
         this.grails_params = new HashMap<String, String>();
@@ -57,16 +56,12 @@ public class Engine implements IEngine {
                  this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_LAUNCH) && this.grails_params.get(PARAM_ACT).equals(ENGINE_ACT_UI) )
             {
                  this.params = session_params;
-                 log.debug("XX: It is going to create the tool provider");
                  this.tp = SimpleLTIStore.createToolProvider(this.params, this.config, this.endpoint_url);
-                 log.debug("XX: The tool provider was created");
+                 //TODO: If there is a TC, it should be loaded here.
 
                  Map<String, Object> profile = getProfile();
-                 log.debug("XX: Overriding tool parameters");
                  overrideParameters(profile);
-                 log.debug("XX: Validating tool required parameters");
                  validateRequiredParameters(profile);
-                 log.debug("XX: The tool required parameters have been validated");
             } else if ( this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_REGISTRATION) ) {
                 this.params = session_params;
                 this.tp = SimpleLTIStore.createToolProvider(this.params, this.config, this.endpoint_url);
