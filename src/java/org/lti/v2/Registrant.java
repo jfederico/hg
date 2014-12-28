@@ -161,7 +161,7 @@ public class Registrant extends ToolProvider implements LTIv2 {
             //Prepare base_url_choice
                 JSONArray base_url_choice = new JSONArray();
                     JSONObject default_base_url = new JSONObject();
-                    default_base_url.put("default_base_url", "http://192.168.44.149:8888/");
+                    default_base_url.put("default_base_url", "http://192.168.44.149:8888");
                 base_url_choice.put(default_base_url);
             tool_profile.put("base_url_choice", base_url_choice);
             //Prepare resource_handler
@@ -181,7 +181,7 @@ public class Registrant extends ToolProvider implements LTIv2 {
                         JSONArray message_array = new JSONArray();
                             JSONObject message = new JSONObject();
                             message.put("message_type", "basic-lti-launch-request");
-                            message.put("path", "http://192.168.44.149:8888/hg/1/launch/v2p0");
+                            message.put("path", "/hg/1/launch/v2p0");
                             message.put("enabled_capability", new JSONArray());
                                 JSONArray parameter_array = new JSONArray();
                                     JSONObject parameter_system_setting_url = new JSONObject();
