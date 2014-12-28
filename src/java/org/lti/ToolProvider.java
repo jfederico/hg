@@ -9,7 +9,6 @@ import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -134,84 +133,6 @@ public abstract class ToolProvider {
         return toolConsumerProfile;
     }
 
-    /*
-    private JSONObject getIMSXJSONRequest(String regKey) {
-        JSONObject imsx_JSONRequest = new JSONObject();
-
-        imsx_JSONRequest.put("@context", "http://purl.imsglobal.org/ctx/lti/v2/ToolProxy/");
-        imsx_JSONRequest.put("@type", "ToolProxy");
-        imsx_JSONRequest.put("lti_version", "LTI-2p0");
-        imsx_JSONRequest.put("tool_consumer_profile", "http://192.168.44.149/moodle/mod/lti/services.php/profile/" + regKey + "?lti_version=LTI-2p0");
-            JSONObject tool_profile = new JSONObject();
-            tool_profile.put("lti_version", "LTI-2p0");
-                //Prepare product_instance
-                JSONObject product_instance = new JSONObject();
-                product_instance.put("guid", "192.168.44.149");
-                    JSONObject product_info = new JSONObject();
-                    product_info.put("product_version", "1.0.0");
-                        JSONObject product_family = new JSONObject();
-                            JSONObject vendor = new JSONObject();
-                            Date dt = new Date();
-                            vendor.put("timestamp", "" + dt.getTime());
-                            vendor.put("code", "hg");
-                                JSONObject vendor_name = new JSONObject();
-                                vendor_name.put("default_value", "123it.ca");
-                                vendor_name.put("key", "product.vendor.name");
-                                vendor.put("vendor_name", vendor_name);
-                            product_family.put("vendor", vendor);
-                            product_family.put("code", "hg_bigbluebutton");
-                    product_info.put("product_family", product_family);
-                        JSONObject product_name = new JSONObject();
-                        product_name.put("default_value", "hg");
-                        product_name.put("key", "product.name");
-                    product_info.put("product_name", product_name);
-                product_instance.put("product_info", product_info);
-                product_instance.put("support", new JSONObject());
-                product_instance.put("service_provider", new JSONObject());
-                product_instance.put("service_owner", new JSONObject());
-            tool_profile.put("product_instance", product_instance);
-            //Prepare service_offered
-            //    JSONArray service_offered = new JSONArray();
-            //imsx_JSONRequest.put("service_offered", service_offered);
-            //Prepare base_url_choice
-            //    JSONArray base_url_choice = new JSONArray();
-            //imsx_JSONRequest.put("base_url_choice", base_url_choice);
-            //Prepare message
-                JSONArray message_array = new JSONArray();
-                JSONObject message = new JSONObject();
-                message.put("message_type", "basic-lti-launch-request");
-                message.put("path", "http://192.168.44.149:8888/hg/0/launch/v2p0");
-                    JSONArray parameter_array = new JSONArray();
-                    JSONObject parameter = new JSONObject();
-                    parameter.put("name", "lis_person_name_full");
-                    parameter.put("variable", "$Person.name.full");
-                    parameter_array.put(parameter);
-                message.put("parameter", parameter_array);
-                message_array.put(message);
-            tool_profile.put("message", message_array);
-            //Prepare resource_handler
-                JSONArray resource_handler_array = new JSONArray();
-                    JSONObject resource_handler = new JSONObject();
-                    resource_handler.put("resource_type", "urn:lti:ResourceType:acme.example.com/nitrolab/homework");
-                        JSONObject resource_handler_name = new JSONObject();
-                        resource_handler_name.put("default_value", "Acme Homework Assignment");
-                    resource_handler.put("name", resource_handler_name);
-                        JSONObject resource_handler_description = new JSONObject();
-                        resource_handler_description.put("default_value", "Acme Homework Assignment");
-                    resource_handler.put("description", resource_handler_description);
-                        JSONArray enabled_capability = new JSONArray();
-                        enabled_capability.put("Result.autocreate");
-                    resource_handler.put("enabled_capability", enabled_capability);
-                resource_handler_array.put(resource_handler);
-            tool_profile.put("resource_handler", resource_handler_array);
-        imsx_JSONRequest.put("tool_profile", tool_profile);
-
-        log.debug("+++++++++++++++++++++++++++++++++++++++");
-        log.debug(imsx_JSONRequest);
-        log.debug("+++++++++++++++++++++++++++++++++++++++");
-        return imsx_JSONRequest;
-    }
-*/
     public Map<String, String> doRequestLti(String url, String regKey, String regPassword, String message) {
         //throws Exception {
         log.debug("Executing the doRequestLti");
@@ -317,45 +238,6 @@ public abstract class ToolProvider {
         return responseAsString.toString();
     }
 
-/*
-    private void sendPost(String url, String urlParameters) throws Exception {
-
-        String USER_AGENT = "Mozilla/5.0";
-        URL obj = new URL(url);
-        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-
-        //add reuqest header
-        con.setRequestMethod("POST");
-        con.setRequestProperty("User-Agent", USER_AGENT);
-        con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
-
-        // Send post request
-        con.setDoOutput(true);
-        DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-        wr.writeBytes(urlParameters);
-        wr.flush();
-        wr.close();
-
-        int responseCode = con.getResponseCode();
-        System.out.println("\nSending 'POST' request to URL : " + url);
-        System.out.println("Post parameters : " + urlParameters);
-        System.out.println("Response Code : " + responseCode);
-
-        BufferedReader in = new BufferedReader( new InputStreamReader(con.getInputStream()) );
-        String inputLine;
-        StringBuffer response = new StringBuffer();
-
-        while ((inputLine = in.readLine()) != null) {
-            response.append(inputLine);
-        }
-        in.close();
-
-        //print result
-        System.out.println(response.toString());
-
-    }
- */
-
     /** Make an API call */
     private JSONObject ltiProxyRequest(String query) {
         return ltiProxyRequest(query, "GET");
@@ -412,6 +294,45 @@ public abstract class ToolProvider {
 
         return ltiProxyResponse;
     }
+
+    /*
+    private void sendPost(String url, String urlParameters) throws Exception {
+
+        String USER_AGENT = "Mozilla/5.0";
+        URL obj = new URL(url);
+        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+        //add reuqest header
+        con.setRequestMethod("POST");
+        con.setRequestProperty("User-Agent", USER_AGENT);
+        con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+
+        // Send post request
+        con.setDoOutput(true);
+        DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+        wr.writeBytes(urlParameters);
+        wr.flush();
+        wr.close();
+
+        int responseCode = con.getResponseCode();
+        System.out.println("\nSending 'POST' request to URL : " + url);
+        System.out.println("Post parameters : " + urlParameters);
+        System.out.println("Response Code : " + responseCode);
+
+        BufferedReader in = new BufferedReader( new InputStreamReader(con.getInputStream()) );
+        String inputLine;
+        StringBuffer response = new StringBuffer();
+
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+
+        //print result
+        System.out.println(response.toString());
+
+    }
+ */
 
     public Map<String, Object> jsonToMap(JSONObject json)
             throws JSONException {
