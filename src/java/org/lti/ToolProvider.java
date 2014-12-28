@@ -134,40 +134,86 @@ public abstract class ToolProvider {
         return toolConsumerProfile;
     }
 
-    private JSONObject getIMSXJSONRequest() {
+    /*
+    private JSONObject getIMSXJSONRequest(String regKey) {
         JSONObject imsx_JSONRequest = new JSONObject();
 
-        JSONObject product_instance = new JSONObject();
-        product_instance.put("guid", "192.168.44.149");
-            JSONObject product_info = new JSONObject();
-            product_info.put("product_version", "1.0.0");
-                JSONObject product_family = new JSONObject();
-                    JSONObject vendor = new JSONObject();
-                    Date dt = new Date();
-                    vendor.put("timestamp", "" + dt.getTime());
-                    vendor.put("code", "hg");
-                        JSONObject vendor_name = new JSONObject();
-                        vendor_name.put("default_value", "123it.ca");
-                        vendor_name.put("key", "product.vendor.name");
-                        vendor.put("vendor_name", vendor_name);
-                product_family.put("vendor", vendor);
-                product_family.put("code", "hg_bigbluebutton");
-            product_info.put("product_family", product_family);
-                JSONObject product_name = new JSONObject();
-                product_name.put("default_value", "hg");
-                product_name.put("key", "product.name");
-        product_instance.put("support", "{}");
-        product_instance.put("service_provider", "{}");
-        product_instance.put("service_owner", "{}");
-            JSONObject service_offered = new JSONObject();
-        product_instance.put("service_offered", service_offered);
-
+        imsx_JSONRequest.put("@context", "http://purl.imsglobal.org/ctx/lti/v2/ToolProxy/");
+        imsx_JSONRequest.put("@type", "ToolProxy");
         imsx_JSONRequest.put("lti_version", "LTI-2p0");
-        imsx_JSONRequest.put("product_instance", product_instance);
+        imsx_JSONRequest.put("tool_consumer_profile", "http://192.168.44.149/moodle/mod/lti/services.php/profile/" + regKey + "?lti_version=LTI-2p0");
+            JSONObject tool_profile = new JSONObject();
+            tool_profile.put("lti_version", "LTI-2p0");
+                //Prepare product_instance
+                JSONObject product_instance = new JSONObject();
+                product_instance.put("guid", "192.168.44.149");
+                    JSONObject product_info = new JSONObject();
+                    product_info.put("product_version", "1.0.0");
+                        JSONObject product_family = new JSONObject();
+                            JSONObject vendor = new JSONObject();
+                            Date dt = new Date();
+                            vendor.put("timestamp", "" + dt.getTime());
+                            vendor.put("code", "hg");
+                                JSONObject vendor_name = new JSONObject();
+                                vendor_name.put("default_value", "123it.ca");
+                                vendor_name.put("key", "product.vendor.name");
+                                vendor.put("vendor_name", vendor_name);
+                            product_family.put("vendor", vendor);
+                            product_family.put("code", "hg_bigbluebutton");
+                    product_info.put("product_family", product_family);
+                        JSONObject product_name = new JSONObject();
+                        product_name.put("default_value", "hg");
+                        product_name.put("key", "product.name");
+                    product_info.put("product_name", product_name);
+                product_instance.put("product_info", product_info);
+                product_instance.put("support", new JSONObject());
+                product_instance.put("service_provider", new JSONObject());
+                product_instance.put("service_owner", new JSONObject());
+            tool_profile.put("product_instance", product_instance);
+            //Prepare service_offered
+            //    JSONArray service_offered = new JSONArray();
+            //imsx_JSONRequest.put("service_offered", service_offered);
+            //Prepare base_url_choice
+            //    JSONArray base_url_choice = new JSONArray();
+            //imsx_JSONRequest.put("base_url_choice", base_url_choice);
+            //Prepare message
+                JSONArray message_array = new JSONArray();
+                JSONObject message = new JSONObject();
+                message.put("message_type", "basic-lti-launch-request");
+                message.put("path", "http://192.168.44.149:8888/hg/0/launch/v2p0");
+                    JSONArray parameter_array = new JSONArray();
+                    JSONObject parameter = new JSONObject();
+                    parameter.put("name", "lis_person_name_full");
+                    parameter.put("variable", "$Person.name.full");
+                    parameter_array.put(parameter);
+                message.put("parameter", parameter_array);
+                message_array.put(message);
+            tool_profile.put("message", message_array);
+            //Prepare resource_handler
+                JSONArray resource_handler_array = new JSONArray();
+                    JSONObject resource_handler = new JSONObject();
+                    resource_handler.put("resource_type", "urn:lti:ResourceType:acme.example.com/nitrolab/homework");
+                        JSONObject resource_handler_name = new JSONObject();
+                        resource_handler_name.put("default_value", "Acme Homework Assignment");
+                    resource_handler.put("name", resource_handler_name);
+                        JSONObject resource_handler_description = new JSONObject();
+                        resource_handler_description.put("default_value", "Acme Homework Assignment");
+                    resource_handler.put("description", resource_handler_description);
+                        JSONArray enabled_capability = new JSONArray();
+                        enabled_capability.put("Result.autocreate");
+                    resource_handler.put("enabled_capability", enabled_capability);
+                resource_handler_array.put(resource_handler);
+            tool_profile.put("resource_handler", resource_handler_array);
+        imsx_JSONRequest.put("tool_profile", tool_profile);
+
+        log.debug("+++++++++++++++++++++++++++++++++++++++");
+        log.debug(imsx_JSONRequest);
+        log.debug("+++++++++++++++++++++++++++++++++++++++");
         return imsx_JSONRequest;
     }
-
-    public Map<String, String> doRequestLti(String url, String regKey, String regPassword){
+*/
+    public Map<String, String> doRequestLti(String url, String regKey, String regPassword, String message) {
+        //throws Exception {
         log.debug("Executing the doRequestLti");
         Map<String, String> returnValues = new LinkedHashMap<String, String>();
 
@@ -179,7 +225,7 @@ public abstract class ToolProvider {
         OAuthResponseMessage oar;
 
         log.debug("//2.- Prepare the message");
-        String imsx_JSONRequest = getIMSXJSONRequest().toString();
+        String imsx_JSONRequest = message;
         log.debug("imsx_JSONRequest:\n" + imsx_JSONRequest);
         try {
             log.debug("//3.- Sign the message");
@@ -216,9 +262,11 @@ public abstract class ToolProvider {
                 //The resource was not found, the record must be deleted from the epcs server
                 thedump = oar.getDump();
                 log.debug("\nREQUEST=" + thedump.get(HttpMessage.REQUEST) + "\nRESPONSE=" + thedump.get(HttpMessage.RESPONSE));
+                //throw new Exception("Error 404");
             } else {
                 thedump = oar.getDump();
                 log.debug("\nREQUEST\n" + thedump.get(HttpMessage.REQUEST) + "\nRESPONSE\n" + thedump.get(HttpMessage.RESPONSE));
+                //throw new Exception("Error");
             }
         } catch(IOException e) {
             log.debug(e.toString());
@@ -237,13 +285,16 @@ public abstract class ToolProvider {
         return returnValues;
     }
 
-    public String executeProxyRegistration(String url, String regKey, String regPassword) {
+    public String executeProxyRegistration(String url, String regKey, String regPassword, String message) {
+        String response;
         try{
-            doRequestLti(url, regKey, regPassword);
+            doRequestLti(url, regKey, regPassword, message);
+            response = "OK";
         } catch (Exception e){
             log.error("Error while executing the post for registration");
+            response = "ERROR: " + e.getMessage();
         }
-        return "OK";
+        return response;
     }
 
     private String getResponse(InputStream inputStream)
