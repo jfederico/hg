@@ -12,11 +12,10 @@ public interface IEngine {
     public static String PARAM_ACTION       = "action";
     public static String PARAM_TENANT       = "tenant";
     public static String PARAM_ENGINE       = "engine";
-    public static String PARAM_VERSION      = "version";
     public static String PARAM_ACT          = "act";
     public static String PARAM_CMD          = "cmd";
     public static String[] GRAILS_PARAMS    = new String[] { 
-        PARAM_ENDPOINT, PARAM_APPLICATION, PARAM_CONTROLLER, PARAM_ACTION, PARAM_TENANT, PARAM_ENGINE, PARAM_VERSION, PARAM_ACT, PARAM_CMD
+        PARAM_ENDPOINT, PARAM_APPLICATION, PARAM_CONTROLLER, PARAM_ACTION, PARAM_TENANT, PARAM_ENGINE, PARAM_ACT, PARAM_CMD
     };
 
     public static String COMPLETION_RESPONSE_TYPE_HTML  = "html";

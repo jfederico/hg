@@ -14,10 +14,10 @@ public class TestEngine extends Engine {
     private static final Logger log = Logger.getLogger(TestEngine.class);
 
     public static final String ENGINE_CODE = EngineFactory.ENGINE_TEST;
-    public static final String ENGINE_NAME = "BigBlueButton";
-    public static final String ENGINE_DESCRIPTION = "Open source web conferencing system for distance learning.";
-    public static final String ENGINE_URL = "http://www.bigbluebutton.org/";
-    public static final String ENGINE_CONTACT_EMAIL = "bigbluebutton-users@googlegroups.com";
+    public static final String ENGINE_NAME = "HG Test";
+    public static final String ENGINE_DESCRIPTION = "Default broker for processing test LTI (1.x and 2.x) requests";
+    public static final String ENGINE_URL = "http://www.123it.ca/hg/";
+    public static final String ENGINE_CONTACT_EMAIL = "contact@123it.ca";
 
     public TestEngine(HttpServletRequest request, Map<String, String> params, Map<String, Object> config, String endpoint, Map<String, String> session_params)
         throws Exception {
@@ -29,11 +29,11 @@ public class TestEngine extends Engine {
             definition.put("title", (String)config.get("title"));
             definition.put("description", (String)config.get("description"));
 
-            String launch_url_path = grails_params.get("application") + "/" + grails_params.get("tenant") + "/" + ENGINE_TYPE_LAUNCH + "/" + grails_params.get("version"); 
+            String launch_url_path = grails_params.get(PARAM_APPLICATION) + "/" + grails_params.get(PARAM_TENANT) + "/" + ENGINE_TYPE_LAUNCH; 
             definition.put( "launch_url", "http://" + endpoint + "/" + launch_url_path );
             definition.put( "secure_launch_url", "https://" + endpoint + "/" + launch_url_path );
 
-            String icon_path = grails_params.get("application") + "/" + grails_params.get("tenant") + "/" + ENGINE_TYPE_RESOURCE + "/v1/?a=ico";
+            String icon_path = grails_params.get(PARAM_APPLICATION) + "/" + grails_params.get(PARAM_TENANT) + "/" + ENGINE_TYPE_RESOURCE + "/?a=ico";
             definition.put( "icon", "http://" + endpoint + "/" + icon_path );
             definition.put( "secure_icon", "https://" + endpoint + "/" + icon_path );
 

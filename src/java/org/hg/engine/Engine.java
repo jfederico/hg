@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 import org.lti.LTIException;
 import org.lti.ToolProvider;
 import org.lti.SimpleLTIStore;
+import org.lti.ToolProviderProfile;
 
 public class Engine implements IEngine {
     private static final Logger log = Logger.getLogger(Engine.class);
@@ -40,7 +41,7 @@ public class Engine implements IEngine {
                     params.remove(GRAILS_PARAMS[i]);
                 }
             }
-            this.endpoint_url = (request.isSecure()? "https": "http") + "://" + this.endpoint + "/" + this.grails_params.get("application") + "/" + this.grails_params.get("tenant") + "/" + type + "/" + this.grails_params.get("version"); 
+            this.endpoint_url = (request.isSecure()? "https": "http") + "://" + this.endpoint + "/" + this.grails_params.get(PARAM_APPLICATION) + "/" + this.grails_params.get(PARAM_TENANT) + "/" + type; 
 
             /*
             //Temporary working params
@@ -57,6 +58,7 @@ public class Engine implements IEngine {
             {
                  this.params = session_params;
                  this.tp = SimpleLTIStore.createToolProvider(this.params, this.config, this.endpoint_url);
+                 this.tp.setToolProviderProfile(buildToolProviderProfile(this.params, this.config));
                  //TODO: If there is a TC, it should be loaded here.
 
                  Map<String, Object> profile = getProfile();
@@ -65,6 +67,7 @@ public class Engine implements IEngine {
             } else if ( this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_REGISTRATION) ) {
                 this.params = session_params;
                 this.tp = SimpleLTIStore.createToolProvider(this.params, this.config, this.endpoint_url);
+                this.tp.setToolProviderProfile(buildToolProviderProfile(this.params, this.config));
             } else {
                 this.params = params;
             }
@@ -164,5 +167,10 @@ public class Engine implements IEngine {
 
     public String getEndpointURL() {
         return this.endpoint_url;
+    }
+    
+    private ToolProviderProfile buildToolProviderProfile(Map<String, String> params, Map<String, Object> config){
+        ToolProviderProfile tp_profile = new ToolProviderProfile();
+        return tp_profile;
     }
 }
