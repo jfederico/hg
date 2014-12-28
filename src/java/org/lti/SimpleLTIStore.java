@@ -28,7 +28,7 @@ public class SimpleLTIStore {
     private static final String LTI_VERSION_V1   = "1";
     private static final String LTI_VERSION_V2   = "2";
 
-    public static ToolProvider createToolProvider(Map<String, String> params, Map<String, Object> config, String endpoint) 
+    public static ToolProvider createToolProvider(Map<String, String> params, String endpoint, String key, String secret) 
             throws LTIException {
         log.info("Creating LTIToolProvider");
 
@@ -36,15 +36,8 @@ public class SimpleLTIStore {
 
         String version = getVersionNumber(params);
         log.debug("LTI version: " + version);
-        //log.debug(config.toString());
-        //log.debug(params.toString());
 
         try {
-            @SuppressWarnings("unchecked")
-            Map<String, Object> lti_cfg = (Map<String, Object>)config.get("lti");
-            String key = (String)lti_cfg.get("key");
-            String secret = (String)lti_cfg.get("secret");
-
             if( version.equals(LTI_VERSION_V1)) {
                 tp = new org.lti.v1.Launcher(endpoint, key, secret, params);
             } else if( version.equals(LTI_VERSION_V2)) {

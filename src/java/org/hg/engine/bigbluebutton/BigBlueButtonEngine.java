@@ -47,7 +47,6 @@ public class BigBlueButtonEngine extends Engine {
     public BigBlueButtonEngine(HttpServletRequest request, Map<String, String> params, Map<String, Object> config, String endpoint, Map<String, String> session_params)
         throws Exception {
         super(request, params, config, endpoint, session_params);
-        log.debug("XX: instantiate BigBlueButtonEngine()");
 
         if(this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_LAUNCH)){
             if(this.grails_params.get(PARAM_ACT).equals(ENGINE_ACT_CC)){
@@ -107,8 +106,9 @@ public class BigBlueButtonEngine extends Engine {
             }
         } else if( this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_REGISTRATION) ){
             setCompletionResponseCommand( new RegistrationURL(tp) );
+            //TODO: The tp_profile should be loaded here based on the 'config' definition.
+
         }
-        log.debug("XX: BigBlueButtonEngine() instantiated");
     }
 
     @Override

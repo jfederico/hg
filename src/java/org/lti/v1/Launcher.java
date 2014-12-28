@@ -29,7 +29,7 @@ public class Launcher extends ToolProvider implements LTIv1 {
             throw new LTIException(LTIException.MESSAGEKEY_MISSING_PARAMETERS, "LTI version " + LTIv1.VERSION + " parameters not included. " + e.getMessage());
         }
 
-        if( hasValidSignature() ) log.debug("XX: OAuth signature is valid"); else throw new Exception("OAuth signature is NOT valid");
+        if( hasValidSignature() ) log.debug("OAuth signature is valid"); else throw new Exception("OAuth signature is NOT valid");
     }
 
     public String getLTIVersion(){

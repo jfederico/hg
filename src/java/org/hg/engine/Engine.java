@@ -31,6 +31,7 @@ public class Engine implements IEngine {
         this.grails_params = new HashMap<String, String>();
         this.endpoint = endpoint;
 
+        Map<String, String> keypair = parseKeypair();
         try {
             String type = params.get(PARAM_ENGINE);
             validateEngineType(type);
@@ -43,21 +44,12 @@ public class Engine implements IEngine {
             }
             this.endpoint_url = (request.isSecure()? "https": "http") + "://" + this.endpoint + "/" + this.grails_params.get(PARAM_APPLICATION) + "/" + this.grails_params.get(PARAM_TENANT) + "/" + type; 
 
-            /*
-            //Temporary working params
-            Map<String, String> _params;
-            if( request.getMethod().equals("POST") ) {
-                _params = params;
-            } else {
-                _params = session_params;
-            }
-            this.params = _params;
-            */
             if ( this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_LAUNCH) && this.grails_params.get(PARAM_ACT).equals(ENGINE_ACT_SSO) ||
                  this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_LAUNCH) && this.grails_params.get(PARAM_ACT).equals(ENGINE_ACT_UI) )
             {
                  this.params = session_params;
-                 this.tp = SimpleLTIStore.createToolProvider(this.params, this.config, this.endpoint_url);
+
+                 this.tp = SimpleLTIStore.createToolProvider(this.params, this.endpoint_url, keypair.get("key"), keypair.get("secret"));
                  this.tp.setToolProviderProfile(buildToolProviderProfile(this.params, this.config));
                  //TODO: If there is a TC, it should be loaded here.
 
@@ -66,7 +58,7 @@ public class Engine implements IEngine {
                  validateRequiredParameters(profile);
             } else if ( this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_REGISTRATION) ) {
                 this.params = session_params;
-                this.tp = SimpleLTIStore.createToolProvider(this.params, this.config, this.endpoint_url);
+                this.tp = SimpleLTIStore.createToolProvider(this.params, this.endpoint_url, keypair.get("key"), keypair.get("secret"));
                 this.tp.setToolProviderProfile(buildToolProviderProfile(this.params, this.config));
             } else {
                 this.params = params;
@@ -74,6 +66,15 @@ public class Engine implements IEngine {
         } catch( Exception e) {
             throw e;
         }
+    }
+    
+    private Map<String, String> parseKeypair() {
+        Map<String, String> keypair = new HashMap<String, String>();
+        @SuppressWarnings("unchecked")
+        Map<String, Object> lti_cfg = (Map<String, Object>)this.config.get("lti");
+        keypair.put("key", (String)lti_cfg.get("key"));
+        keypair.put("secret", (String)lti_cfg.get("secret"));
+        return keypair;
     }
 
     protected CompletionResponse completionResponse;
@@ -134,20 +135,19 @@ public class Engine implements IEngine {
     @SuppressWarnings("unchecked")
     private void validateRequiredParameters(Map<String, Object> full_profile)
             throws Exception {
+        log.debug("Validate Engine required parameters");
         Map<String, Object> profile = (HashMap<String, Object>)full_profile.get("profile");
         ArrayList<Object> required_params = (ArrayList<Object>)profile.get("required_params");
         ArrayList<String> requiredParams = new ArrayList<String>();
         log.debug(required_params);
         for(Object required_param: required_params ){
-            log.debug((String)((Map<String, Object>)required_param).get("name"));
             requiredParams.add( (String)((Map<String, Object>)required_param).get("name") );
         }
 
         String[] requiredParameters = requiredParams.toArray(new String[requiredParams.size()]);
-        log.debug("XX: Validation starting");
-        log.debug(requiredParameters);
         try {
             this.tp.validateParameters(requiredParameters);
+            log.debug("Engine required parameters are included");
         } catch ( Exception e ) {
             throw new LTIException(LTIException.MESSAGEKEY_MISSING_PARAMETERS, "Tool Provider required parameters missing. " + e.getMessage());
         }
