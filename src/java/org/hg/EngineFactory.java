@@ -8,11 +8,10 @@ import org.hg.engine.IEngine;
 
 public interface EngineFactory {
 
-    public static String ENGINE_TEST = "hg_test";
-    public static String ENGINE_BN = "blindside_networks";
-    public static String ENGINE_BIGBLUEBUTTON = "big_blue_button";
-    public static String ENGINE_CW = "cw";
-    public static String ENGINE_CHALKANDWIRE = "chalk_and_wire";
+    public static String ENGINE_TEST            = "hg_test";
+    public static String ENGINE_BIGBLUEBUTTON   = "hg_bigbluebutton";
+    public static String ENGINE_LIMESURVEY      = "hg_limesurvey";
+    public static String ENGINE_YOUTUBE         = "hg_youtube";
 
     IEngine createEngine(HttpServletRequest request, Map<String, String> params, Map<String, Object> config, String endpoint, Map<String, String> session_params)
             throws Exception;

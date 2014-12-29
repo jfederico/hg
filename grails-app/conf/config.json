@@ -11,13 +11,18 @@
                     "alias": "bigbluebutton"
                 }
             ],
-            "title": "Blindeside Networks",
-            "description": "Blindside Networks started BigBlueButton in 2009. It provides commercial support and premium hosting for the BigBlueButton community.",
             "vendor": {
-                "code": "big_blue_button",
-                "name": "BN Test Install",
-                "description": "test-install is a BigBlueButton server freely provided by Blindside Networks for testing purposes only.",
+                "code": "blindside_networks",
+                "name": "Blindeside Networks",
+                "description": "Blindside Networks started BigBlueButton in 2009. It provides commercial support and premium hosting for the BigBlueButton community.",
                 "url": "http://www.blindsidenetworks.com/",
+                "contact": "admin@blindsidenetworks.com"
+            },
+            "product": {
+                "code": "hg_bigbluebutton",
+                "name": "BBB Rooms",
+                "description": "Basic LTI integration for BigBlueButton. It makes use of the BigBlueButton server test-install freely provided by Blindside Networks for testing purposes only.",
+                "url": "http://test-install.blindsidenetworks.com/",
                 "contact": "admin@blindsidenetworks.com"
             },
             "lti": {

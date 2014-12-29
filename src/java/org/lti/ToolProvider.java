@@ -57,6 +57,7 @@ public abstract class ToolProvider {
         this.key = key;
         this.secret = secret;
         this.params = new HashMap<String, String>(params);
+        this.tp_profile = null;
     }
 
     public void validateParameters(String[] requiredParameters)
@@ -389,4 +390,6 @@ public abstract class ToolProvider {
         }
         return list;
     }
+    
+    public abstract String registerProxy() throws LTIException;
 }

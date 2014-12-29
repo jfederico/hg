@@ -17,7 +17,9 @@ import org.bigbluebutton.api.BBBProxy;
 import org.hg.EngineFactory;
 import org.hg.engine.CompletionResponse;
 import org.hg.engine.Engine;
+import org.lti.LTIv2;
 import org.lti.RolesValidator;
+import org.lti.ToolProviderProfile;
 
 public class BigBlueButtonEngine extends Engine {
     private static final Logger log = Logger.getLogger(BigBlueButtonEngine.class);
@@ -47,12 +49,20 @@ public class BigBlueButtonEngine extends Engine {
     public BigBlueButtonEngine(HttpServletRequest request, Map<String, String> params, Map<String, Object> config, String endpoint, Map<String, String> session_params)
         throws Exception {
         super(request, params, config, endpoint, session_params);
+        log.debug("HERE: BigBlueButtonEngine()");
+
+        if( this.tp != null && this.tp.getLTIVersion().equals(LTIv2.VERSION) ) {
+            this.tp.setToolProviderProfile(buildToolProviderProfile());
+        }
 
         if(this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_LAUNCH)){
             if(this.grails_params.get(PARAM_ACT).equals(ENGINE_ACT_CC)){
                 Map<String, Object> definition = new HashMap<String, Object>();
-                definition.put("title", (String)config.get("title"));
-                definition.put("description", (String)config.get("description"));
+                
+                @SuppressWarnings("unchecked")
+                Map<String, String> config_vendor = (Map<String, String>)this.config.get("vendor"); 
+                definition.put("title", config_vendor.get("name"));
+                definition.put("description", config_vendor.get("description"));
 
                 String launch_url_path = grails_params.get(PARAM_APPLICATION) + "/" + grails_params.get(PARAM_TENANT) + "/" + ENGINE_TYPE_LAUNCH; 
                 definition.put( "launch_url", "http://" + endpoint + "/" + launch_url_path );
@@ -63,51 +73,53 @@ public class BigBlueButtonEngine extends Engine {
                 definition.put( "secure_icon", "https://" + endpoint + "/" + icon_path );
 
                 @SuppressWarnings("unchecked")
-                Map<String, Object> vendor = (Map<String, Object>)config.get("vendor");
-                String vendor_code = (String)vendor.get("code");
+                Map<String, String> config_product = (Map<String, String>)this.config.get("vendor"); 
+                String vendor_code = config_product.get("code");
                 definition.put( "vendor_code", (vendor_code != null && !vendor_code.equals(""))? vendor_code: ENGINE_CODE );
-                String vendor_name = (String)vendor.get("name");
+                String vendor_name = config_product.get("name");
                 definition.put( "vendor_name", (vendor_name != null && !vendor_name.equals(""))? vendor_name: ENGINE_NAME );
-                String vendor_description = (String)vendor.get("description");
+                String vendor_description = config_product.get("description");
                 definition.put( "vendor_description", (vendor_description != null && !vendor_description.equals(""))? vendor_description: ENGINE_DESCRIPTION );
-                String vendor_url = (String)vendor.get("url");
+                String vendor_url = config_product.get("url");
                 definition.put( "vendor_url", (vendor_url != null && !vendor_url.equals(""))? vendor_url: ENGINE_URL );
-                String vendor_contact_email = (String)vendor.get("contact");
+                String vendor_contact_email = config_product.get("contact");
                 definition.put( "vendor_contact_email", (vendor_contact_email != null && !vendor_contact_email.equals(""))? vendor_contact_email: ENGINE_CONTACT_EMAIL );
 
                 setCompletionResponseCommand( new CommonCartridgeXML(definition) );
             } else {
                 @SuppressWarnings("unchecked")
-                Map<String, String> engine = (Map<String, String>)config.get("engine");
+                Map<String, String> config_engine = (Map<String, String>)config.get("engine");
 
                 if( this.params.containsKey(PARAM_CUSTOM_RECORD) && Boolean.parseBoolean(this.params.get(PARAM_CUSTOM_RECORD)) ){
                     if( this.grails_params.containsKey(PARAM_ACT) && this.grails_params.get(PARAM_ACT).equals(ENGINE_ACT_UI) ){
                         if( this.grails_params.containsKey(PARAM_CMD) && this.grails_params.get(PARAM_CMD).equals(BBB_CMD_MEETING_JOIN) ) {
-                            setCompletionResponseCommand( new SingleSignOnURL(engine, getMeetingParams(), getSessionParams()) );
+                            setCompletionResponseCommand( new SingleSignOnURL(config_engine, getMeetingParams(), getSessionParams()) );
                         } else if( this.grails_params.containsKey(PARAM_CMD) && this.grails_params.get(PARAM_CMD).equals(BBB_CMD_RECORDING_PUBLISH) ) {
                             this.tp.putParameter(PARAM_BBB_RECORDING_ID, params.get(PARAM_BBB_RECORDING_ID));
                             this.tp.putParameter(PARAM_BBB_RECORDING_PUBLISHED, params.get(PARAM_BBB_RECORDING_PUBLISHED));
-                            setCompletionResponseCommand( new PublishRecording(engine, getMeetingParams(), getSessionParams(), getRecordingParams()) );
+                            setCompletionResponseCommand( new PublishRecording(config_engine, getMeetingParams(), getSessionParams(), getRecordingParams()) );
                         } else if( this.grails_params.containsKey(PARAM_CMD) && this.grails_params.get(PARAM_CMD).equals(BBB_CMD_RECORDING_UNPUBLISH) ) {
                             this.tp.putParameter(PARAM_BBB_RECORDING_ID, params.get(PARAM_BBB_RECORDING_ID));
                             this.tp.putParameter(PARAM_BBB_RECORDING_PUBLISHED, params.get(PARAM_BBB_RECORDING_PUBLISHED));
-                            setCompletionResponseCommand( new UnpublishRecording(engine, getMeetingParams(), getSessionParams(), getRecordingParams()) );
+                            setCompletionResponseCommand( new UnpublishRecording(config_engine, getMeetingParams(), getSessionParams(), getRecordingParams()) );
                         } else if( this.grails_params.containsKey(PARAM_CMD) && this.grails_params.get(PARAM_CMD).equals(BBB_CMD_RECORDING_DELETE) ) {
                             this.tp.putParameter(PARAM_BBB_RECORDING_ID, params.get(PARAM_BBB_RECORDING_ID));
                             this.tp.putParameter(PARAM_BBB_RECORDING_PUBLISHED, params.get(PARAM_BBB_RECORDING_PUBLISHED));
-                            setCompletionResponseCommand( new DeleteRecording(engine, getMeetingParams(), getSessionParams(), getRecordingParams()) );
+                            setCompletionResponseCommand( new DeleteRecording(config_engine, getMeetingParams(), getSessionParams(), getRecordingParams()) );
                         }
                     } else {
-                        setCompletionResponseCommand( new UI(engine, getMeetingParams(), getSessionParams()) );
+                        setCompletionResponseCommand( new UI(config_engine, getMeetingParams(), getSessionParams()) );
                     }
                 } else {
-                    setCompletionResponseCommand( new SingleSignOnURL(engine, getMeetingParams(), getSessionParams()) );
+                    setCompletionResponseCommand( new SingleSignOnURL(config_engine, getMeetingParams(), getSessionParams()) );
                 }
             }
         } else if( this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_REGISTRATION) ){
-            setCompletionResponseCommand( new RegistrationURL(tp) );
+            setCompletionResponseCommand( new RegistrationURL(this.tp) );
             //TODO: The tp_profile should be loaded here based on the 'config' definition.
-
+            //this.tp.executeProxyRegistration(url, regKey, regPassword, message);
+            this.tp.registerProxy();
+            
         }
     }
 
@@ -245,6 +257,27 @@ public class BigBlueButtonEngine extends Engine {
         recordingParams.put(BBBProxy.PARAM_PUBLISH, Boolean.toString(!Boolean.parseBoolean(params.get(PARAM_BBB_RECORDING_PUBLISHED))) );
 
         return recordingParams;
+    }
+
+    private ToolProviderProfile buildToolProviderProfile() {
+        log.debug("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+        log.debug(this.endpoint);
+        log.debug(this.config);
+        log.debug(this.grails_params);
+        log.debug(this.params);
+        
+        String param_tc_profile_url = this.params.get(LTIv2.TC_PROFILE_URL);
+        String config_tool_guid = (String)this.config.get("id") + "@" + this.endpoint;
+        @SuppressWarnings("unchecked")
+        Map<String, String> config_vendor = (Map<String, String>)this.config.get("vendor"); 
+        @SuppressWarnings("unchecked")
+        Map<String, String> config_product = (Map<String, String>)this.config.get("product"); 
+        
+        ToolProviderProfile tp_profile = new ToolProviderProfile(param_tc_profile_url, config_tool_guid, config_product, config_vendor);
+        log.debug("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+        log.debug(tp_profile.getIMSXJSONMessage().toString());
+        tp_profile.setId();
+        return tp_profile;
     }
 
 }

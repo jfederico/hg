@@ -39,18 +39,23 @@ public class SimpleLTIStore {
 
         try {
             if( version.equals(LTI_VERSION_V1)) {
+                log.debug("HERE: Instantiating LTI-1p0 ToolProvider->Launcher");
                 tp = new org.lti.v1.Launcher(endpoint, key, secret, params);
             } else if( version.equals(LTI_VERSION_V2)) {
                 if( params.containsKey(LTIv2.LTI_MESSAGE_TYPE) ) {
                     if( LTIv2.LTI_MESSAGE_TYPE_TOOL_PROXY_REGISTRATION_REQUEST.equals(params.get(LTIv2.LTI_MESSAGE_TYPE)) ){
+                        log.debug("HERE: Instantiating LTI-2p0 ToolProvider->Registrant");
                         tp = new org.lti.v2.Registrant(endpoint, key, secret, params);
                     } else {
+                        log.debug("HERE: Instantiating LTI-2p0 ToolProvider->Launcher");
                         tp = new org.lti.v2.Launcher(endpoint, key, secret, params);
                     }
                 } else {
+                    log.debug("HERE: Instantiating LTI-2p0 ToolProvider->Launcher");
                     tp = new org.lti.v2.Launcher(endpoint, key, secret, params);
                 }
             } else {
+                log.debug("HERE: Instantiating LTI-1p0 ToolProvider->Launcher");
                 tp = new org.lti.v1.Launcher(endpoint, key, secret, params);
             }
 
@@ -58,11 +63,10 @@ public class SimpleLTIStore {
             throw new LTIException(LTIException.MESSAGEKEY_INTERNALERROR, "The tool provider could not be instantiated", e.getCause());
         }
 
-        log.debug(tp.getParameters().toString());
         return tp;
     }
     
-    private static String getVersionNumber(Map<String, String> params) {
+    public static String getVersionNumber(Map<String, String> params) {
         String versionNumber = LTI_VERSION_V1;
 
         String version = params.containsKey(LTI_VERSION)? params.get(LTI_VERSION): LTI_VERSION_DEFAULT;

@@ -11,7 +11,6 @@ import org.apache.log4j.Logger;
 import org.lti.LTIException;
 import org.lti.ToolProvider;
 import org.lti.SimpleLTIStore;
-import org.lti.ToolProviderProfile;
 
 public class Engine implements IEngine {
     private static final Logger log = Logger.getLogger(Engine.class);
@@ -26,7 +25,7 @@ public class Engine implements IEngine {
 
     public Engine(HttpServletRequest request, Map<String, String> params, Map<String, Object> config, String endpoint, Map<String, String> session_params)
             throws Exception {
-
+        log.debug("HERE: Engine()");
         this.config = config;
         this.grails_params = new HashMap<String, String>();
         this.endpoint = endpoint;
@@ -50,7 +49,7 @@ public class Engine implements IEngine {
                  this.params = session_params;
 
                  this.tp = SimpleLTIStore.createToolProvider(this.params, this.endpoint_url, keypair.get("key"), keypair.get("secret"));
-                 this.tp.setToolProviderProfile(buildToolProviderProfile(this.params, this.config));
+                 //this.tp.setToolProviderProfile(buildToolProviderProfile());
                  //TODO: If there is a TC, it should be loaded here.
 
                  Map<String, Object> profile = getProfile();
@@ -59,22 +58,12 @@ public class Engine implements IEngine {
             } else if ( this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_REGISTRATION) ) {
                 this.params = session_params;
                 this.tp = SimpleLTIStore.createToolProvider(this.params, this.endpoint_url, keypair.get("key"), keypair.get("secret"));
-                this.tp.setToolProviderProfile(buildToolProviderProfile(this.params, this.config));
             } else {
                 this.params = params;
             }
         } catch( Exception e) {
             throw e;
         }
-    }
-    
-    private Map<String, String> parseKeypair() {
-        Map<String, String> keypair = new HashMap<String, String>();
-        @SuppressWarnings("unchecked")
-        Map<String, Object> lti_cfg = (Map<String, Object>)this.config.get("lti");
-        keypair.put("key", (String)lti_cfg.get("key"));
-        keypair.put("secret", (String)lti_cfg.get("secret"));
-        return keypair;
     }
 
     protected CompletionResponse completionResponse;
@@ -155,7 +144,7 @@ public class Engine implements IEngine {
 
     private void validateEngineType(String type)
             throws Exception {
-        for( int i=0; i < ENGINE_TYPES.length; i++ ){
+        for( int i=0; i < ENGINE_TYPES.length; i++ ) {
             if( type.equals(ENGINE_TYPES[i]) ){
                 return;
             }
@@ -168,9 +157,13 @@ public class Engine implements IEngine {
     public String getEndpointURL() {
         return this.endpoint_url;
     }
-    
-    private ToolProviderProfile buildToolProviderProfile(Map<String, String> params, Map<String, Object> config){
-        ToolProviderProfile tp_profile = new ToolProviderProfile();
-        return tp_profile;
+
+    private Map<String, String> parseKeypair() {
+        Map<String, String> keypair = new HashMap<String, String>();
+        @SuppressWarnings("unchecked")
+        Map<String, Object> lti_cfg = (Map<String, Object>)this.config.get("lti");
+        keypair.put("key", (String)lti_cfg.get("key"));
+        keypair.put("secret", (String)lti_cfg.get("secret"));
+        return keypair;
     }
 }

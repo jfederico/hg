@@ -40,10 +40,11 @@ public class SimpleEngineFactory implements EngineFactory {
         }
 
         @SuppressWarnings("unchecked")
-        Map<String, Object> vendor = (Map<String, Object>)config.get("vendor");
+        Map<String, Object> vendor = (Map<String, Object>)config.get("product");
         String vendor_code = (String)vendor.get("code");
 
-        log.debug(vendor_code);
+        System.out.println("HERE: SimpleEngineFactory");
+        System.out.println(vendor_code);
 
         if( vendor_code.equals(ENGINE_TEST) ){
             engine = new TestEngine(request, params, config, endpoint, session_params);
