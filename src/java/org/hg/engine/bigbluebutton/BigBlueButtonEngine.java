@@ -22,7 +22,7 @@ import org.lti.RolesValidator;
 import org.lti.ToolProviderProfile;
 
 public class BigBlueButtonEngine extends Engine {
-    private static final Logger log = Logger.getLogger(BigBlueButtonEngine.class);
+    private static final Logger log = Logger.getLogger(BigBlueButtonEngine.class.getName());
 
     public static final String ENGINE_CODE = EngineFactory.ENGINE_BIGBLUEBUTTON;
     public static final String ENGINE_NAME = "BigBlueButton";
@@ -49,7 +49,7 @@ public class BigBlueButtonEngine extends Engine {
     public BigBlueButtonEngine(HttpServletRequest request, Map<String, String> params, Map<String, Object> config, String endpoint, Map<String, String> session_params)
         throws Exception {
         super(request, params, config, endpoint, session_params);
-        log.debug("HERE: BigBlueButtonEngine()");
+        log.debug("====== Creating object::BigBlueButtonEngine()");
 
         if( this.tp != null && this.tp.getLTIVersion().equals(LTIv2.VERSION) ) {
             this.tp.setToolProviderProfile(buildToolProviderProfile());
@@ -119,7 +119,6 @@ public class BigBlueButtonEngine extends Engine {
             //TODO: The tp_profile should be loaded here based on the 'config' definition.
             //this.tp.executeProxyRegistration(url, regKey, regPassword, message);
             this.tp.registerProxy();
-            
         }
     }
 
@@ -267,13 +266,15 @@ public class BigBlueButtonEngine extends Engine {
         log.debug(this.params);
         
         String param_tc_profile_url = this.params.get(LTIv2.TC_PROFILE_URL);
-        String config_tool_guid = (String)this.config.get("id") + "@" + this.endpoint;
-        @SuppressWarnings("unchecked")
-        Map<String, String> config_vendor = (Map<String, String>)this.config.get("vendor"); 
+        //String config_tool_guid = (String)this.config.get("id") + "@" + this.endpoint;
+        String config_tool_guid = (String)this.grails_params.get(PARAM_TENANT) + "@" + this.endpoint;
         @SuppressWarnings("unchecked")
         Map<String, String> config_product = (Map<String, String>)this.config.get("product"); 
+        @SuppressWarnings("unchecked")
+        Map<String, String> config_vendor = (Map<String, String>)this.config.get("vendor"); 
         
         ToolProviderProfile tp_profile = new ToolProviderProfile(param_tc_profile_url, config_tool_guid, config_product, config_vendor);
+
         log.debug("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
         log.debug(tp_profile.getIMSXJSONMessage().toString());
         tp_profile.setId();

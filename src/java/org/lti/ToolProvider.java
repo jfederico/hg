@@ -53,11 +53,17 @@ public abstract class ToolProvider {
 
     public ToolProvider(String endpoint, String key, String secret, Map<String, String> params)
             throws LTIException, Exception {
+        log.debug("====== Creating object::ToolProvider()");
+        log.debug(endpoint);
+        log.debug(key);
+        log.debug(secret);
+        log.debug(params);
         this.endpoint = endpoint;
         this.key = key;
         this.secret = secret;
         this.params = new HashMap<String, String>(params);
         this.tp_profile = null;
+
     }
 
     public void validateParameters(String[] requiredParameters)

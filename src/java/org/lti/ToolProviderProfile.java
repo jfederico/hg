@@ -133,6 +133,8 @@ public class ToolProviderProfile {
     }
 
     private JSONArray getResourceHandler() {
+        String[] tool_guid_segments = this.tool_guid.split("@");
+
         //Prepare resource_handler
         JSONArray resource_handler_array = new JSONArray();
             JSONObject resource_handler = new JSONObject();
@@ -150,7 +152,7 @@ public class ToolProviderProfile {
                 JSONArray message_array = new JSONArray();
                     JSONObject message = new JSONObject();
                     message.put("message_type", "basic-lti-launch-request");
-                    message.put("path", "/hg/1/launch");
+                    message.put("path", "/hg/" + tool_guid_segments[0] + "/launch");
                     message.put("enabled_capability", new JSONArray());
                         JSONArray parameter_array = new JSONArray();
                             JSONObject parameter_system_setting_url = new JSONObject();

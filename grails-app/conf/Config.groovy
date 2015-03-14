@@ -96,7 +96,7 @@ log4j = {
                        'grails.app.controllers',
                        'grails.app.services',
                        'grails.app.domain'
-    
+
     error  'org.codehaus.groovy.grails.web.servlet',        // controllers
            'org.codehaus.groovy.grails.web.pages',          // GSP
            'org.codehaus.groovy.grails.web.sitemesh',       // layouts

@@ -16,6 +16,8 @@ public class Registrant extends ToolProvider implements LTIv2 {
     public Registrant(String endpoint, String key, String secret, Map<String, String> params)
             throws LTIException, Exception {
         super(endpoint, key, secret, params);
+        log.debug("====== Creating object::Registrant()");
+        log.debug(endpoint);
     }
 
     public String getLTIVersion(){
@@ -70,7 +72,7 @@ public class Registrant extends ToolProvider implements LTIv2 {
                     }
                 }
             }
-            log.debug("------------------------------------------------------------------------");
+            log.debug("**************************************************************");
 
         } catch (Exception e) {
             log.debug("Valio madre, hay un error");

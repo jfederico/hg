@@ -13,7 +13,7 @@ public class RegistrationURL implements CompletionResponse {
     ToolProvider tp;
     public RegistrationURL(ToolProvider tp)
         throws Exception {
-
+        log.debug("====== Creating object::RegistrationURL()");
         this.tp = tp;
     }
 

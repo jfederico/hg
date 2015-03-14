@@ -11,8 +11,7 @@ import org.hg.engine.bigbluebutton.BigBlueButtonEngine;
 import org.hg.engine.test.TestEngine;
 
 public class SimpleEngineFactory implements EngineFactory {
-
-    private static final Logger log = Logger.getLogger(SimpleEngineFactory.class);
+    private static final Logger log = Logger.getLogger(SimpleEngineFactory.class.getName());
 
     private static final EngineFactory INSTANCE = new SimpleEngineFactory();
 
@@ -43,8 +42,8 @@ public class SimpleEngineFactory implements EngineFactory {
         Map<String, Object> vendor = (Map<String, Object>)config.get("product");
         String vendor_code = (String)vendor.get("code");
 
-        System.out.println("HERE: SimpleEngineFactory");
-        System.out.println(vendor_code);
+        log.debug("====== Creating object::SimpleEngineFactory() for [" + vendor_code + "]");
+        System.out.println("====== Creating object::SimpleEngineFactory() for [" + vendor_code + "]");
 
         if( vendor_code.equals(ENGINE_TEST) ){
             engine = new TestEngine(request, params, config, endpoint, session_params);

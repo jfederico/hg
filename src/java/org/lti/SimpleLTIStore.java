@@ -38,24 +38,16 @@ public class SimpleLTIStore {
         log.debug("LTI version: " + version);
 
         try {
-            if( version.equals(LTI_VERSION_V1)) {
-                log.debug("HERE: Instantiating LTI-1p0 ToolProvider->Launcher");
-                tp = new org.lti.v1.Launcher(endpoint, key, secret, params);
-            } else if( version.equals(LTI_VERSION_V2)) {
-                if( params.containsKey(LTIv2.LTI_MESSAGE_TYPE) ) {
-                    if( LTIv2.LTI_MESSAGE_TYPE_TOOL_PROXY_REGISTRATION_REQUEST.equals(params.get(LTIv2.LTI_MESSAGE_TYPE)) ){
-                        log.debug("HERE: Instantiating LTI-2p0 ToolProvider->Registrant");
-                        tp = new org.lti.v2.Registrant(endpoint, key, secret, params);
-                    } else {
-                        log.debug("HERE: Instantiating LTI-2p0 ToolProvider->Launcher");
-                        tp = new org.lti.v2.Launcher(endpoint, key, secret, params);
-                    }
+            if( version.equals(LTI_VERSION_V2)) {
+                if( params.containsKey(LTIv2.LTI_MESSAGE_TYPE) && params.get(LTIv2.LTI_MESSAGE_TYPE).equals(LTIv2.LTI_MESSAGE_TYPE_TOOL_PROXY_REGISTRATION_REQUEST) ) {
+                    log.debug("Instantiating LTI-2p0 ToolProvider->Registrant");
+                    tp = new org.lti.v2.Registrant(endpoint, key, secret, params);
                 } else {
-                    log.debug("HERE: Instantiating LTI-2p0 ToolProvider->Launcher");
+                    log.debug("Instantiating LTI-2p0 ToolProvider->Launcher");
                     tp = new org.lti.v2.Launcher(endpoint, key, secret, params);
                 }
             } else {
-                log.debug("HERE: Instantiating LTI-1p0 ToolProvider->Launcher");
+                log.debug("Instantiating LTI-1p0 ToolProvider->Launcher");
                 tp = new org.lti.v1.Launcher(endpoint, key, secret, params);
             }
 

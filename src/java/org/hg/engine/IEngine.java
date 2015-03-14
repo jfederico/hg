@@ -5,7 +5,6 @@ import java.util.Map;
 import org.lti.ToolProvider;
 
 public interface IEngine {
-
     public static String PARAM_ENDPOINT     = "endpoint";
     public static String PARAM_APPLICATION  = "application";
     public static String PARAM_CONTROLLER   = "controller";

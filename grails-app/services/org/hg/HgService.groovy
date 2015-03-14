@@ -63,10 +63,21 @@ class HgService {
         return tTest
     }
 
-    def logParameters(params) {
-        log.info "----------------------------------"
-        for( param in params ) log.info "${param.getKey()}=${param.getValue()}"
-        log.info "----------------------------------"
+    def logParameters(params, boolean debug=false) {
+        def divider = "----------------------------------"
+
+        Map<String, String> ordered_params = new LinkedHashMap<String, String>(params)
+        ordered_params = ordered_params.sort {it.key}
+
+        if( debug ) log.debug divider else log.info divider
+        for( param in ordered_params ) {
+            if( debug ) {
+                log.debug "${param.getKey()}=${param.getValue()}"
+            } else {
+                log.info "${param.getKey()}=${param.getValue()}"
+            }
+        }
+        if( debug ) log.debug divider else log.info divider
     }
 
     def xmlResponse(String msg='No message', String code=CODE_ERROR, String key='GenericResponse') {

@@ -39,4 +39,10 @@ public class Launcher extends ToolProvider implements LTIv1 {
     public String getLTILaunchPresentationReturnURL(){
         return this.params.get(LAUNCH_PRESENTATION_RETURN_URL);
     }
+
+    @Override
+    public String registerProxy() throws LTIException {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

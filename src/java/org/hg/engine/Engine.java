@@ -13,7 +13,7 @@ import org.lti.ToolProvider;
 import org.lti.SimpleLTIStore;
 
 public class Engine implements IEngine {
-    private static final Logger log = Logger.getLogger(Engine.class);
+    private static final Logger log = Logger.getLogger(Engine.class.getName());
 
     protected Map<String, String> params;
     protected Map<String, Object> config;
@@ -25,7 +25,7 @@ public class Engine implements IEngine {
 
     public Engine(HttpServletRequest request, Map<String, String> params, Map<String, Object> config, String endpoint, Map<String, String> session_params)
             throws Exception {
-        log.debug("HERE: Engine()");
+        log.debug("====== Creating object::Engine()");
         this.config = config;
         this.grails_params = new HashMap<String, String>();
         this.endpoint = endpoint;
