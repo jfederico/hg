@@ -26,9 +26,23 @@
                 "contact": "admin@blindsidenetworks.com"
             },
             "lti": {
-                "id": "0",
-                "key": "bbb",
-                "secret": "welcome",
+                "keys" : [
+                    {
+                        "id": "0",
+                        "key": "bbb",
+                        "secret": "welcome"
+                    },
+                    {
+                        "id": "1",
+                        "key": "9PW86kCauheRL1T",
+                        "secret": "pzcbFux5Gu52zcv"
+                    },
+                    {
+                        "id": "2",
+                        "key": "mmzGVsRRAcrGrAC",
+                        "secret": "yc3fA30w7lQ9oN1"
+                    },
+                ],
                 "profiles": [
                     {
                         "id": "0",
