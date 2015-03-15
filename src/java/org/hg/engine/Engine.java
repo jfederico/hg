@@ -30,7 +30,8 @@ public class Engine implements IEngine {
         this.grails_params = new HashMap<String, String>();
         this.endpoint = endpoint;
 
-        Map<String, String> keypair = parseKeypair();
+        log.debug(session_params.get("oauth_consumer_key"));
+        Map<String, String> keypair = parseKeypair(session_params.get("oauth_consumer_key"));
         try {
             String type = params.get(PARAM_ENGINE);
             validateEngineType(type);
@@ -158,12 +159,21 @@ public class Engine implements IEngine {
         return this.endpoint_url;
     }
 
-    private Map<String, String> parseKeypair() {
+    private Map<String, String> parseKeypair(String _key) {
         Map<String, String> keypair = new HashMap<String, String>();
         @SuppressWarnings("unchecked")
         Map<String, Object> lti_cfg = (Map<String, Object>)this.config.get("lti");
-        keypair.put("key", (String)lti_cfg.get("key"));
-        keypair.put("secret", (String)lti_cfg.get("secret"));
+        @SuppressWarnings("unchecked")
+        List<Map<String, String>> keys = (List<Map<String, String>>)lti_cfg.get("keys");
+        for ( Map<String, String> key : keys) {
+            if( key.get("key").equals(_key) ) {
+                keypair.put("id", (String)key.get("id"));
+                keypair.put("key", (String)key.get("key"));
+                keypair.put("secret", (String)key.get("secret"));
+                break;
+            }
+        }
+
         return keypair;
     }
 }
