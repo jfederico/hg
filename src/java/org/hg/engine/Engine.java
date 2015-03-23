@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 import org.lti.LTIException;
 import org.lti.ToolProvider;
 import org.lti.SimpleLTIStore;
+import org.lti.ToolProviderNew;
 
 public class Engine implements IEngine {
     private static final Logger log = Logger.getLogger(Engine.class.getName());
@@ -22,6 +23,7 @@ public class Engine implements IEngine {
     protected String endpoint_url;
 
     protected ToolProvider tp;
+    protected ToolProviderNew tpn;
 
     public Engine(HttpServletRequest request, Map<String, String> params, Map<String, Object> config, String endpoint, Map<String, String> session_params)
             throws Exception {
@@ -44,6 +46,10 @@ public class Engine implements IEngine {
             }
             this.endpoint_url = (request.isSecure()? "https": "http") + "://" + this.endpoint + "/" + this.grails_params.get(PARAM_APPLICATION) + "/" + this.grails_params.get(PARAM_TENANT) + "/" + type; 
 
+            if ( this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_LAUNCH) || this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_REGISTRATION) ) {
+                this.tpn = new ToolProviderNew(session_params, this.endpoint_url, keypair.get("key"), keypair.get("secret"));
+            }
+
             if ( this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_LAUNCH) && this.grails_params.get(PARAM_ACT).equals(ENGINE_ACT_SSO) ||
                  this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_LAUNCH) && this.grails_params.get(PARAM_ACT).equals(ENGINE_ACT_UI) )
             {
@@ -56,12 +62,15 @@ public class Engine implements IEngine {
                  Map<String, Object> profile = getProfile();
                  overrideParameters(profile);
                  validateRequiredParameters(profile);
+
             } else if ( this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_REGISTRATION) ) {
                 this.params = session_params;
                 this.tp = SimpleLTIStore.createToolProvider(this.params, this.endpoint_url, keypair.get("key"), keypair.get("secret"));
+
             } else {
                 this.params = params;
             }
+
         } catch( Exception e) {
             throw e;
         }
