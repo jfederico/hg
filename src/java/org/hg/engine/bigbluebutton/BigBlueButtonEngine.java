@@ -99,7 +99,6 @@ public class BigBlueButtonEngine extends Engine {
                     if( this.grails_params.containsKey(PARAM_ACT) && this.grails_params.get(PARAM_ACT).equals(ENGINE_ACT_UI) ){
                         if( this.grails_params.containsKey(PARAM_CMD) && this.grails_params.get(PARAM_CMD).equals(BBB_CMD_MEETING_JOIN) ) {
                             setCompletionResponseCommand( new SingleSignOnURL(config_engine, getMeetingParams(), getSessionParams()) );
-                            this.tpn.executeActionService();
                         } else if( this.grails_params.containsKey(PARAM_CMD) && this.grails_params.get(PARAM_CMD).equals(BBB_CMD_RECORDING_PUBLISH) ) {
                             this.tpn.putParameter(PARAM_BBB_RECORDING_ID, params.get(PARAM_BBB_RECORDING_ID));
                             this.tpn.putParameter(PARAM_BBB_RECORDING_PUBLISHED, params.get(PARAM_BBB_RECORDING_PUBLISHED));
@@ -115,16 +114,18 @@ public class BigBlueButtonEngine extends Engine {
                         }
                     } else {
                         setCompletionResponseCommand( new UI(config_engine, getMeetingParams(), getSessionParams()) );
+                        this.tpn.executeActionService();
                     }
+
                 } else {
                     setCompletionResponseCommand( new SingleSignOnURL(config_engine, getMeetingParams(), getSessionParams()) );
                     this.tpn.executeActionService();
                 }
             }
+
         } else if( this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_REGISTRATION) ){
             setCompletionResponseCommand( new RegistrationURL(this.tpn) );
             //TODO: The tp_profile should be loaded here based on the 'config' definition.
-            //this.tp.executeProxyRegistration(url, regKey, regPassword, message);
             this.tpn.executeActionService();
         }
     }

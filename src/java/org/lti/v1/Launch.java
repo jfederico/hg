@@ -13,6 +13,7 @@ public class Launch implements ActionService {
 
     public String execute(ToolProviderNew tpn)
             throws Exception {
+        log.info("============================================================================================");
         log.info("Executing LTILaunch v1p0");
         // TODO Auto-generated method stub
         return null;
