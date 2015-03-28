@@ -42,8 +42,14 @@ public class ToolProviderNew implements LTI{
     protected Map<String, String> params;
     
     protected static final String[] OAUTH_REQUIERED_PARAMS = { 
-        OAuth.OAUTH_CONSUMER_KEY, OAuth.OAUTH_NONCE, OAuth.OAUTH_CALLBACK, OAuth.OAUTH_SIGNATURE, OAuth.OAUTH_SIGNATURE_METHOD, OAuth.OAUTH_VERSION, OAuth.OAUTH_TIMESTAMP
-        };
+                                           OAuth.OAUTH_CONSUMER_KEY,
+                                           OAuth.OAUTH_NONCE,
+                                           OAuth.OAUTH_CALLBACK,
+                                           OAuth.OAUTH_SIGNATURE,
+                                           OAuth.OAUTH_SIGNATURE_METHOD,
+                                           OAuth.OAUTH_VERSION,
+                                           OAuth.OAUTH_TIMESTAMP 
+                                           };
 
     private static final String VERSION_NUMBER_V1   = "1";
     private static final String VERSION_NUMBER_V2   = "2";
@@ -59,30 +65,32 @@ public class ToolProviderNew implements LTI{
 
     protected ActionService actionService;
 
+    public ToolProviderNew(Map<String, String> params, String endpoint)
+            throws LTIException, Exception {
+        CreateToolProviderNew(params, endpoint, null, null);
+    }
+
     public ToolProviderNew(Map<String, String> params, String endpoint, String key, String secret)
+            throws LTIException, Exception {
+        CreateToolProviderNew(params, endpoint, key, secret);
+    }
+
+    public void CreateToolProviderNew(Map<String, String> params, String endpoint, String key, String secret)
             throws LTIException, Exception {
         log.debug("====== Creating object::ToolProviderNew()");
         log.debug(endpoint);
-        log.debug(key);
-        log.debug(secret);
         log.debug(params);
         this.endpoint = endpoint;
-        this.key = key;
-        this.secret = secret;
         this.params = new HashMap<String, String>(params);
         this.tp_profile = null;
 
         this.version = params.containsKey(LTI_VERSION)? params.get(LTI_VERSION): VERSION_DEFAULT;
 
-        try {
-            validateParameters(OAUTH_REQUIERED_PARAMS);
-            log.debug("OAuth required parameters are included");
-        } catch (Exception e) {
-            throw new LTIException(LTIException.MESSAGEKEY_MISSING_PARAMETERS, "OAuth required parameters missing. " + e.getMessage());
-        }
-
         if( VERSION_NUMBER_V2.equals(getVersionNumber()) ) {
             if( params.containsKey(LTI_MESSAGE_TYPE) && params.get(LTI_MESSAGE_TYPE).equals(LTI_MESSAGE_TYPE_TOOL_PROXY_REGISTRATION_REQUEST) ) {
+                this.key = params.get(REG_KEY);
+                this.secret = params.get(REG_PASSWORD);
+
                 try {
                     validateParameters(LTI_V2_TOOL_PROXY_REGISTRATION_REQUEST_PARAMETERS_REQUIRED);
                     log.debug("LTI required parameters are included");
@@ -94,20 +102,40 @@ public class ToolProviderNew implements LTI{
                 this.actionService = new org.lti.v2.Registration();
 
             } else {
+                this.key = key;
+                this.secret = secret;
+
+                try {
+                    validateParameters(OAUTH_REQUIERED_PARAMS);
+                    log.debug("OAuth required parameters are included");
+                } catch (Exception e) {
+                    throw new LTIException(LTIException.MESSAGEKEY_MISSING_PARAMETERS, "OAuth required parameters missing. " + e.getMessage());
+                }
+
                 try {
                     validateParameters(LTI_V2_LAUNCH_REQUEST_PARAMETERS_REQUIRED);
                     log.debug("LTI required parameters are included");
                 } catch (Exception e) {
                     throw new LTIException(LTIException.MESSAGEKEY_MISSING_PARAMETERS, "LTI version " + this.version + " parameters not included. " + e.getMessage());
                 }
+                
+                if( hasValidSignature() ) log.debug("OAuth signature is valid"); else throw new Exception("OAuth signature is NOT valid");
 
                 log.debug("Instantiating service LTI-2p0 for Launch");
                 this.actionService = new org.lti.v2.Launch();
-
-                executeActionService();
             }
 
         } else {
+            this.key = key;
+            this.secret = secret;
+
+            try {
+                validateParameters(OAUTH_REQUIERED_PARAMS);
+                log.debug("OAuth required parameters are included");
+            } catch (Exception e) {
+                throw new LTIException(LTIException.MESSAGEKEY_MISSING_PARAMETERS, "OAuth required parameters missing. " + e.getMessage());
+            }
+
             try {
                 validateParameters(LTI_V1_LAUNCH_REQUEST_PARAMETERS_REQUIRED);
                 log.debug("LTI required parameters are included");
@@ -115,14 +143,11 @@ public class ToolProviderNew implements LTI{
                 throw new LTIException(LTIException.MESSAGEKEY_MISSING_PARAMETERS, "LTI version " + this.version + " parameters not included. " + e.getMessage());
             }
 
+            if( hasValidSignature() ) log.debug("OAuth signature is valid"); else throw new Exception("OAuth signature is NOT valid");
+
             log.debug("Instantiating service LTI-1p0 for Launch");
             this.actionService = new org.lti.v1.Launch();
-
-            // Not requires for LTI 1.x launches
-            //executeActionService();
         }
-
-        if( hasValidSignature() ) log.debug("OAuth signature is valid"); else throw new Exception("OAuth signature is NOT valid");
     }
 
     public String executeActionService()
@@ -387,7 +412,6 @@ public class ToolProviderNew implements LTI{
 
         } catch(Exception e) {
             log.debug("ltiProxyRequest.Exception: Message=" + e.getMessage());
-
         }
 
         return ltiProxyResponse;
@@ -397,10 +421,10 @@ public class ToolProviderNew implements LTI{
             throws JSONException {
         Map<String, Object> retMap = new HashMap<String, Object>();
 
-        if(json != JSONObject.NULL)
-        {
+        if(json != JSONObject.NULL) {
             retMap = toMap(json);
         }
+
         return retMap;
     }
 
@@ -410,42 +434,38 @@ public class ToolProviderNew implements LTI{
 
         @SuppressWarnings("unchecked")
         Iterator<String> keysItr = object.keys();
-        while(keysItr.hasNext())
-        {
+        while(keysItr.hasNext()) {
             String key = keysItr.next();
             Object value = object.get(key);
 
-            if(value instanceof JSONArray)
-            {
+            if(value instanceof JSONArray) {
                 value = toList((JSONArray) value);
-            }
 
-            else if(value instanceof JSONObject)
-            {
+            } else if(value instanceof JSONObject) {
                 value = toMap((JSONObject) value);
+
             }
             map.put(key, value);
         }
+
         return map;
     }
 
     public List<Object> toList(JSONArray array)
             throws JSONException {
         List<Object> list = new ArrayList<Object>();
-        for(int i = 0; i < array.length(); i++)
-        {
+        for(int i = 0; i < array.length(); i++) {
             Object value = array.get(i);
-            if(value instanceof JSONArray)
-            {
+            if(value instanceof JSONArray) {
                 value = toList((JSONArray) value);
-            }
 
-            else if(value instanceof JSONObject)
-            {
+            } else if(value instanceof JSONObject) {
                 value = toMap((JSONObject) value);
             }
+
             list.add(value);
         }
+
         return list;
     }
 }

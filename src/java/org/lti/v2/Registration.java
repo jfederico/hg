@@ -27,9 +27,7 @@ public class Registration implements ActionService {
             String tc_profile = tpn.getToolConsumerProfile(params.get(LTI.TC_PROFILE_URL)).toString();
 
             JSONObject tc_profile_json = new JSONObject(tc_profile);
-
             //JSONObject product_instance_json = tc_profile_json.getJSONObject("product_instance");
-
             JSONArray services_offered_json = tc_profile_json.getJSONArray("service_offered");
 
             boolean end_outer_for = false;
@@ -41,13 +39,13 @@ public class Registration implements ActionService {
                     if( "application/vnd.ims.lti.v2.toolproxy+json".equals(format) ){
                         log.debug("Execute call to " + service_json.getString("endpoint"));
 
-                        log.debug("registering Proxy");
+                        log.debug("Registering Proxy");
                         String regKey = params.get(LTI.REG_KEY);
                         String regPassword = params.get(LTI.REG_PASSWORD);
                         JSONObject message = tp_profile.getIMSXJSONMessage();
-                        log.debug(message.toString());
                         proxy_registration_response = tpn.executeProxyRegistration(service_json.getString("endpoint"), regKey, regPassword, message.toString());
 
+                        log.debug("Proxy registration response:");
                         log.debug(proxy_registration_response);
                         end_outer_for = true;
                         break;

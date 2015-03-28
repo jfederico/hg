@@ -2,8 +2,6 @@ package org.hg.engine;
 
 import java.util.Map;
 
-import org.lti.ToolProvider;
-
 public interface IEngine {
     public static String PARAM_ENDPOINT     = "endpoint";
     public static String PARAM_APPLICATION  = "application";
@@ -35,7 +33,6 @@ public interface IEngine {
 
     abstract Map<String, Object> getCompletionResponse() throws Exception;
     abstract void setCompletionResponseCommand(CompletionResponse completionResponse);
-    abstract ToolProvider getToolProvider();
     abstract String getEndpointURL();
 
 }

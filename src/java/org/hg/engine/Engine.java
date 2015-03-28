@@ -4,13 +4,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
+
+import net.oauth.OAuth;
 
 import org.apache.log4j.Logger;
 import org.lti.LTIException;
-import org.lti.ToolProvider;
-import org.lti.SimpleLTIStore;
 import org.lti.ToolProviderNew;
 
 public class Engine implements IEngine {
@@ -22,7 +21,6 @@ public class Engine implements IEngine {
     protected String endpoint;
     protected String endpoint_url;
 
-    protected ToolProvider tp;
     protected ToolProviderNew tpn;
 
     public Engine(HttpServletRequest request, Map<String, String> params, Map<String, Object> config, String endpoint, Map<String, String> session_params)
@@ -32,8 +30,6 @@ public class Engine implements IEngine {
         this.grails_params = new HashMap<String, String>();
         this.endpoint = endpoint;
 
-        log.debug(session_params.get("oauth_consumer_key"));
-        Map<String, String> keypair = parseKeypair(session_params.get("oauth_consumer_key"));
         try {
             String type = params.get(PARAM_ENGINE);
             validateEngineType(type);
@@ -46,17 +42,15 @@ public class Engine implements IEngine {
             }
             this.endpoint_url = (request.isSecure()? "https": "http") + "://" + this.endpoint + "/" + this.grails_params.get(PARAM_APPLICATION) + "/" + this.grails_params.get(PARAM_TENANT) + "/" + type; 
 
-            if ( this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_LAUNCH) || this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_REGISTRATION) ) {
-                this.tpn = new ToolProviderNew(session_params, this.endpoint_url, keypair.get("key"), keypair.get("secret"));
-            }
-
             if ( this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_LAUNCH) && this.grails_params.get(PARAM_ACT).equals(ENGINE_ACT_SSO) ||
                  this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_LAUNCH) && this.grails_params.get(PARAM_ACT).equals(ENGINE_ACT_UI) )
             {
                  this.params = session_params;
+                 String oauth_consumer_key = this.params.get(OAuth.OAUTH_CONSUMER_KEY);
+                 log.debug(oauth_consumer_key);
+                 Map<String, String> keypair = parseKeypair(oauth_consumer_key);
 
-                 this.tp = SimpleLTIStore.createToolProvider(this.params, this.endpoint_url, keypair.get("key"), keypair.get("secret"));
-                 //this.tp.setToolProviderProfile(buildToolProviderProfile());
+                 this.tpn = new ToolProviderNew(this.params, this.endpoint_url, keypair.get("key"), keypair.get("secret"));
                  //TODO: If there is a TC, it should be loaded here.
 
                  Map<String, Object> profile = getProfile();
@@ -65,7 +59,7 @@ public class Engine implements IEngine {
 
             } else if ( this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_REGISTRATION) ) {
                 this.params = session_params;
-                this.tp = SimpleLTIStore.createToolProvider(this.params, this.endpoint_url, keypair.get("key"), keypair.get("secret"));
+                this.tpn = new ToolProviderNew(this.params, this.endpoint_url);
 
             } else {
                 this.params = params;
@@ -74,6 +68,7 @@ public class Engine implements IEngine {
         } catch( Exception e) {
             throw e;
         }
+        log.debug("====== Created object::Engine()");
     }
 
     protected CompletionResponse completionResponse;
@@ -90,10 +85,6 @@ public class Engine implements IEngine {
     public void setCompletionResponseCommand(CompletionResponse completionResponse) {
     }
 
-    public ToolProvider getToolProvider() {
-        return this.tp;
-    }
-    
     private Map<String, Object> getProfile() {
         Map<String, Object> return_profile = new HashMap<String, Object>();
 
@@ -124,10 +115,10 @@ public class Engine implements IEngine {
             String source = (String)((Map<String, Object>)override).get("source");
             String target = (String)((Map<String, Object>)override).get("target");
             String default_value = (String)((Map<String, Object>)override).get("default_value");
-            if( this.tp.hasParameter(source) )
-                this.tp.putParameter(target, this.tp.getParameter(source));
+            if( this.tpn.hasParameter(source) )
+                this.tpn.putParameter(target, this.tpn.getParameter(source));
             else
-                this.tp.putParameter(target, default_value);
+                this.tpn.putParameter(target, default_value);
         }
     }
 
@@ -145,7 +136,7 @@ public class Engine implements IEngine {
 
         String[] requiredParameters = requiredParams.toArray(new String[requiredParams.size()]);
         try {
-            this.tp.validateParameters(requiredParameters);
+            this.tpn.validateParameters(requiredParameters);
             log.debug("Engine required parameters are included");
         } catch ( Exception e ) {
             throw new LTIException(LTIException.MESSAGEKEY_MISSING_PARAMETERS, "Tool Provider required parameters missing. " + e.getMessage());

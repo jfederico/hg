@@ -38,10 +38,7 @@ class LtiController {
             }
 
             engine = engineFactory.createEngine(request, params, config, hgService.endpoint, session["params"])
-            //Object engineClass = engineFactory.getEngineClass(config)
-            //log.debug engineClass.ENGINE_CODE
-            //def ltiConstants = engine.getToolProvider()
-            //log.debug ltiConstants.TOOL_CONSUMER_INFO_PRODUCT_FAMILY_CODE
+            //Here complete the setting and execute the action
 
             def completionResponse = engine.getCompletionResponse()
             if( completionResponse == null ){

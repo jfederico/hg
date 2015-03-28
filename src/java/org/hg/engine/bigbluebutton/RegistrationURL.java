@@ -5,16 +5,16 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.hg.engine.CompletionResponse;
-import org.lti.ToolProvider;
+import org.lti.ToolProviderNew;
 
 public class RegistrationURL implements CompletionResponse {
     private static final Logger log = Logger.getLogger(RegistrationURL.class);
 
-    ToolProvider tp;
-    public RegistrationURL(ToolProvider tp)
+    ToolProviderNew tpn;
+    public RegistrationURL(ToolProviderNew tpn)
         throws Exception {
         log.debug("====== Creating object::RegistrationURL()");
-        this.tp = tp;
+        this.tpn = tpn;
     }
 
     public Map<String, Object> get()
@@ -25,7 +25,7 @@ public class RegistrationURL implements CompletionResponse {
 
         String registrationURL = null;
         try {
-            registrationURL = this.tp.getLTILaunchPresentationReturnURL();
+            registrationURL = this.tpn.getLTILaunchPresentationReturnURL();
         } catch ( Exception e){
             throw new Exception("Error after registration", e.getCause());
         }

@@ -3,10 +3,13 @@ package org.lti;
 import java.util.Date;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class ToolProviderProfile {
+    private static final Logger log = Logger.getLogger(ToolProviderProfile.class);
+
     JSONObject id;
 
     String tool_guid;
@@ -16,6 +19,7 @@ public class ToolProviderProfile {
     Map<String, String> config_vendor; 
     
     public ToolProviderProfile(String param_tc_profile_url, String param_tool_guid, Map<String, String> config_product, Map<String, String> config_vendor) {
+        log.debug("====Creating ToolProviderProfile()");
         this.tool_guid = param_tool_guid;
         String[] tc_profile_url_segments = param_tc_profile_url.split("\\?");
         String tc_profile_url = tc_profile_url_segments[0];

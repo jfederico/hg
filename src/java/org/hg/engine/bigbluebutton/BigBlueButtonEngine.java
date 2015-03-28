@@ -11,13 +11,15 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import net.oauth.OAuth;
+
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.log4j.Logger;
 import org.bigbluebutton.api.BBBProxy;
 import org.hg.EngineFactory;
 import org.hg.engine.CompletionResponse;
 import org.hg.engine.Engine;
-import org.lti.LTIv2;
+import org.lti.LTI;
 import org.lti.RolesValidator;
 import org.lti.ToolProviderProfile;
 
@@ -51,8 +53,11 @@ public class BigBlueButtonEngine extends Engine {
         super(request, params, config, endpoint, session_params);
         log.debug("====== Creating object::BigBlueButtonEngine()");
 
-        if( this.tp != null && this.tp.getLTIVersion().equals(LTIv2.VERSION) ) {
-            this.tp.setToolProviderProfile(buildToolProviderProfile());
+        if( this.tpn != null && this.tpn.getLTIVersion().equals(LTI.VERSION_V2P0) ) {
+            log.debug("the version is" + this.tpn.getLTIVersion() );
+            this.tpn.setToolProviderProfile(buildToolProviderProfile());
+        } else {
+            log.debug("the version is no 2p0 it is " + this.tpn.getLTIVersion() );
         }
 
         if(this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_LAUNCH)){
@@ -96,16 +101,16 @@ public class BigBlueButtonEngine extends Engine {
                             setCompletionResponseCommand( new SingleSignOnURL(config_engine, getMeetingParams(), getSessionParams()) );
                             this.tpn.executeActionService();
                         } else if( this.grails_params.containsKey(PARAM_CMD) && this.grails_params.get(PARAM_CMD).equals(BBB_CMD_RECORDING_PUBLISH) ) {
-                            this.tp.putParameter(PARAM_BBB_RECORDING_ID, params.get(PARAM_BBB_RECORDING_ID));
-                            this.tp.putParameter(PARAM_BBB_RECORDING_PUBLISHED, params.get(PARAM_BBB_RECORDING_PUBLISHED));
+                            this.tpn.putParameter(PARAM_BBB_RECORDING_ID, params.get(PARAM_BBB_RECORDING_ID));
+                            this.tpn.putParameter(PARAM_BBB_RECORDING_PUBLISHED, params.get(PARAM_BBB_RECORDING_PUBLISHED));
                             setCompletionResponseCommand( new PublishRecording(config_engine, getMeetingParams(), getSessionParams(), getRecordingParams()) );
                         } else if( this.grails_params.containsKey(PARAM_CMD) && this.grails_params.get(PARAM_CMD).equals(BBB_CMD_RECORDING_UNPUBLISH) ) {
-                            this.tp.putParameter(PARAM_BBB_RECORDING_ID, params.get(PARAM_BBB_RECORDING_ID));
-                            this.tp.putParameter(PARAM_BBB_RECORDING_PUBLISHED, params.get(PARAM_BBB_RECORDING_PUBLISHED));
+                            this.tpn.putParameter(PARAM_BBB_RECORDING_ID, params.get(PARAM_BBB_RECORDING_ID));
+                            this.tpn.putParameter(PARAM_BBB_RECORDING_PUBLISHED, params.get(PARAM_BBB_RECORDING_PUBLISHED));
                             setCompletionResponseCommand( new UnpublishRecording(config_engine, getMeetingParams(), getSessionParams(), getRecordingParams()) );
                         } else if( this.grails_params.containsKey(PARAM_CMD) && this.grails_params.get(PARAM_CMD).equals(BBB_CMD_RECORDING_DELETE) ) {
-                            this.tp.putParameter(PARAM_BBB_RECORDING_ID, params.get(PARAM_BBB_RECORDING_ID));
-                            this.tp.putParameter(PARAM_BBB_RECORDING_PUBLISHED, params.get(PARAM_BBB_RECORDING_PUBLISHED));
+                            this.tpn.putParameter(PARAM_BBB_RECORDING_ID, params.get(PARAM_BBB_RECORDING_ID));
+                            this.tpn.putParameter(PARAM_BBB_RECORDING_PUBLISHED, params.get(PARAM_BBB_RECORDING_PUBLISHED));
                             setCompletionResponseCommand( new DeleteRecording(config_engine, getMeetingParams(), getSessionParams(), getRecordingParams()) );
                         }
                     } else {
@@ -117,10 +122,9 @@ public class BigBlueButtonEngine extends Engine {
                 }
             }
         } else if( this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_REGISTRATION) ){
-            setCompletionResponseCommand( new RegistrationURL(this.tp) );
+            setCompletionResponseCommand( new RegistrationURL(this.tpn) );
             //TODO: The tp_profile should be loaded here based on the 'config' definition.
             //this.tp.executeProxyRegistration(url, regKey, regPassword, message);
-            this.tp.registerProxy();
             this.tpn.executeActionService();
         }
     }
@@ -137,13 +141,16 @@ public class BigBlueButtonEngine extends Engine {
     }
 
     private Map<String, String> getMeetingParams(){
-        Map<String, String> params = this.tp.getParameters();
+        Map<String, String> params = this.tpn.getParameters();
         Map<String, String> meetingParams = new HashMap<String, String>();
         // Map ToolProvider parameters with Meeting parameters
-        meetingParams.put(BBBProxy.PARAM_NAME, getValidatedMeetingName(params.get("resource_link_title")));
-        meetingParams.put(BBBProxy.PARAM_MEETING_ID, getValidatedMeetingId(params.get("resource_link_id"), params.get("oauth_consumer_key")));
-        meetingParams.put(BBBProxy.PARAM_ATTENDEE_PW, DigestUtils.shaHex("ap" + params.get("resource_link_id") + params.get("oauth_consumer_key")));
-        meetingParams.put(BBBProxy.PARAM_MODERATOR_PW, DigestUtils.shaHex("mp" + params.get("resource_link_id") + params.get("oauth_consumer_key")));
+        String oauth_consumer_key = this.params.get(OAuth.OAUTH_CONSUMER_KEY);
+        String resource_link_id = this.params.get(LTI.RESOURCE_LINK_ID);
+        String resource_link_title = this.params.get(LTI.RESOURCE_LINK_TITLE);
+        meetingParams.put(BBBProxy.PARAM_NAME, getValidatedMeetingName(resource_link_title));
+        meetingParams.put(BBBProxy.PARAM_MEETING_ID, getValidatedMeetingId(resource_link_id, oauth_consumer_key));
+        meetingParams.put(BBBProxy.PARAM_ATTENDEE_PW, DigestUtils.shaHex("ap" + resource_link_id + oauth_consumer_key));
+        meetingParams.put(BBBProxy.PARAM_MODERATOR_PW, DigestUtils.shaHex("mp" + resource_link_id + oauth_consumer_key));
         try {
             meetingParams.put(BBBProxy.PARAM_WELCOME, URLEncoder.encode(params.containsKey(PARAM_CUSTOM_WELCOME)? params.get(PARAM_CUSTOM_WELCOME): "Welcome to <b>" + params.get("resource_link_title") + "</b>", "UTF-8") );
         } catch (UnsupportedEncodingException e) {
@@ -174,22 +181,24 @@ public class BigBlueButtonEngine extends Engine {
     }
 
     private Map<String, String> getSessionParams(){
-        Map<String, String> params = this.tp.getParameters();
+        Map<String, String> params = this.tpn.getParameters();
         Map<String, String> sessionParams = new HashMap<String, String>();
         // Map LtiUser parameters with Session parameters
+        String oauth_consumer_key = this.params.get(OAuth.OAUTH_CONSUMER_KEY);
+        String resource_link_id = this.params.get(LTI.RESOURCE_LINK_ID);
         sessionParams.put(BBBProxy.PARAM_FULL_NAME, getValidatedUserFullName(params));
-        sessionParams.put(BBBProxy.PARAM_MEETING_ID, getValidatedMeetingId(params.get("resource_link_id"), params.get("oauth_consumer_key")));
+        sessionParams.put(BBBProxy.PARAM_MEETING_ID, getValidatedMeetingId(resource_link_id, oauth_consumer_key));
         if( RolesValidator.isStudent(params.get("roles")) || RolesValidator.isLearner(params.get("roles")) )
-            sessionParams.put(BBBProxy.PARAM_PASSWORD, DigestUtils.shaHex("ap" + params.get("resource_link_id") + params.get("oauth_consumer_key")));
+            sessionParams.put(BBBProxy.PARAM_PASSWORD, DigestUtils.shaHex("ap" + resource_link_id + oauth_consumer_key));
         else
-            sessionParams.put(BBBProxy.PARAM_PASSWORD, DigestUtils.shaHex("mp" + params.get("resource_link_id") + params.get("oauth_consumer_key")));
+            sessionParams.put(BBBProxy.PARAM_PASSWORD, DigestUtils.shaHex("mp" + resource_link_id + oauth_consumer_key));
         //Set the role
         if( RolesValidator.isStudent(params.get("roles")) || RolesValidator.isLearner(params.get("roles")) )
             sessionParams.put("role", BBB_ROLE_VIEWER);
         else
             sessionParams.put("role", BBB_ROLE_MODERATOR);
         ////sessionParams.put("createTime", "");
-        sessionParams.put(BBBProxy.PARAM_USER_ID, DigestUtils.shaHex( params.get("user_id") + params.get("oauth_consumer_key")));
+        sessionParams.put(BBBProxy.PARAM_USER_ID, DigestUtils.shaHex( params.get("user_id") + oauth_consumer_key));
 
         return sessionParams;
     }
@@ -252,7 +261,7 @@ public class BigBlueButtonEngine extends Engine {
     }
 
     private Map<String, String> getRecordingParams(){
-        Map<String, String> params = this.tp.getParameters();
+        Map<String, String> params = this.tpn.getParameters();
         Map<String, String> recordingParams = new HashMap<String, String>();
 
         recordingParams.put(BBBProxy.PARAM_RECORD_ID, params.get(PARAM_BBB_RECORDING_ID));
@@ -268,7 +277,7 @@ public class BigBlueButtonEngine extends Engine {
         log.debug(this.grails_params);
         log.debug(this.params);
         
-        String param_tc_profile_url = this.params.get(LTIv2.TC_PROFILE_URL);
+        String param_tc_profile_url = this.params.get(LTI.TC_PROFILE_URL);
         //String config_tool_guid = (String)this.config.get("id") + "@" + this.endpoint;
         String config_tool_guid = (String)this.grails_params.get(PARAM_TENANT) + "@" + this.endpoint;
         @SuppressWarnings("unchecked")
