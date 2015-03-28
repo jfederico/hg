@@ -50,10 +50,11 @@ public class Engine implements IEngine {
                  log.debug(oauth_consumer_key);
                  Map<String, String> keypair = parseKeypair(oauth_consumer_key);
 
-                 this.tpn = new ToolProviderNew(this.params, this.endpoint_url, keypair.get("key"), keypair.get("secret"));
+                 this.tpn = new ToolProviderNew(this.params, this.endpoint_url, keypair.get("key"), keypair.get("secret"), keypair.get("tc_profile_url"));
                  //TODO: If there is a TC, it should be loaded here.
 
                  Map<String, Object> profile = getProfile();
+                 //aditionalParameters(profile);
                  overrideParameters(profile);
                  validateRequiredParameters(profile);
 
@@ -170,6 +171,7 @@ public class Engine implements IEngine {
                 keypair.put("id", (String)key.get("id"));
                 keypair.put("key", (String)key.get("key"));
                 keypair.put("secret", (String)key.get("secret"));
+                keypair.put("tc_profile_url", (String)key.get("tc_profile_url"));
                 break;
             }
         }

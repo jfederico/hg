@@ -58,6 +58,7 @@ public class ToolProviderNew implements LTI{
     protected String endpoint;
     protected String key;
     protected String secret;
+    protected String tc_profile_url;
 
     protected String version;
 
@@ -67,15 +68,15 @@ public class ToolProviderNew implements LTI{
 
     public ToolProviderNew(Map<String, String> params, String endpoint)
             throws LTIException, Exception {
-        CreateToolProviderNew(params, endpoint, null, null);
+        CreateToolProviderNew(params, endpoint, null, null, null);
     }
 
-    public ToolProviderNew(Map<String, String> params, String endpoint, String key, String secret)
+    public ToolProviderNew(Map<String, String> params, String endpoint, String key, String secret, String tc_profile_url)
             throws LTIException, Exception {
-        CreateToolProviderNew(params, endpoint, key, secret);
+        CreateToolProviderNew(params, endpoint, key, secret, tc_profile_url);
     }
 
-    public void CreateToolProviderNew(Map<String, String> params, String endpoint, String key, String secret)
+    public void CreateToolProviderNew(Map<String, String> params, String endpoint, String key, String secret, String tc_profile_url)
             throws LTIException, Exception {
         log.debug("====== Creating object::ToolProviderNew()");
         log.debug(endpoint);
@@ -90,6 +91,7 @@ public class ToolProviderNew implements LTI{
             if( params.containsKey(LTI_MESSAGE_TYPE) && params.get(LTI_MESSAGE_TYPE).equals(LTI_MESSAGE_TYPE_TOOL_PROXY_REGISTRATION_REQUEST) ) {
                 this.key = params.get(REG_KEY);
                 this.secret = params.get(REG_PASSWORD);
+                this.tc_profile_url = params.get(TC_PROFILE_URL);
 
                 try {
                     validateParameters(LTI_V2_TOOL_PROXY_REGISTRATION_REQUEST_PARAMETERS_REQUIRED);
@@ -104,6 +106,7 @@ public class ToolProviderNew implements LTI{
             } else {
                 this.key = key;
                 this.secret = secret;
+                this.tc_profile_url = tc_profile_url;
 
                 try {
                     validateParameters(OAUTH_REQUIERED_PARAMS);
@@ -119,7 +122,7 @@ public class ToolProviderNew implements LTI{
                     throw new LTIException(LTIException.MESSAGEKEY_MISSING_PARAMETERS, "LTI version " + this.version + " parameters not included. " + e.getMessage());
                 }
                 
-                if( hasValidSignature() ) log.debug("OAuth signature is valid"); else throw new Exception("OAuth signature is NOT valid");
+                //if( hasValidSignature() ) log.debug("OAuth signature is valid"); else throw new Exception("OAuth signature is NOT valid");
 
                 log.debug("Instantiating service LTI-2p0 for Launch");
                 this.actionService = new org.lti.v2.Launch();
@@ -128,6 +131,7 @@ public class ToolProviderNew implements LTI{
         } else {
             this.key = key;
             this.secret = secret;
+            this.tc_profile_url = tc_profile_url;
 
             try {
                 validateParameters(OAUTH_REQUIERED_PARAMS);
@@ -143,7 +147,7 @@ public class ToolProviderNew implements LTI{
                 throw new LTIException(LTIException.MESSAGEKEY_MISSING_PARAMETERS, "LTI version " + this.version + " parameters not included. " + e.getMessage());
             }
 
-            if( hasValidSignature() ) log.debug("OAuth signature is valid"); else throw new Exception("OAuth signature is NOT valid");
+            //if( hasValidSignature() ) log.debug("OAuth signature is valid"); else throw new Exception("OAuth signature is NOT valid");
 
             log.debug("Instantiating service LTI-1p0 for Launch");
             this.actionService = new org.lti.v1.Launch();
@@ -197,7 +201,7 @@ public class ToolProviderNew implements LTI{
         return params.containsKey(key);
     }
 
-    protected boolean hasValidSignature() throws LTIException, Exception {
+    public boolean hasValidSignature() throws LTIException, Exception {
         boolean response = false;
         log.debug("Checking if the OAuth signature is valid. endpoint=" + this.endpoint + ", secret=" + this.secret );
         Object postProp = sanitizePrametersForBaseString();

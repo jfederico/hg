@@ -285,7 +285,10 @@ public class BigBlueButtonEngine extends Engine {
         Map<String, String> config_product = (Map<String, String>)this.config.get("product"); 
         @SuppressWarnings("unchecked")
         Map<String, String> config_vendor = (Map<String, String>)this.config.get("vendor"); 
-        
+        log.debug(param_tc_profile_url);
+        log.debug(config_tool_guid);
+        log.debug(config_product);
+        log.debug(config_vendor);
         ToolProviderProfile tp_profile = new ToolProviderProfile(param_tc_profile_url, config_tool_guid, config_product, config_vendor);
 
         log.debug("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
