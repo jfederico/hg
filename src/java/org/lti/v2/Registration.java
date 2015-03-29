@@ -8,13 +8,13 @@ import org.json.JSONObject;
 import org.lti.ActionService;
 import org.lti.LTIException;
 import org.lti.LTI;
-import org.lti.ToolProviderNew;
+import org.lti.ToolProvider;
 import org.lti.ToolProviderProfile;
 
 public class Registration implements ActionService {
     private static final Logger log = Logger.getLogger(Registration.class);
 
-    public String execute(ToolProviderNew tpn)
+    public String execute(ToolProvider tpn)
             throws Exception {
         log.info("LTIRegistration v2p0");
         String proxy_registration_response = "ERROR";

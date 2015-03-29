@@ -10,7 +10,7 @@ import net.oauth.OAuth;
 
 import org.apache.log4j.Logger;
 import org.lti.LTIException;
-import org.lti.ToolProviderNew;
+import org.lti.ToolProvider;
 
 public class Engine implements IEngine {
     private static final Logger log = Logger.getLogger(Engine.class.getName());
@@ -21,7 +21,7 @@ public class Engine implements IEngine {
     protected String endpoint;
     protected String endpoint_url;
 
-    protected ToolProviderNew tpn;
+    protected ToolProvider tpn;
 
     public Engine(HttpServletRequest request, Map<String, String> params, Map<String, Object> config, String endpoint, Map<String, String> session_params)
             throws Exception {
@@ -50,7 +50,7 @@ public class Engine implements IEngine {
                  log.debug(oauth_consumer_key);
                  Map<String, String> keypair = parseKeypair(oauth_consumer_key);
 
-                 this.tpn = new ToolProviderNew(this.params, this.endpoint_url, keypair.get("key"), keypair.get("secret"), keypair.get("tc_profile_url"));
+                 this.tpn = new ToolProvider(this.params, this.endpoint_url, keypair.get("key"), keypair.get("secret"), keypair.get("tc_profile_url"));
                  //TODO: If there is a TC, it should be loaded here.
 
                  Map<String, Object> profile = getProfile();
@@ -60,7 +60,7 @@ public class Engine implements IEngine {
 
             } else if ( this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_REGISTRATION) ) {
                 this.params = session_params;
-                this.tpn = new ToolProviderNew(this.params, this.endpoint_url);
+                this.tpn = new ToolProvider(this.params, this.endpoint_url);
 
             } else {
                 this.params = params;

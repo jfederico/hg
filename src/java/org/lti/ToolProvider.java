@@ -35,9 +35,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class ToolProviderNew implements LTI{
+public class ToolProvider implements LTI{
 
-    private static final Logger log = Logger.getLogger(ToolProviderNew.class);
+    private static final Logger log = Logger.getLogger(ToolProvider.class);
 
     protected Map<String, String> params;
     
@@ -66,12 +66,12 @@ public class ToolProviderNew implements LTI{
 
     protected ActionService actionService;
 
-    public ToolProviderNew(Map<String, String> params, String endpoint)
+    public ToolProvider(Map<String, String> params, String endpoint)
             throws LTIException, Exception {
         CreateToolProviderNew(params, endpoint, null, null, null);
     }
 
-    public ToolProviderNew(Map<String, String> params, String endpoint, String key, String secret, String tc_profile_url)
+    public ToolProvider(Map<String, String> params, String endpoint, String key, String secret, String tc_profile_url)
             throws LTIException, Exception {
         CreateToolProviderNew(params, endpoint, key, secret, tc_profile_url);
     }
@@ -100,9 +100,6 @@ public class ToolProviderNew implements LTI{
                     throw new LTIException(LTIException.MESSAGEKEY_MISSING_PARAMETERS, "LTI version " + this.version + " parameters not included. " + e.getMessage());
                 }
 
-                log.debug("Instantiating service LTI-2p0 for Registration");
-                this.actionService = new org.lti.v2.Registration();
-
             } else {
                 this.key = key;
                 this.secret = secret;
@@ -121,11 +118,6 @@ public class ToolProviderNew implements LTI{
                 } catch (Exception e) {
                     throw new LTIException(LTIException.MESSAGEKEY_MISSING_PARAMETERS, "LTI version " + this.version + " parameters not included. " + e.getMessage());
                 }
-                
-                //if( hasValidSignature() ) log.debug("OAuth signature is valid"); else throw new Exception("OAuth signature is NOT valid");
-
-                log.debug("Instantiating service LTI-2p0 for Launch");
-                this.actionService = new org.lti.v2.Launch();
             }
 
         } else {
@@ -146,11 +138,22 @@ public class ToolProviderNew implements LTI{
             } catch (Exception e) {
                 throw new LTIException(LTIException.MESSAGEKEY_MISSING_PARAMETERS, "LTI version " + this.version + " parameters not included. " + e.getMessage());
             }
+        }
+    }
 
-            //if( hasValidSignature() ) log.debug("OAuth signature is valid"); else throw new Exception("OAuth signature is NOT valid");
-
+    public void InitToolProvider()
+        throws Exception {
+        if( VERSION_NUMBER_V2.equals(getVersionNumber()) ) {
+            if( params.containsKey(LTI_MESSAGE_TYPE) && params.get(LTI_MESSAGE_TYPE).equals(LTI_MESSAGE_TYPE_TOOL_PROXY_REGISTRATION_REQUEST) ) {
+                log.debug("Instantiating service LTI-2p0 for Registration");
+                this.actionService = new org.lti.v2.Registration();
+            } else {
+                log.debug("Instantiating service LTI-2p0 for Launch");
+                this.actionService = new org.lti.v2.Launch(this);
+            }
+        } else {
             log.debug("Instantiating service LTI-1p0 for Launch");
-            this.actionService = new org.lti.v1.Launch();
+            this.actionService = new org.lti.v1.Launch(this);
         }
     }
 
@@ -241,6 +244,10 @@ public class ToolProviderNew implements LTI{
 
     public String getLTIVersion() {
         return this.version;
+    }
+
+    public String getToolConsumerProfile() {
+        return this.tc_profile_url;
     }
 
     public String getLTILaunchPresentationReturnURL() {
@@ -471,5 +478,59 @@ public class ToolProviderNew implements LTI{
         }
 
         return list;
+    }
+
+    public String getVerifiedUserFullName() {
+        String userFullName;
+        String userFirstName;
+        String userLastName;
+
+        if( VERSION_NUMBER_V2.equals(getVersionNumber()) ) {
+            log.debug("FullName for version2");
+            userFullName = "";
+        } else {
+            log.debug("FullName for version1");
+            userFullName = this.params.get("lis_person_name_full");
+            if( userFullName == null || userFullName == "" ){
+                userFirstName = this.params.get("lis_person_name_given");
+                userLastName = this.params.get("lis_person_name_family");
+                if( userFirstName != null && userFirstName != "" ){
+                    userFullName = userFirstName;
+                }
+                if( userLastName != null && userLastName != "" ){
+                    userFullName += userFullName.length() > 0? " ": "";
+                    userFullName += userLastName;
+                }
+            }
+        }
+        return userFullName;
+    }
+
+    public String getVerifiedRoles() {
+        String roles = "";
+
+        if( VERSION_NUMBER_V2.equals(getVersionNumber()) ) {
+            log.debug("Roles for version2");
+            roles = "";
+        } else {
+            log.debug("Roles for version1");
+            roles = params.get(ROLES);
+        }
+
+        return roles;
+    }
+
+    public String getVerifiedUserId() {
+        String userId;
+
+        if( VERSION_NUMBER_V2.equals(getVersionNumber()) ) {
+            log.debug("Roles for version2");
+            userId = "";
+        } else {
+            log.debug("Roles for version1");
+            userId = params.get(USER_ID);
+        }
+
+        return userId;
     }
 }

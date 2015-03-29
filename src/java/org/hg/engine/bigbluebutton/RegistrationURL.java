@@ -5,13 +5,13 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.hg.engine.CompletionResponse;
-import org.lti.ToolProviderNew;
+import org.lti.ToolProvider;
 
 public class RegistrationURL implements CompletionResponse {
     private static final Logger log = Logger.getLogger(RegistrationURL.class);
 
-    ToolProviderNew tpn;
-    public RegistrationURL(ToolProviderNew tpn)
+    ToolProvider tpn;
+    public RegistrationURL(ToolProvider tpn)
         throws Exception {
         log.debug("====== Creating object::RegistrationURL()");
         this.tpn = tpn;

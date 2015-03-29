@@ -1,6 +1,6 @@
 package org.lti;
 
 public interface ActionService {
-    public String execute(ToolProviderNew tpn) throws Exception;
+    public String execute(ToolProvider tpn) throws Exception;
 
 }

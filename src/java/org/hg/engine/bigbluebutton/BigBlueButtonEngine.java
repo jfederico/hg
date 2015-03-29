@@ -94,33 +94,49 @@ public class BigBlueButtonEngine extends Engine {
             } else {
                 @SuppressWarnings("unchecked")
                 Map<String, String> config_engine = (Map<String, String>)config.get("engine");
+                log.debug("HERE");
+                tpn.InitToolProvider();
+
+                log.debug("here0");
+                Map<String, String> bbb_meeting_params = getBBBMeetingParams();
+                log.debug(bbb_meeting_params);
+                Map<String, String> bbb_session_params = getBBBSessionParams();
+                log.debug(bbb_session_params);
+                log.debug("there0");
 
                 if( this.params.containsKey(PARAM_CUSTOM_RECORD) && Boolean.parseBoolean(this.params.get(PARAM_CUSTOM_RECORD)) ){
                     if( this.grails_params.containsKey(PARAM_ACT) && this.grails_params.get(PARAM_ACT).equals(ENGINE_ACT_UI) ){
                         if( this.grails_params.containsKey(PARAM_CMD) && this.grails_params.get(PARAM_CMD).equals(BBB_CMD_MEETING_JOIN) ) {
-                            setCompletionResponseCommand( new SingleSignOnURL(config_engine, getMeetingParams(), getSessionParams()) );
+                            setCompletionResponseCommand( new SingleSignOnURL(config_engine, bbb_meeting_params, bbb_session_params) );
                         } else if( this.grails_params.containsKey(PARAM_CMD) && this.grails_params.get(PARAM_CMD).equals(BBB_CMD_RECORDING_PUBLISH) ) {
                             this.tpn.putParameter(PARAM_BBB_RECORDING_ID, params.get(PARAM_BBB_RECORDING_ID));
                             this.tpn.putParameter(PARAM_BBB_RECORDING_PUBLISHED, params.get(PARAM_BBB_RECORDING_PUBLISHED));
-                            setCompletionResponseCommand( new PublishRecording(config_engine, getMeetingParams(), getSessionParams(), getRecordingParams()) );
+                            setCompletionResponseCommand( new PublishRecording(config_engine, bbb_meeting_params, bbb_session_params, getRecordingParams()) );
                         } else if( this.grails_params.containsKey(PARAM_CMD) && this.grails_params.get(PARAM_CMD).equals(BBB_CMD_RECORDING_UNPUBLISH) ) {
                             this.tpn.putParameter(PARAM_BBB_RECORDING_ID, params.get(PARAM_BBB_RECORDING_ID));
                             this.tpn.putParameter(PARAM_BBB_RECORDING_PUBLISHED, params.get(PARAM_BBB_RECORDING_PUBLISHED));
-                            setCompletionResponseCommand( new UnpublishRecording(config_engine, getMeetingParams(), getSessionParams(), getRecordingParams()) );
+                            setCompletionResponseCommand( new UnpublishRecording(config_engine, bbb_meeting_params, bbb_session_params, getRecordingParams()) );
                         } else if( this.grails_params.containsKey(PARAM_CMD) && this.grails_params.get(PARAM_CMD).equals(BBB_CMD_RECORDING_DELETE) ) {
                             this.tpn.putParameter(PARAM_BBB_RECORDING_ID, params.get(PARAM_BBB_RECORDING_ID));
                             this.tpn.putParameter(PARAM_BBB_RECORDING_PUBLISHED, params.get(PARAM_BBB_RECORDING_PUBLISHED));
-                            setCompletionResponseCommand( new DeleteRecording(config_engine, getMeetingParams(), getSessionParams(), getRecordingParams()) );
+                            setCompletionResponseCommand( new DeleteRecording(config_engine, bbb_meeting_params, bbb_session_params, getRecordingParams()) );
                         }
                     } else {
-                        setCompletionResponseCommand( new UI(config_engine, getMeetingParams(), getSessionParams()) );
+                        log.debug("here1");
+                        setCompletionResponseCommand( new UI(config_engine, bbb_meeting_params, bbb_session_params) );
+                        log.debug("there1");
                         this.tpn.executeActionService();
+                        log.debug("here1");
                     }
 
                 } else {
-                    setCompletionResponseCommand( new SingleSignOnURL(config_engine, getMeetingParams(), getSessionParams()) );
+                    log.debug("here2");
+                    setCompletionResponseCommand( new SingleSignOnURL(config_engine, bbb_meeting_params, bbb_session_params) );
+                    log.debug("there2");
                     this.tpn.executeActionService();
+                    log.debug("here2");
                 }
+                log.debug("THERE");
             }
 
         } else if( this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_REGISTRATION) ){
@@ -141,7 +157,7 @@ public class BigBlueButtonEngine extends Engine {
         this.completionResponse = completionResponse;
     }
 
-    private Map<String, String> getMeetingParams(){
+    private Map<String, String> getBBBMeetingParams(){
         Map<String, String> params = this.tpn.getParameters();
         Map<String, String> meetingParams = new HashMap<String, String>();
         // Map ToolProvider parameters with Meeting parameters
@@ -181,25 +197,26 @@ public class BigBlueButtonEngine extends Engine {
         return meetingParams;
     }
 
-    private Map<String, String> getSessionParams(){
+    private Map<String, String> getBBBSessionParams(){
         Map<String, String> params = this.tpn.getParameters();
         Map<String, String> sessionParams = new HashMap<String, String>();
         // Map LtiUser parameters with Session parameters
         String oauth_consumer_key = this.params.get(OAuth.OAUTH_CONSUMER_KEY);
         String resource_link_id = this.params.get(LTI.RESOURCE_LINK_ID);
-        sessionParams.put(BBBProxy.PARAM_FULL_NAME, getValidatedUserFullName(params));
+        sessionParams.put(BBBProxy.PARAM_FULL_NAME, getValidatedUserFullName());
         sessionParams.put(BBBProxy.PARAM_MEETING_ID, getValidatedMeetingId(resource_link_id, oauth_consumer_key));
-        if( RolesValidator.isStudent(params.get("roles")) || RolesValidator.isLearner(params.get("roles")) )
+        log.debug("It is null or empty");
+        String roles = tpn.getVerifiedRoles();
+        log.debug("Roles=" + roles);
+        if( roles == null || roles.equals("") || RolesValidator.isStudent(roles) || RolesValidator.isLearner(roles) ) {
             sessionParams.put(BBBProxy.PARAM_PASSWORD, DigestUtils.shaHex("ap" + resource_link_id + oauth_consumer_key));
-        else
-            sessionParams.put(BBBProxy.PARAM_PASSWORD, DigestUtils.shaHex("mp" + resource_link_id + oauth_consumer_key));
-        //Set the role
-        if( RolesValidator.isStudent(params.get("roles")) || RolesValidator.isLearner(params.get("roles")) )
             sessionParams.put("role", BBB_ROLE_VIEWER);
-        else
+        } else {
+            sessionParams.put(BBBProxy.PARAM_PASSWORD, DigestUtils.shaHex("mp" + resource_link_id + oauth_consumer_key));
             sessionParams.put("role", BBB_ROLE_MODERATOR);
+        }
         ////sessionParams.put("createTime", "");
-        sessionParams.put(BBBProxy.PARAM_USER_ID, DigestUtils.shaHex( params.get("user_id") + oauth_consumer_key));
+        sessionParams.put(BBBProxy.PARAM_USER_ID, (roles == null || roles.equals(""))? "": DigestUtils.shaHex( tpn.getVerifiedUserId() + oauth_consumer_key) );
 
         return sessionParams;
     }
@@ -236,21 +253,16 @@ public class BigBlueButtonEngine extends Engine {
         return "";
     }
 
-    private String getValidatedUserFullName(Map<String, String> params){
-        String userFullName = params.get("lis_person_name_full");
-        String userFirstName = params.get("lis_person_name_given");
-        String userLastName = params.get("lis_person_name_family");
-        if( userFullName == null || userFullName == "" ){
-            if( userFirstName != null && userFirstName != "" ){
-                userFullName = userFirstName;
-            }
-            if( userLastName != null && userLastName != "" ){
-                userFullName += userFullName.length() > 0? " ": "";
-                userFullName += userLastName;
-            }
-            if( userFullName == null || userFullName == "" ){
-                userFullName = ( RolesValidator.isStudent(params.get("roles"), true) || RolesValidator.isLearner(params.get("roles"), true) )? "Viewer" : "Moderator";
-            }
+    private String getValidatedUserFullName(){
+        String userFullName;
+
+        userFullName = tpn.getVerifiedUserFullName();
+        if( userFullName == null || userFullName == "" ) {
+            log.debug("It is null or empty");
+            String roles = tpn.getVerifiedRoles();
+            log.debug("Roles=" + roles);
+            userFullName = ( roles.equals("") || RolesValidator.isStudent(roles, true) || RolesValidator.isLearner(roles, true) )? "Viewer" : "Moderator";
+            log.debug("Now it is " + userFullName);
         }
         try {
             userFullName = URLEncoder.encode(userFullName, "UTF-8");
@@ -258,6 +270,7 @@ public class BigBlueButtonEngine extends Engine {
             log.debug("Error encoding userFullName: " + e.getMessage());
             userFullName = "User";
         }
+
         return userFullName;
     }
 
@@ -278,18 +291,19 @@ public class BigBlueButtonEngine extends Engine {
         log.debug(this.grails_params);
         log.debug(this.params);
         
-        String param_tc_profile_url = this.params.get(LTI.TC_PROFILE_URL);
+        String tc_profile_url = this.tpn.getToolConsumerProfile();
+        String lti_version = this.tpn.getLTIVersion();
         //String config_tool_guid = (String)this.config.get("id") + "@" + this.endpoint;
-        String config_tool_guid = (String)this.grails_params.get(PARAM_TENANT) + "@" + this.endpoint;
+        String config_tool_guid = this.grails_params.get(PARAM_TENANT) + "@" + this.endpoint;
         @SuppressWarnings("unchecked")
         Map<String, String> config_product = (Map<String, String>)this.config.get("product"); 
         @SuppressWarnings("unchecked")
         Map<String, String> config_vendor = (Map<String, String>)this.config.get("vendor"); 
-        log.debug(param_tc_profile_url);
+        log.debug(tc_profile_url);
         log.debug(config_tool_guid);
         log.debug(config_product);
         log.debug(config_vendor);
-        ToolProviderProfile tp_profile = new ToolProviderProfile(param_tc_profile_url, config_tool_guid, config_product, config_vendor);
+        ToolProviderProfile tp_profile = new ToolProviderProfile(lti_version, tc_profile_url, config_tool_guid, config_product, config_vendor);
 
         log.debug("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
         log.debug(tp_profile.getIMSXJSONMessage().toString());

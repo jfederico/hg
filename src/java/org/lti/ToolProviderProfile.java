@@ -18,20 +18,16 @@ public class ToolProviderProfile {
     Map<String, String> config_product; 
     Map<String, String> config_vendor; 
     
-    public ToolProviderProfile(String param_tc_profile_url, String param_tool_guid, Map<String, String> config_product, Map<String, String> config_vendor) {
+    public ToolProviderProfile(String lti_version, String tc_profile_url, String config_tool_guid, Map<String, String> config_product, Map<String, String> config_vendor) {
         log.debug("====Creating ToolProviderProfile()");
-        this.tool_guid = param_tool_guid;
-        String[] tc_profile_url_segments = param_tc_profile_url.split("\\?");
-        String tc_profile_url = tc_profile_url_segments[0];
+        this.tool_guid = config_tool_guid;
         this.tc_profile_url = tc_profile_url;
-        String[] lti_version_segments = tc_profile_url_segments[1].split("=");
-        this.lti_version = lti_version_segments[1];
+        this.lti_version = lti_version;
         this.config_product = config_product;
         this.config_vendor = config_vendor;
     }
     
     public void setId(){
-        
     }
     
     private JSONArray getContext() {
