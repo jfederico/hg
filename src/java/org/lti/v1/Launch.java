@@ -7,10 +7,9 @@ import org.lti.ToolProvider;
 public class Launch implements ActionService {
     private static final Logger log = Logger.getLogger(Launch.class);
 
-    public Launch(ToolProvider tpn)
-            throws Exception{
-        log.info("============================================================================================");
+    public Launch(ToolProvider tpn) {
         log.info("LTILaunch v1p0");
+        log.info("============================================================================================");
     }
 
     public String execute(ToolProvider tpn)

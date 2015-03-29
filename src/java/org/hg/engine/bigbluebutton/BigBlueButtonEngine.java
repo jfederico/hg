@@ -95,7 +95,7 @@ public class BigBlueButtonEngine extends Engine {
                 @SuppressWarnings("unchecked")
                 Map<String, String> config_engine = (Map<String, String>)config.get("engine");
                 log.debug("HERE");
-                tpn.InitToolProvider();
+                this.tpn.InitToolProvider();
 
                 log.debug("here0");
                 Map<String, String> bbb_meeting_params = getBBBMeetingParams();
@@ -140,9 +140,13 @@ public class BigBlueButtonEngine extends Engine {
             }
 
         } else if( this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_REGISTRATION) ){
+            this.tpn.InitToolProvider();
+
             setCompletionResponseCommand( new RegistrationURL(this.tpn) );
             //TODO: The tp_profile should be loaded here based on the 'config' definition.
+            log.debug("HERE0");
             this.tpn.executeActionService();
+            log.debug("HERE1");
         }
     }
 
@@ -198,7 +202,6 @@ public class BigBlueButtonEngine extends Engine {
     }
 
     private Map<String, String> getBBBSessionParams(){
-        Map<String, String> params = this.tpn.getParameters();
         Map<String, String> sessionParams = new HashMap<String, String>();
         // Map LtiUser parameters with Session parameters
         String oauth_consumer_key = this.params.get(OAuth.OAUTH_CONSUMER_KEY);
@@ -291,6 +294,8 @@ public class BigBlueButtonEngine extends Engine {
         log.debug(this.grails_params);
         log.debug(this.params);
         
+        String tc_key = this.tpn.getToolConsumerKey();
+        String tc_secret = this.tpn.getToolConsumerSecret();
         String tc_profile_url = this.tpn.getToolConsumerProfile();
         String lti_version = this.tpn.getLTIVersion();
         //String config_tool_guid = (String)this.config.get("id") + "@" + this.endpoint;
@@ -303,7 +308,7 @@ public class BigBlueButtonEngine extends Engine {
         log.debug(config_tool_guid);
         log.debug(config_product);
         log.debug(config_vendor);
-        ToolProviderProfile tp_profile = new ToolProviderProfile(lti_version, tc_profile_url, config_tool_guid, config_product, config_vendor);
+        ToolProviderProfile tp_profile = new ToolProviderProfile(lti_version, tc_key, tc_secret, tc_profile_url, config_tool_guid, config_product, config_vendor);
 
         log.debug("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
         log.debug(tp_profile.getIMSXJSONMessage().toString());

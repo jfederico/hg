@@ -13,16 +13,24 @@ public class ToolProviderProfile {
     JSONObject id;
 
     String tool_guid;
+    String tc_key;
+    String tc_secret;
     String tc_profile_url;
     String lti_version;
     Map<String, String> config_product; 
     Map<String, String> config_vendor; 
     
-    public ToolProviderProfile(String lti_version, String tc_profile_url, String config_tool_guid, Map<String, String> config_product, Map<String, String> config_vendor) {
+    public ToolProviderProfile(String lti_version, String _tc_key, String _tc_secret, String _tc_profile_url, String config_tool_guid, Map<String, String> config_product, Map<String, String> config_vendor) {
         log.debug("====Creating ToolProviderProfile()");
         this.tool_guid = config_tool_guid;
+        String[] tc_profile_url_segments = _tc_profile_url.split("\\?");
+        String tc_profile_url = tc_profile_url_segments[0];
         this.tc_profile_url = tc_profile_url;
+        this.tc_key = _tc_key;
+        this.tc_secret = _tc_secret;
+        //String[] lti_version_segments = tc_profile_url_segments[1].split("=");
         this.lti_version = lti_version;
+        //this.lti_version = lti_version_segments[1];
         this.config_product = config_product;
         this.config_vendor = config_vendor;
     }
@@ -55,7 +63,7 @@ public class ToolProviderProfile {
         product_instance.put("product_info", getProductInfo());
         product_instance.put("support", getSupport());
         product_instance.put("service_provider", getServiceProvider());
-        product_instance.put("service_owner", getServiceOwner());
+        //product_instance.put("service_owner", getServiceOwner());
         return product_instance;
     }
 
@@ -96,7 +104,7 @@ public class ToolProviderProfile {
             vendor_name.put("key", "product.vendor.name");
         vendor.put("vendor_name", vendor_name);
             JSONObject vendor_description = new JSONObject();
-            vendor_description.put("default_value", "123IT offers consulting services for integrationg applications");
+            vendor_description.put("default_value", "123IT offers consulting services for integrating applications");
             vendor_description.put("key", "product.vendor.description");
         vendor.put("description", vendor_description);
         vendor.put("website", "http://123it.ca");
@@ -171,10 +179,22 @@ public class ToolProviderProfile {
                             parameter_tc_profile_url.put("name", "tc_profile_url");
                             parameter_tc_profile_url.put("variable", "ToolConsumerProfile.url");
                         parameter_array.put(parameter_tc_profile_url);
+                            JSONObject parameter_cert_given_name = new JSONObject();
+                            parameter_cert_given_name.put("name", "cert_given_name");
+                            parameter_cert_given_name.put("variable", "Person.name.given");
+                        parameter_array.put(parameter_cert_given_name);
+                            JSONObject parameter_cert_family_name = new JSONObject();
+                            parameter_cert_family_name.put("name", "cert_family_name");
+                            parameter_cert_family_name.put("variable", "Person.name.family");
+                        parameter_array.put(parameter_cert_family_name);
                             JSONObject parameter_cert_full_name = new JSONObject();
                             parameter_cert_full_name.put("name", "cert_full_name");
                             parameter_cert_full_name.put("variable", "Person.name.full");
                         parameter_array.put(parameter_cert_full_name);
+                            JSONObject parameter_cert_email = new JSONObject();
+                            parameter_cert_email.put("name", "cert_email");
+                            parameter_cert_email.put("variable", "Person.email.primary");
+                        parameter_array.put(parameter_cert_email);
                             JSONObject parameter_cert_userid = new JSONObject();
                             parameter_cert_userid.put("name", "cert_userid");
                             parameter_cert_userid.put("variable", "User.id");
@@ -192,7 +212,49 @@ public class ToolProviderProfile {
 
     private JSONObject getSecurityContract() {
         JSONObject security_contract = new JSONObject();
-        security_contract.put("shared_secret", "secret");
+        security_contract.put("shared_secret", this.tc_secret);
+/*
+            JSONArray tool_services = new JSONArray();
+                JSONObject tool_consumer_profile = new JSONObject();
+                tool_consumer_profile.put("@type", "RestServiceProfile");
+                    JSONArray tool_consumer_profile_actions = new JSONArray();
+                    tool_consumer_profile_actions.put("GET");
+                    tool_consumer_profile.put("action", tool_consumer_profile_actions);
+                    tool_consumer_profile.put("service", "tcp:ToolConsumerProfile");
+            tool_services.put(tool_consumer_profile);
+                JSONObject tool_proxy_collection = new JSONObject();
+                tool_proxy_collection.put("@type", "RestServiceProfile");
+                    JSONArray tool_proxy_collection_actions = new JSONArray();
+                    tool_proxy_collection_actions.put("POST");
+                    tool_proxy_collection.put("action", tool_proxy_collection_actions);
+                    tool_proxy_collection.put("service", "tcp:ToolProxy.collection");
+            tool_services.put(tool_proxy_collection);
+                JSONObject tool_proxy_settings = new JSONObject();
+                tool_proxy_settings.put("@type", "RestServiceProfile");
+                    JSONArray tool_proxy_settings_actions = new JSONArray();
+                    tool_proxy_settings_actions.put("GET");
+                    tool_proxy_settings_actions.put("PUT");
+                    tool_proxy_settings.put("action", tool_proxy_settings_actions);
+                    tool_proxy_settings.put("service", "tcp:ToolProxySettings");
+            tool_services.put(tool_proxy_settings);
+                JSONObject tool_proxy_binding_settings = new JSONObject();
+                tool_proxy_binding_settings.put("@type", "RestServiceProfile");
+                    JSONArray tool_proxy_binding_settings_actions = new JSONArray();
+                    tool_proxy_binding_settings_actions.put("GET");
+                    tool_proxy_binding_settings_actions.put("PUT");
+                    tool_proxy_binding_settings.put("action", tool_proxy_binding_settings_actions);
+                    tool_proxy_binding_settings.put("service", "tcp:ToolProxyBindingSettings");
+            tool_services.put(tool_proxy_binding_settings);
+                JSONObject lti_link_settings = new JSONObject();
+                lti_link_settings.put("@type", "RestServiceProfile");
+                    JSONArray lti_link_settings_actions = new JSONArray();
+                    lti_link_settings_actions.put("GET");
+                    lti_link_settings_actions.put("PUT");
+                    lti_link_settings.put("action", lti_link_settings_actions);
+                    lti_link_settings.put("service", "tcp:LtiLinkSettings");
+            tool_services.put(lti_link_settings);
+        security_contract.put("tool_service", tool_services);
+*/
         return security_contract;
     }
 
@@ -202,7 +264,10 @@ public class ToolProviderProfile {
         imsx_JSONMessage.put("@context", getContext());
         imsx_JSONMessage.put("@type", "ToolProxy");
         //////// TODO: Replace @id
-        imsx_JSONMessage.put("@id", "xxxx-yyyy-zzzz");
+        imsx_JSONMessage.put("@id", this.tc_key + ":" + this.tool_guid);
+            JSONObject custom = new JSONObject();
+            custom.put("id", this.tc_key);
+        imsx_JSONMessage.put("custom", custom);
         imsx_JSONMessage.put("lti_version", this.lti_version);
         imsx_JSONMessage.put("tool_consumer_profile", this.tc_profile_url + "?lti_version=" + this.lti_version);
         imsx_JSONMessage.put("tool_profile", getToolProfile());

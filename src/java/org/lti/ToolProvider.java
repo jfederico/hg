@@ -250,6 +250,14 @@ public class ToolProvider implements LTI{
         return this.tc_profile_url;
     }
 
+    public String getToolConsumerKey() {
+        return this.key;
+    }
+
+    public String getToolConsumerSecret() {
+        return this.secret;
+    }
+
     public String getLTILaunchPresentationReturnURL() {
         return this.params.get(LAUNCH_PRESENTATION_RETURN_URL);
     }
