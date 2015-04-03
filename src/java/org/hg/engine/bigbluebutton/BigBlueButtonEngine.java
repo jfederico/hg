@@ -53,13 +53,6 @@ public class BigBlueButtonEngine extends Engine {
         super(request, params, config, endpoint, session_params);
         log.debug("====== Creating object::BigBlueButtonEngine()");
 
-        if( this.tpn != null && this.tpn.getLTIVersion().equals(LTI.VERSION_V2P0) ) {
-            log.debug("the version is" + this.tpn.getLTIVersion() );
-            this.tpn.setToolProviderProfile(buildToolProviderProfile());
-        } else {
-            log.debug("the version is no 2p0 it is " + this.tpn.getLTIVersion() );
-        }
-
         if(this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_LAUNCH)){
             if(this.grails_params.get(PARAM_ACT).equals(ENGINE_ACT_CC)){
                 Map<String, Object> definition = new HashMap<String, Object>();
@@ -97,12 +90,10 @@ public class BigBlueButtonEngine extends Engine {
                 log.debug("HERE");
                 this.tpn.InitToolProvider();
 
-                log.debug("here0");
                 Map<String, String> bbb_meeting_params = getBBBMeetingParams();
                 log.debug(bbb_meeting_params);
                 Map<String, String> bbb_session_params = getBBBSessionParams();
                 log.debug(bbb_session_params);
-                log.debug("there0");
 
                 if( this.params.containsKey(PARAM_CUSTOM_RECORD) && Boolean.parseBoolean(this.params.get(PARAM_CUSTOM_RECORD)) ){
                     if( this.grails_params.containsKey(PARAM_ACT) && this.grails_params.get(PARAM_ACT).equals(ENGINE_ACT_UI) ){
@@ -122,31 +113,25 @@ public class BigBlueButtonEngine extends Engine {
                             setCompletionResponseCommand( new DeleteRecording(config_engine, bbb_meeting_params, bbb_session_params, getRecordingParams()) );
                         }
                     } else {
-                        log.debug("here1");
                         setCompletionResponseCommand( new UI(config_engine, bbb_meeting_params, bbb_session_params) );
-                        log.debug("there1");
                         this.tpn.executeActionService();
-                        log.debug("here1");
                     }
 
                 } else {
-                    log.debug("here2");
                     setCompletionResponseCommand( new SingleSignOnURL(config_engine, bbb_meeting_params, bbb_session_params) );
-                    log.debug("there2");
                     this.tpn.executeActionService();
-                    log.debug("here2");
                 }
                 log.debug("THERE");
             }
 
         } else if( this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_REGISTRATION) ){
-            this.tpn.InitToolProvider();
+            if( this.tpn.getLTIVersion().equals(LTI.VERSION_V2P0) ) {
+                this.tpn.setToolProviderProfile(buildToolProviderProfile());
+                this.tpn.InitToolProvider();
 
-            setCompletionResponseCommand( new RegistrationURL(this.tpn) );
-            //TODO: The tp_profile should be loaded here based on the 'config' definition.
-            log.debug("HERE0");
-            this.tpn.executeActionService();
-            log.debug("HERE1");
+                setCompletionResponseCommand( new RegistrationURL(this.tpn) );
+                this.tpn.executeActionService();
+            }
         }
     }
 

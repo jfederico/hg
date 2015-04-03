@@ -213,21 +213,21 @@ public class ToolProviderProfile {
     private JSONObject getSecurityContract() {
         JSONObject security_contract = new JSONObject();
         security_contract.put("shared_secret", this.tc_secret);
-/*
+        /*
             JSONArray tool_services = new JSONArray();
                 JSONObject tool_consumer_profile = new JSONObject();
                 tool_consumer_profile.put("@type", "RestServiceProfile");
                     JSONArray tool_consumer_profile_actions = new JSONArray();
                     tool_consumer_profile_actions.put("GET");
                     tool_consumer_profile.put("action", tool_consumer_profile_actions);
-                    tool_consumer_profile.put("service", "tcp:ToolConsumerProfile");
+                    tool_consumer_profile.put("service", "tcp:ToolConsumerProfile"); //To be replaced
             tool_services.put(tool_consumer_profile);
                 JSONObject tool_proxy_collection = new JSONObject();
                 tool_proxy_collection.put("@type", "RestServiceProfile");
                     JSONArray tool_proxy_collection_actions = new JSONArray();
                     tool_proxy_collection_actions.put("POST");
                     tool_proxy_collection.put("action", tool_proxy_collection_actions);
-                    tool_proxy_collection.put("service", "tcp:ToolProxy.collection");
+                    tool_proxy_collection.put("service", "tcp:ToolProxy.collection"); //To be replaced
             tool_services.put(tool_proxy_collection);
                 JSONObject tool_proxy_settings = new JSONObject();
                 tool_proxy_settings.put("@type", "RestServiceProfile");
@@ -235,7 +235,7 @@ public class ToolProviderProfile {
                     tool_proxy_settings_actions.put("GET");
                     tool_proxy_settings_actions.put("PUT");
                     tool_proxy_settings.put("action", tool_proxy_settings_actions);
-                    tool_proxy_settings.put("service", "tcp:ToolProxySettings");
+                    tool_proxy_settings.put("service", "tcp:ToolProxySettings"); //To be replaced
             tool_services.put(tool_proxy_settings);
                 JSONObject tool_proxy_binding_settings = new JSONObject();
                 tool_proxy_binding_settings.put("@type", "RestServiceProfile");
@@ -243,7 +243,7 @@ public class ToolProviderProfile {
                     tool_proxy_binding_settings_actions.put("GET");
                     tool_proxy_binding_settings_actions.put("PUT");
                     tool_proxy_binding_settings.put("action", tool_proxy_binding_settings_actions);
-                    tool_proxy_binding_settings.put("service", "tcp:ToolProxyBindingSettings");
+                    tool_proxy_binding_settings.put("service", "tcp:ToolProxyBindingSettings"); //To be replaced
             tool_services.put(tool_proxy_binding_settings);
                 JSONObject lti_link_settings = new JSONObject();
                 lti_link_settings.put("@type", "RestServiceProfile");
@@ -251,10 +251,10 @@ public class ToolProviderProfile {
                     lti_link_settings_actions.put("GET");
                     lti_link_settings_actions.put("PUT");
                     lti_link_settings.put("action", lti_link_settings_actions);
-                    lti_link_settings.put("service", "tcp:LtiLinkSettings");
+                    lti_link_settings.put("service", "tcp:LtiLinkSettings"); //To be replaced
             tool_services.put(lti_link_settings);
         security_contract.put("tool_service", tool_services);
-*/
+        */
         return security_contract;
     }
 

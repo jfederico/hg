@@ -46,9 +46,9 @@
                     },
                     {
                         "id": "3",
-                        "key": "m58vFtsJcxad9Ci",
-                        "secret": "IQvuYEcU8Z1kH3X",
-                        "tc_profile_url": "http://192.168.44.149/moodle/mod/lti/services.php/profile/m58vFtsJcxad9Ci?lti_version=LTI-2p0"
+                        "key": "4udMfD2i39Hqo3N",
+                        "secret": "Rm4IZFKQpfM91IZ",
+                        "tc_profile_url": "http://192.168.44.149/moodle/mod/lti/services.php/profile/4udMfD2i39Hqo3N?lti_version=LTI-2p0"
                     },
                 ],
                 "profiles": [

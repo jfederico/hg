@@ -541,4 +541,67 @@ public class ToolProvider implements LTI{
 
         return userId;
     }
+
+    ////////////////////
+    /** Make an API call */
+    public static JSONObject doAPICall(String query) {
+        return doAPICall(query, "POST");
+    }
+
+    public static JSONObject doAPICall(String query, String method) {
+        JSONObject response = null;
+
+        StringBuilder urlStr = new StringBuilder(query);
+        try {
+            // open connection
+            log.debug("doAPICall.call: " + query );
+
+            URL url = new URL(urlStr.toString());
+            HttpURLConnection httpConnection = (HttpURLConnection) url.openConnection();
+            httpConnection.setUseCaches(false);
+            httpConnection.setDoOutput(true);
+            httpConnection.setRequestMethod(method);
+            httpConnection.connect();
+
+            int responseCode = httpConnection.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                // read response
+                InputStreamReader isr = null;
+                BufferedReader reader = null;
+                StringBuilder json = new StringBuilder();
+                try {
+                    isr = new InputStreamReader(httpConnection.getInputStream(), "UTF-8");
+                    reader = new BufferedReader(isr);
+                    String line = reader.readLine();
+                    while (line != null) {
+                        if( !line.startsWith("<?xml version=\"1.0\"?>"))
+                            json.append(line.trim());
+                        line = reader.readLine();
+                    }
+                } finally {
+                    if (reader != null)
+                        reader.close();
+                    if (isr != null)
+                        isr.close();
+                }
+                httpConnection.disconnect();
+
+                log.debug("doAPICall.responseJSON: " + json);
+                String stringJSON = json.toString();
+                response = new JSONObject(stringJSON);
+            } else {
+                log.debug("doAPICall.HTTPERROR: Message=" + "Tool Consumer responded with HTTP status code " + responseCode);
+            }
+
+        } catch(IOException e) {
+            log.debug("doAPICall.IOException: Message=" + e.getMessage());
+        } catch(IllegalArgumentException e) {
+            log.debug("doAPICall.IllegalArgumentException: Message=" + e.getMessage());
+        } catch(Exception e) {
+            log.debug("doAPICall.Exception: Message=" + e.getMessage());
+        }
+        return response;
+    }
+    /////////////
+
 }

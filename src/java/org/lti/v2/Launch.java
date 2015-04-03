@@ -7,8 +7,6 @@ import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.lti.ActionService;
-import org.lti.LTI;
-import org.lti.LTIException;
 import org.lti.ToolProvider;
 
 public class Launch implements ActionService {
@@ -20,6 +18,9 @@ public class Launch implements ActionService {
         log.info("LTILaunch v2p0");
         log.info("============================================================================================");
         retrieved_params = new LinkedHashMap<String, String>();
+
+        //JSONObject tool_consumer_profile = ToolProvider.doAPICall(tpn.getToolConsumerProfile());
+        //log.debug(tool_consumer_profile.toString());
 
         /*
         //Execute query to the LTI consumer
