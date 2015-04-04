@@ -19,46 +19,31 @@ public class Launch implements ActionService {
         log.info("============================================================================================");
         retrieved_params = new LinkedHashMap<String, String>();
 
-        //JSONObject tool_consumer_profile = ToolProvider.doAPICall(tpn.getToolConsumerProfile());
-        //log.debug(tool_consumer_profile.toString());
+        log.debug(tpn.getToolConsumerProfile());
+        JSONObject tool_consumer_profile = ToolProvider.doAPICall(tpn.getToolConsumerProfile(), "GET");
+        log.debug(tool_consumer_profile.toString());
 
-        /*
-        //Execute query to the LTI consumer
-        try {
-            //request the tool consumer profile
-            String tc_profile = tpn.getToolConsumerProfile(tpn.getToolConsumerProfile()).toString();
-
-            JSONObject tc_profile_json = new JSONObject(tc_profile);
-            JSONArray services_offered_json = tc_profile_json.getJSONArray("service_offered");
-
-            boolean end_outer_for = false;
-            for( int i=0; i < services_offered_json.length() && !end_outer_for; i++ ){
-                JSONObject service_json = services_offered_json.getJSONObject(i);
-                JSONArray formats = service_json.getJSONArray("format");
-                for( int j=0; j < formats.length(); j++ ){
-                    String format = formats.getString(j);
-                    if( "application/vnd.ims.lti.v2.toolproxy+json".equals(format) ){
-                        log.debug("Execute call to " + service_json.getString("endpoint"));
-
-                        log.debug("Registering Proxy");
-                        String regKey = params.get(LTI.REG_KEY);
-                        String regPassword = params.get(LTI.REG_PASSWORD);
-                        JSONObject message = tp_profile.getIMSXJSONMessage();
-                        proxy_registration_response = tpn.executeProxyRegistration(service_json.getString("endpoint"), regKey, regPassword, message.toString());
-
-                        log.debug("Proxy registration response:");
-                        log.debug(proxy_registration_response);
-                        end_outer_for = true;
-                        break;
-                    }
-                }
+        String endpoint;
+        JSONArray services_offered = tool_consumer_profile.getJSONArray("service_offered");
+        for( int i=0; i < services_offered.length(); i++ ) {
+            JSONObject service_offered = services_offered.getJSONObject(i);
+            String id = service_offered.getString("@id");
+            if( id.equals("tcp:ToolProxy.collection") ) {
+                endpoint = service_offered.getString("endpoint") + "?lti_version=LTI-2p0";
+                log.debug(endpoint);
+                //JSONObject tool_proxy_collection = ToolProvider.doAPICall(endpoint, "POST");
+                //log.debug(tool_proxy_collection.toString());
+            } else if( id.equals("tcp:ToolProxySettings") ) {
+                endpoint = service_offered.getString("endpoint") + "?lti_version=LTI-2p0";
+                log.debug(endpoint);
+                //Replace {tool_proxy_id}
+                //log.debug(tpn.getToolConsumerKey());
+                //endpoint = endpoint.replace("{tool_proxy_id}", tpn.getToolConsumerKey());
+                //log.debug(endpoint);
+                //JSONObject tool_proxy_settings = ToolProvider.doAPICall(endpoint, "GET");
+                //log.debug(tool_proxy_settings.toString());
             }
-
-        } catch (Exception e) {
-            log.debug("Valio madre, hay un error");
-            throw new LTIException(LTIException.MESSAGEKEY_MISSING_PARAMETERS, "LTI version " + tpn.getLTIVersion() + " parameters not included. " + e.getMessage());
         }
-        */
 
     }
 

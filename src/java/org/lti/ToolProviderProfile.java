@@ -161,7 +161,26 @@ public class ToolProviderProfile {
                     JSONObject message = new JSONObject();
                     message.put("message_type", "basic-lti-launch-request");
                     message.put("path", "/hg/" + tool_guid_segments[0] + "/launch");
-                    message.put("enabled_capability", new JSONArray());
+                        JSONArray enabled_capability_array = new JSONArray();
+                            enabled_capability_array.put("Context.id");
+                            enabled_capability_array.put("CourseSection.label");
+                            enabled_capability_array.put("CourseSection.title");
+                            enabled_capability_array.put("Membership.role");
+                            enabled_capability_array.put("Person.email.primary");
+                            enabled_capability_array.put("Person.name.family");
+                            enabled_capability_array.put("Person.name.full");
+                            enabled_capability_array.put("Person.name.given");
+                            enabled_capability_array.put("Person.sourcedId");
+                            enabled_capability_array.put("ResourceLink.id");
+                            enabled_capability_array.put("ResourceLink.title");
+                            enabled_capability_array.put("ResourceLink.sourcedId");
+                            enabled_capability_array.put("User.id");
+                            enabled_capability_array.put("User.username");
+                            enabled_capability_array.put("ToolConsumerProfile.url");
+                            enabled_capability_array.put("ToolProxy.custom.url");
+                            enabled_capability_array.put("ToolProxyBinding.custom.url");
+                            enabled_capability_array.put("LtiLink.custom.url");
+                    message.put("enabled_capability", enabled_capability_array);
                         JSONArray parameter_array = new JSONArray();
                             JSONObject parameter_system_setting_url = new JSONObject();
                             parameter_system_setting_url.put("name", "system_setting_url");
@@ -201,8 +220,12 @@ public class ToolProviderProfile {
                         parameter_array.put(parameter_cert_userid);
                             JSONObject parameter_cert_username = new JSONObject();
                             parameter_cert_username.put("name", "cert_username");
-                            parameter_cert_username.put("variable", "User.name");
+                            parameter_cert_username.put("variable", "User.username");
                         parameter_array.put(parameter_cert_username);
+                            JSONObject parameter_roles = new JSONObject();
+                            parameter_cert_username.put("name", "roles");
+                            parameter_cert_username.put("variable", "Membership.role");
+                        parameter_array.put(parameter_roles);
                     message.put("parameter", parameter_array);
                 message_array.put(message);
             resource_handler.put("message", message_array);
@@ -213,7 +236,7 @@ public class ToolProviderProfile {
     private JSONObject getSecurityContract() {
         JSONObject security_contract = new JSONObject();
         security_contract.put("shared_secret", this.tc_secret);
-        /*
+
             JSONArray tool_services = new JSONArray();
                 JSONObject tool_consumer_profile = new JSONObject();
                 tool_consumer_profile.put("@type", "RestServiceProfile");
@@ -253,8 +276,10 @@ public class ToolProviderProfile {
                     lti_link_settings.put("action", lti_link_settings_actions);
                     lti_link_settings.put("service", "tcp:LtiLinkSettings"); //To be replaced
             tool_services.put(lti_link_settings);
-        security_contract.put("tool_service", tool_services);
-        */
+        //////////////////////////////////////////////////////////////////////////////////////////
+        //// NOTE: The spec says tool_service, Moodle has implemented this using tool_services instead
+        //////////////////////////////////////////////////////////////////////////////////////////
+        security_contract.put("tool_services", tool_services);
         return security_contract;
     }
 
@@ -264,10 +289,10 @@ public class ToolProviderProfile {
         imsx_JSONMessage.put("@context", getContext());
         imsx_JSONMessage.put("@type", "ToolProxy");
         //////// TODO: Replace @id
-        imsx_JSONMessage.put("@id", this.tc_key + ":" + this.tool_guid);
-            JSONObject custom = new JSONObject();
-            custom.put("id", this.tc_key);
-        imsx_JSONMessage.put("custom", custom);
+        //imsx_JSONMessage.put("@id", this.tc_key + ":" + this.tool_guid);
+        //    JSONObject custom = new JSONObject();
+        //    custom.put("id", this.tc_key);
+        //imsx_JSONMessage.put("custom", custom);
         imsx_JSONMessage.put("lti_version", this.lti_version);
         imsx_JSONMessage.put("tool_consumer_profile", this.tc_profile_url + "?lti_version=" + this.lti_version);
         imsx_JSONMessage.put("tool_profile", getToolProfile());

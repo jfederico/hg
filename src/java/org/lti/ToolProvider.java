@@ -589,6 +589,8 @@ public class ToolProvider implements LTI{
                 log.debug("doAPICall.responseJSON: " + json);
                 String stringJSON = json.toString();
                 response = new JSONObject(stringJSON);
+            } else if (responseCode == HttpURLConnection.HTTP_BAD_METHOD) {
+                log.debug("doAPICall.HTTPERROR: Message=" + "Tool Consumer responded with a 'Method not allowed' code. " + responseCode);
             } else {
                 log.debug("doAPICall.HTTPERROR: Message=" + "Tool Consumer responded with HTTP status code " + responseCode);
             }
