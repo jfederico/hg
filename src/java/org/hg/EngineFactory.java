@@ -18,15 +18,7 @@ public class EngineFactory {
 
     private static final Logger log = Logger.getLogger(EngineFactory.class.getName());
 
-    private static final EngineFactory INSTANCE = new EngineFactory();
-
-    private EngineFactory() {}
-
-    public static EngineFactory getInstance() {
-        return INSTANCE;
-    }
-
-    public IEngine createEngine(HttpServletRequest request, Map<String, String> params, Map<String, Object> config, String endpoint, Map<String, String> session_params)
+    public static IEngine createEngine(HttpServletRequest request, Map<String, String> params, Map<String, Object> config, String endpoint, Map<String, String> session_params)
             throws Exception {
         IEngine engine = null;
 

@@ -34,12 +34,6 @@ import org.hg.engine.test.TestEngine
 class HgController {
     HgService hgService
 
-    EngineFactory engineFactory
-
-    HgController() {
-        this.engineFactory = EngineFactory.getInstance()
-    }
-
     def index() {
         log.info "###############${params.get('action')}###############"
         //def basePath = grailsAttributes.getApplicationContext().getResource("/files/").getFile().toString()
@@ -57,7 +51,7 @@ class HgController {
                 session["params"] = params
             }
 
-            engine = engineFactory.createEngine(request, params, config, hgService.endpoint, session["params"])
+            engine = EngineFactory.createEngine(request, params, config, hgService.endpoint, session["params"])
             //Here complete the setting and execute the action
 
             def completionResponse = engine.getCompletionResponse()
