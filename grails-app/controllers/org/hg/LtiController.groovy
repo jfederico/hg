@@ -25,7 +25,7 @@ import java.util.List
 import net.oauth.OAuth
 
 import org.hg.EngineFactory
-import org.hg.SimpleEngineFactory
+import org.hg.EngineFactory
 import org.hg.domain.Type
 import org.hg.engine.IEngine
 import org.hg.engine.Engine
@@ -37,7 +37,7 @@ class LtiController {
     EngineFactory engineFactory
 
     LtiController() {
-        this.engineFactory = SimpleEngineFactory.getInstance()
+        this.engineFactory = EngineFactory.getInstance()
     }
 
     def index() {

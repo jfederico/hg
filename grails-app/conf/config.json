@@ -34,18 +34,6 @@
                     },
                     {
                         "id": "1",
-                        "key": "9PW86kCauheRL1T",
-                        "secret": "pzcbFux5Gu52zcv",
-                        "tc_profile_url": "http://192.168.44.149/moodle/mod/lti/services.php/profile/pzcbFux5Gu52zcv?lti_version=LTI-2p0"
-                    },
-                    {
-                        "id": "2",
-                        "key": "mmzGVsRRAcrGrAC",
-                        "secret": "yc3fA30w7lQ9oN1",
-                        "tc_profile_url": "http://192.168.44.149/moodle/mod/lti/services.php/profile/mmzGVsRRAcrGrAC?lti_version=LTI-2p0"
-                    },
-                    {
-                        "id": "3",
                         "key": "HiDiM8ScyJ1eAfQ",
                         "secret": "MSxdY60S5cfLoJL",
                         "tc_profile_url": "http://192.168.44.149/moodle/mod/lti/services.php/profile/HiDiM8ScyJ1eAfQ?lti_version=LTI-2p0"
