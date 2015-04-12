@@ -31,12 +31,12 @@ import org.hg.engine.IEngine
 import org.hg.engine.Engine
 import org.hg.engine.test.TestEngine
 
-class LtiController {
+class HgController {
     HgService hgService
 
     EngineFactory engineFactory
 
-    LtiController() {
+    HgController() {
         this.engineFactory = EngineFactory.getInstance()
     }
 

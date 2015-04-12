@@ -50,7 +50,7 @@ class UrlMappings {
 
 		"/"{
             application = grails.util.Metadata.current.'app.name'
-            controller = 'lti'
+            controller = 'hg'
             action = 'index'
             tenant = '0'
             engine = Engine.ENGINE_TYPE_LAUNCH
@@ -58,14 +58,14 @@ class UrlMappings {
         
         "/$tenant?/"{
             application = grails.util.Metadata.current.'app.name'
-            controller = 'lti'
+            controller = 'hg'
             action = 'index'
             engine = Engine.ENGINE_TYPE_LAUNCH
         }
 
         "/$tenant?/$engine?/"{
             application = grails.util.Metadata.current.'app.name'
-            controller = 'lti'
+            controller = 'hg'
             action = 'index'
             constraints {
                 // apply constraints here
