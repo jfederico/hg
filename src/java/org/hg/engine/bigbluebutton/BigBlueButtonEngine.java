@@ -52,8 +52,7 @@ public class BigBlueButtonEngine extends Engine {
         throws Exception {
         super(request, params, config, endpoint, session_params);
         log.debug("====== Creating object::BigBlueButtonEngine()");
-
-        if(this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_LAUNCH)){
+        if ( this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_CONFIG) ) {
             if(this.grails_params.get(PARAM_ACT).equals(ENGINE_ACT_CC)){
                 Map<String, Object> definition = new HashMap<String, Object>();
                 
@@ -84,7 +83,8 @@ public class BigBlueButtonEngine extends Engine {
                 definition.put( "vendor_contact_email", (vendor_contact_email != null && !vendor_contact_email.equals(""))? vendor_contact_email: ENGINE_CONTACT_EMAIL );
 
                 setCompletionResponseCommand( new CommonCartridgeXML(definition) );
-            } else {
+            }
+        } else if( this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_LAUNCH) ) {
                 @SuppressWarnings("unchecked")
                 Map<String, String> config_engine = (Map<String, String>)config.get("engine");
                 log.debug("HERE");
@@ -121,8 +121,6 @@ public class BigBlueButtonEngine extends Engine {
                     setCompletionResponseCommand( new SingleSignOnURL(config_engine, bbb_meeting_params, bbb_session_params) );
                     this.tpn.executeActionService();
                 }
-                log.debug("THERE");
-            }
 
         } else if( this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_REGISTRATION) ){
             if( this.tpn.getLTIVersion().equals(LTI.VERSION_V2P0) ) {

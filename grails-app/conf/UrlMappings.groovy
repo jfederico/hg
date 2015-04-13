@@ -63,7 +63,7 @@ class UrlMappings {
             engine = Engine.ENGINE_TYPE_LAUNCH
         }
 
-        "/$tenant?/$engine?/"{
+        "/$tenant?/$engine?(.${format})?"{
             application = grails.util.Metadata.current.'app.name'
             controller = 'hg'
             action = 'index'

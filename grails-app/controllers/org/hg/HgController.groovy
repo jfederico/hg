@@ -25,7 +25,7 @@ import java.util.List
 import net.oauth.OAuth
 
 import org.hg.EngineFactory
-import org.hg.EngineFactory
+import org.hg.Test
 import org.hg.domain.Type
 import org.hg.engine.IEngine
 import org.hg.engine.Engine
@@ -51,7 +51,8 @@ class HgController {
                 session["params"] = params
             }
 
-            engine = EngineFactory.createEngine(request, params, config, hgService.endpoint, session["params"])
+            EngineFactory engineFactory = new EngineFactory()
+            engine = engineFactory.createEngine(request, params, config, hgService.endpoint, session["params"])
             //Here complete the setting and execute the action
 
             def completionResponse = engine.getCompletionResponse()

@@ -19,12 +19,13 @@ public interface IEngine {
     public static String COMPLETION_RESPONSE_TYPE_URL   = "url";
     public static String COMPLETION_RESPONSE_TYPE_XML   = "xml";
 
+    public static String ENGINE_TYPE_CONFIG         = "config";
     public static String ENGINE_TYPE_LAUNCH         = "launch";
     public static String ENGINE_TYPE_REGISTRATION   = "registration";
     public static String ENGINE_TYPE_RESOURCE       = "resource";
     public static String ENGINE_TYPE_API            = "api";
     public static String[] ENGINE_TYPES    = new String[] {
-        ENGINE_TYPE_LAUNCH, ENGINE_TYPE_REGISTRATION, ENGINE_TYPE_RESOURCE, ENGINE_TYPE_API
+        ENGINE_TYPE_CONFIG, ENGINE_TYPE_LAUNCH, ENGINE_TYPE_REGISTRATION, ENGINE_TYPE_RESOURCE, ENGINE_TYPE_API
     };
 
     public static String ENGINE_ACT_CC   = "cc";
