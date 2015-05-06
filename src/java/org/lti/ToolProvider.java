@@ -208,7 +208,7 @@ public class ToolProvider implements LTI{
         boolean response = false;
         log.debug("Checking if the OAuth signature is valid. endpoint=" + this.endpoint + ", secret=" + this.secret );
         Object postProp = sanitizePrametersForBaseString();
-        
+
         OAuthMessage oam = new OAuthMessage("POST", this.endpoint, ((Properties)postProp).entrySet());
         HMAC_SHA1 hmac = new HMAC_SHA1();
         hmac.setConsumerSecret(this.secret);
