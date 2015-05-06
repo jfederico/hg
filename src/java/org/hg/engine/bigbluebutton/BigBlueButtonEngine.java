@@ -192,7 +192,7 @@ public class BigBlueButtonEngine extends Engine {
         sessionParams.put(BBBProxy.PARAM_FULL_NAME, getValidatedUserFullName());
         sessionParams.put(BBBProxy.PARAM_MEETING_ID, getValidatedMeetingId(resource_link_id, oauth_consumer_key));
         log.debug("It is null or empty");
-        String roles = tpn.getVerifiedRoles();
+        String roles = getVerifiedRoles();
         log.debug("Roles=" + roles);
         if( roles == null || roles.equals("") || RolesValidator.isStudent(roles) || RolesValidator.isLearner(roles) ) {
             sessionParams.put(BBBProxy.PARAM_PASSWORD, DigestUtils.shaHex("ap" + resource_link_id + oauth_consumer_key));
@@ -202,7 +202,7 @@ public class BigBlueButtonEngine extends Engine {
             sessionParams.put("role", BBB_ROLE_MODERATOR);
         }
         ////sessionParams.put("createTime", "");
-        sessionParams.put(BBBProxy.PARAM_USER_ID, (roles == null || roles.equals(""))? "": DigestUtils.shaHex( tpn.getVerifiedUserId() + oauth_consumer_key) );
+        sessionParams.put(BBBProxy.PARAM_USER_ID, (roles == null || roles.equals(""))? "": DigestUtils.shaHex( getVerifiedUserId() + oauth_consumer_key) );
 
         return sessionParams;
     }
@@ -242,10 +242,10 @@ public class BigBlueButtonEngine extends Engine {
     private String getValidatedUserFullName(){
         String userFullName;
 
-        userFullName = tpn.getVerifiedUserFullName();
+        userFullName = getVerifiedUserFullName();
         if( userFullName == null || userFullName == "" ) {
             log.debug("It is null or empty");
-            String roles = tpn.getVerifiedRoles();
+            String roles = getVerifiedRoles();
             log.debug("Roles=" + roles);
             userFullName = ( roles.equals("") || RolesValidator.isStudent(roles, true) || RolesValidator.isLearner(roles, true) )? "Viewer" : "Moderator";
             log.debug("Now it is " + userFullName);

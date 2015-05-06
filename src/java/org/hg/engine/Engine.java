@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
 import net.oauth.OAuth;
@@ -178,4 +179,49 @@ public class Engine implements IEngine {
 
         return keypair;
     }
+    
+    public Map<String, String> getParameters() {
+        return this.params;
+    }
+    
+    public String getVerifiedUserFullName() {
+        String userFullName;
+        String userFirstName;
+        String userLastName;
+
+        log.debug("FullName for version1");
+        userFullName = this.params.get("lis_person_name_full");
+        if( userFullName == null || userFullName == "" ){
+            userFirstName = this.params.get("lis_person_name_given");
+            userLastName = this.params.get("lis_person_name_family");
+            if( userFirstName != null && userFirstName != "" ){
+                userFullName = userFirstName;
+            }
+            if( userLastName != null && userLastName != "" ){
+                userFullName += userFullName.length() > 0? " ": "";
+                userFullName += userLastName;
+            }
+        }
+
+        return userFullName;
+    }
+
+    public String getVerifiedRoles() {
+        String roles = "";
+
+        log.debug("Roles for version1");
+        roles = params.get("roles");
+
+        return roles;
+    }
+
+    public String getVerifiedUserId() {
+        String userId;
+
+        log.debug("Roles for version1");
+        userId = params.get("user_id");
+
+        return userId;
+    }
+
 }

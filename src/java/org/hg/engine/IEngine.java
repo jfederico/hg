@@ -36,5 +36,8 @@ public interface IEngine {
     abstract Map<String, Object> getCompletionResponse() throws Exception;
     abstract void setCompletionResponseCommand(CompletionResponse completionResponse);
     abstract String getEndpointURL();
-
+    abstract Map<String, String> getParameters();
+    abstract String getVerifiedUserFullName();
+    abstract String getVerifiedRoles();
+    abstract String getVerifiedUserId();
 }

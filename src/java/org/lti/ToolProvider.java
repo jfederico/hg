@@ -488,60 +488,6 @@ public class ToolProvider implements LTI{
         return list;
     }
 
-    public String getVerifiedUserFullName() {
-        String userFullName;
-        String userFirstName;
-        String userLastName;
-
-        if( VERSION_NUMBER_V2.equals(getVersionNumber()) ) {
-            log.debug("FullName for version2");
-            userFullName = "";
-        } else {
-            log.debug("FullName for version1");
-            userFullName = this.params.get("lis_person_name_full");
-            if( userFullName == null || userFullName == "" ){
-                userFirstName = this.params.get("lis_person_name_given");
-                userLastName = this.params.get("lis_person_name_family");
-                if( userFirstName != null && userFirstName != "" ){
-                    userFullName = userFirstName;
-                }
-                if( userLastName != null && userLastName != "" ){
-                    userFullName += userFullName.length() > 0? " ": "";
-                    userFullName += userLastName;
-                }
-            }
-        }
-        return userFullName;
-    }
-
-    public String getVerifiedRoles() {
-        String roles = "";
-
-        if( VERSION_NUMBER_V2.equals(getVersionNumber()) ) {
-            log.debug("Roles for version2");
-            roles = "";
-        } else {
-            log.debug("Roles for version1");
-            roles = params.get(ROLES);
-        }
-
-        return roles;
-    }
-
-    public String getVerifiedUserId() {
-        String userId;
-
-        if( VERSION_NUMBER_V2.equals(getVersionNumber()) ) {
-            log.debug("Roles for version2");
-            userId = "";
-        } else {
-            log.debug("Roles for version1");
-            userId = params.get(USER_ID);
-        }
-
-        return userId;
-    }
-
     ////////////////////
     /** Make an API call */
     public static JSONObject doAPICall(String query) {

@@ -4,7 +4,7 @@ class UrlMappings {
     /*
      * $scheme://$domain:$port/$application/$tenant/$engine_type/?query_string
      *
-     * engine_type = [ launch | registration | resource | api ]
+     * engine_type = [ launch | registration | resource | api | config.xml ]
      *
      * query_string = ?a=xxx&c=yyy (act=action, cmd=command)
      *

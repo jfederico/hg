@@ -135,7 +135,7 @@ public class ToolProviderProfile {
     private JSONArray getBaseURLChoice(){
         JSONArray base_url_choice = new JSONArray();
             JSONObject default_base_url = new JSONObject();
-            default_base_url.put("default_base_url", "http://192.168.44.149:8888");
+            default_base_url.put("default_base_url", "http://192.168.50.130:8888");
         base_url_choice.put(default_base_url);
         return base_url_choice;
     }

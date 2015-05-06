@@ -25,6 +25,7 @@ public class RolesValidator {
     public static String URN_SYSTEM_ROLE = "urn:lti:sysrole:ims/lis/";
     public static String URN_INSTITUTION_ROLE = "urn:lti:instrole:ims/lis/";
     public static String URN_CONTEXT_ROLE = "urn:lti:role:ims/lis/";
+    public static String VOCAB_LTIV2P0 = "http://purl.imsglobal.org/vocab/lis/v2/person#";
 
     public static boolean EXCLUSIVE = true;
     public static boolean NONEXCLUSIVE = false;
@@ -35,7 +36,8 @@ public class RolesValidator {
         for( int i=0; i < roles.length; i++){
             if( roles[i].equals(LEARNER) ||
                 roles[i].equals(URN_INSTITUTION_ROLE + LEARNER) ||
-                roles[i].equals(URN_CONTEXT_ROLE + LEARNER)
+                roles[i].equals(URN_CONTEXT_ROLE + LEARNER) ||
+                roles[i].equals(VOCAB_LTIV2P0 + LEARNER)
                 ){
                 response = true;
                 break;
@@ -51,7 +53,8 @@ public class RolesValidator {
             for( int i=0; i < roles.length; i++){
                 if( !roles[i].equals(LEARNER) &&
                     !roles[i].equals(URN_INSTITUTION_ROLE + LEARNER) &&
-                    !roles[i].equals(URN_CONTEXT_ROLE + LEARNER)
+                    !roles[i].equals(URN_CONTEXT_ROLE + LEARNER) &&
+                    !roles[i].equals(VOCAB_LTIV2P0 + LEARNER)
                     ){
                     response = false;
                     break;
@@ -69,7 +72,8 @@ public class RolesValidator {
         for( int i=0; i < roles.length; i++){
             if( roles[i].equals(STUDENT) ||
                 roles[i].equals(URN_INSTITUTION_ROLE + STUDENT) ||
-                roles[i].equals(URN_CONTEXT_ROLE + STUDENT)
+                roles[i].equals(URN_CONTEXT_ROLE + STUDENT) ||
+                roles[i].equals(VOCAB_LTIV2P0 + STUDENT)
                 ){
                 response = true;
                 break;
@@ -85,7 +89,8 @@ public class RolesValidator {
             for( int i=0; i < roles.length; i++){
                 if( !roles[i].equals(STUDENT) &&
                     !roles[i].equals(URN_INSTITUTION_ROLE + STUDENT) &&
-                    !roles[i].equals(URN_CONTEXT_ROLE + STUDENT)
+                    !roles[i].equals(URN_CONTEXT_ROLE + STUDENT) &&
+                    !roles[i].equals(VOCAB_LTIV2P0 + STUDENT)
                     ){
                     response = false;
                     break;
@@ -104,7 +109,8 @@ public class RolesValidator {
             if( roles[i].equals(ADMINISTRATOR) ||
                 roles[i].equals(URN_SYSTEM_ROLE + ADMINISTRATOR) ||
                 roles[i].equals(URN_INSTITUTION_ROLE + ADMINISTRATOR) ||
-                roles[i].equals(URN_CONTEXT_ROLE + ADMINISTRATOR)
+                roles[i].equals(URN_CONTEXT_ROLE + ADMINISTRATOR) ||
+                roles[i].equals(VOCAB_LTIV2P0 + ADMINISTRATOR)
                 ){
                 response = true;
                 break;
@@ -124,7 +130,8 @@ public class RolesValidator {
             if( roles[i].equals(_role) ||
                 roles[i].equals(URN_SYSTEM_ROLE + _role) ||
                 roles[i].equals(URN_INSTITUTION_ROLE + _role) ||
-                roles[i].equals(URN_CONTEXT_ROLE + _role)
+                roles[i].equals(URN_CONTEXT_ROLE + _role) ||
+                roles[i].equals(VOCAB_LTIV2P0 + _role)
                 ){
                 response = true;
                 break;
@@ -141,7 +148,8 @@ public class RolesValidator {
                 if( !roles[i].equals(_role) &&
                     !roles[i].equals(URN_SYSTEM_ROLE + _role) &&
                     !roles[i].equals(URN_INSTITUTION_ROLE + _role) &&
-                    !roles[i].equals(URN_CONTEXT_ROLE + _role)
+                    !roles[i].equals(URN_CONTEXT_ROLE + _role) &&
+                    !roles[i].equals(VOCAB_LTIV2P0 + _role)
                     ){
                     response = false;
                     break;
@@ -161,7 +169,8 @@ public class RolesValidator {
                 if( roles[i].equals(role[j]) ||
                     roles[i].equals(URN_SYSTEM_ROLE + role[j]) ||
                     roles[i].equals(URN_INSTITUTION_ROLE + role[j]) ||
-                    roles[i].equals(URN_CONTEXT_ROLE + role[j])
+                    roles[i].equals(URN_CONTEXT_ROLE + role[j]) ||
+                    roles[i].equals(VOCAB_LTIV2P0 + role[j])
                     ){
                     return true;
                 }
