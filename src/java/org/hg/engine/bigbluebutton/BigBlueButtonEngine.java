@@ -291,7 +291,7 @@ public class BigBlueButtonEngine extends Engine {
         log.debug(config_tool_guid);
         log.debug(config_product);
         log.debug(config_vendor);
-        ToolProviderProfile tp_profile = new ToolProviderProfile(lti_version, tc_key, tc_secret, tc_profile_url, config_tool_guid, config_product, config_vendor);
+        ToolProviderProfile tp_profile = new ToolProviderProfile(lti_version, tc_key, tc_secret, tc_profile_url, config_tool_guid, config_product, config_vendor, this.endpoint_url);
 
         log.debug("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
         log.debug(tp_profile.getIMSXJSONMessage().toString());

@@ -17,10 +17,11 @@ public class ToolProviderProfile {
     String tc_secret;
     String tc_profile_url;
     String lti_version;
-    Map<String, String> config_product; 
-    Map<String, String> config_vendor; 
+    Map<String, String> config_product;
+    Map<String, String> config_vendor;
+    String endpoint_url;
     
-    public ToolProviderProfile(String lti_version, String _tc_key, String _tc_secret, String _tc_profile_url, String config_tool_guid, Map<String, String> config_product, Map<String, String> config_vendor) {
+    public ToolProviderProfile(String lti_version, String _tc_key, String _tc_secret, String _tc_profile_url, String config_tool_guid, Map<String, String> config_product, Map<String, String> config_vendor, String endpoint_url) {
         log.debug("====Creating ToolProviderProfile()");
         this.tool_guid = config_tool_guid;
         String[] tc_profile_url_segments = _tc_profile_url.split("\\?");
@@ -33,6 +34,7 @@ public class ToolProviderProfile {
         //this.lti_version = lti_version_segments[1];
         this.config_product = config_product;
         this.config_vendor = config_vendor;
+        this.endpoint_url = endpoint_url;
     }
     
     public void setId(){
@@ -135,7 +137,7 @@ public class ToolProviderProfile {
     private JSONArray getBaseURLChoice(){
         JSONArray base_url_choice = new JSONArray();
             JSONObject default_base_url = new JSONObject();
-            default_base_url.put("default_base_url", "http://192.168.50.130:8888");
+            default_base_url.put("default_base_url", this.endpoint_url);
         base_url_choice.put(default_base_url);
         return base_url_choice;
     }
