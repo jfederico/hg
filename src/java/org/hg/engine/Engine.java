@@ -41,7 +41,8 @@ public class Engine implements IEngine {
                     params.remove(GRAILS_PARAMS[i]);
                 }
             }
-            this.endpoint_url = (request.isSecure()? "https": "http") + "://" + this.endpoint + "/" + this.grails_params.get(PARAM_APPLICATION) + "/" + this.grails_params.get(PARAM_TENANT) + "/" + type; 
+            //this.endpoint_url = (request.isSecure()? "https": "http") + "://" + this.endpoint + "/" + this.grails_params.get(PARAM_APPLICATION) + "/" + this.grails_params.get(PARAM_TENANT) + "/" + type;
+            this.endpoint_url = (request.isSecure()? "https": "http") + "://" + this.endpoint;
 
             if ( this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_LAUNCH) && this.grails_params.get(PARAM_ACT).equals(ENGINE_ACT_SSO) ||
                  this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_LAUNCH) && this.grails_params.get(PARAM_ACT).equals(ENGINE_ACT_UI) )
@@ -51,7 +52,8 @@ public class Engine implements IEngine {
                  log.debug(oauth_consumer_key);
                  Map<String, String> keypair = parseKeypair(oauth_consumer_key);
 
-                 this.tpn = new ToolProvider(this.params, this.endpoint_url, keypair.get("key"), keypair.get("secret"), keypair.get("tc_profile_url"));
+                 String launching_endpoint_url = this.endpoint_url + "/" + this.grails_params.get(PARAM_APPLICATION) + "/" + this.grails_params.get(PARAM_TENANT) + "/" + type;
+                 this.tpn = new ToolProvider(this.params, launching_endpoint_url, keypair.get("key"), keypair.get("secret"), keypair.get("tc_profile_url"));
                  //TODO: If there is a TC, it should be loaded here.
 
                  Map<String, Object> profile = getProfile();
