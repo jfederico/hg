@@ -19,11 +19,8 @@ public class Registration implements ActionService {
         log.info("LTIRegistration v2p0");
         String proxy_registration_response = "ERROR";
 
-        log.debug("HHERE0");
         Map<String, String> params = tpn.getParameters();
-        log.debug("HHERE1");
         ToolProviderProfile tp_profile = tpn.getToolProviderProfile();
-        log.debug("HHERE2");
 
         try {
             //request the tool consumer profile

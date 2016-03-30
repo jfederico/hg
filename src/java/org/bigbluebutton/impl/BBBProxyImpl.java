@@ -113,7 +113,7 @@ public class BBBProxyImpl implements BBBProxy{
 
 	////////////////////
 	/** Make an API call */
-    protected static Map<String, Object> doAPICall(String query) {
+    public static Map<String, Object> doAPICall(String query) {
         Map<String, Object> response = new HashMap<String, Object>();
 
         StringBuilder urlStr = new StringBuilder(query);

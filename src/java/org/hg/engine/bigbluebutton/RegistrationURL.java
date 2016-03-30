@@ -11,6 +11,7 @@ public class RegistrationURL implements CompletionResponse {
     private static final Logger log = Logger.getLogger(RegistrationURL.class);
 
     ToolProvider tpn;
+
     public RegistrationURL(ToolProvider tpn)
         throws Exception {
         log.debug("====== Creating object::RegistrationURL()");

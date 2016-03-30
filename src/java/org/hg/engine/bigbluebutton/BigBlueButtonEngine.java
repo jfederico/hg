@@ -87,7 +87,7 @@ public class BigBlueButtonEngine extends Engine {
         } else if( this.grails_params.get(PARAM_ENGINE).equals(ENGINE_TYPE_LAUNCH) ) {
                 @SuppressWarnings("unchecked")
                 Map<String, String> config_engine = (Map<String, String>)config.get("engine");
-                log.debug("HERE");
+                log.debug("Initializing ToolProvider");
                 this.tpn.InitToolProvider();
 
                 Map<String, String> bbb_meeting_params = getBBBMeetingParams();
@@ -136,7 +136,7 @@ public class BigBlueButtonEngine extends Engine {
     @Override
     public Map<String, Object> getCompletionResponse()
             throws Exception {
-        return completionResponse.get();
+        return this.completionResponse.get();
     }
 
     @Override
@@ -191,7 +191,6 @@ public class BigBlueButtonEngine extends Engine {
         String resource_link_id = this.params.get(LTI.RESOURCE_LINK_ID);
         sessionParams.put(BBBProxy.PARAM_FULL_NAME, getValidatedUserFullName());
         sessionParams.put(BBBProxy.PARAM_MEETING_ID, getValidatedMeetingId(resource_link_id, oauth_consumer_key));
-        log.debug("It is null or empty");
         String roles = getVerifiedRoles();
         log.debug("Roles=" + roles);
         if( roles == null || roles.equals("") || RolesValidator.isStudent(roles) || RolesValidator.isLearner(roles) ) {

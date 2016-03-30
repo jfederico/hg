@@ -39,7 +39,7 @@ public class BBBCreateMeeting implements BBBCommand {
     }
 
     private String getURL(){
-        String url = proxy.getCreateURL(params);
+        String url = this.proxy.getCreateURL(this.params);
         return url;
     }
 
@@ -58,4 +58,5 @@ public class BBBCreateMeeting implements BBBCommand {
 
         return response;
     }
+
 }
